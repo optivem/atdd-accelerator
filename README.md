@@ -28,13 +28,13 @@ What is the Repository Strategy that you use in your Real Life Project:
 
 1. Choose your System Language, from the following options: Java | .NET | TypeScript (for example, I'll choose Java).
 2. Based on your chosen language, keep the System folder only for that language, and delete all the rest, e.g. since I've chosen Java, then:
-   - monolith-dotnet --> DELETE
-   - monolith-java --> KEEP
-   - monolith-typescript --> DELETE
+   - `monolith-dotnet` --> DELETE
+   - `monolith-java` --> KEEP
+   - `monolith-typescript` --> DELETE
 3. Based on your chosen language, keep the commit stage only for that language, and delete all the rest, e.g. since I've chosen Java, then:
-   - .github\workflows\commit-stage-monolith-dotnet.yml --> DELETE
-   - .github\workflows\commit-stage-monolith-java.yml --> KEEP
-   - .github\workflows\commit-stage-monolith-typescript.yml --> DELETE
+   - `.github\workflows\commit-stage-monolith-dotnet.yml` --> DELETE
+   - `.github\workflows\commit-stage-monolith-java.yml` --> KEEP
+   - `.github\workflows\commit-stage-monolith-typescript.yml` --> DELETE
 
 
 _Note for Step 2: Within this template, the System is a Monolith. That's because, for purposes of the ATDD Accelerator Program, it really doesn't matter what System Architecture you use, whether it's Monolith, or Frontend & Monolithic Backend, or Frontend & Microservice Backend, or whatever else. Please keep the Monolith for now, later, at the end of the setup, you can change it to anything else._
@@ -45,10 +45,12 @@ _Note for Step 3: We have only one commit Stage because we're using a Monolith, 
 
 1. Choose your System Test Language, this is the language you'll be using to write System Tests (Smoke Tests, E2E Tests, Acceptance Tests). The choice of this language is an independent decision compared to what you've chosen for the System Language, so you can choose same or different. Please choose from one of the following options: Java | .NET | TypeScript. For example, I'll choose TypeScript, since my QA Automation Engineers are familar with TypeScript.
 2. Keep the System Test folder only for that language, and delete all rest, e.g. since I've chosen TypeScript, then:
-    - system-test-dotnet --> DELETE
-    - system-test-java --> DELETE
-    - system-test-typescript --> KEEP
+    - `system-test-dotnet` --> DELETE
+    - `system-test-java` --> DELETE
+    - `system-test-typescript` --> KEEP
 2. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
-   - .github\workflows\commit-stage-monolith-dotnet.yml --> DELETE
+   - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
+   - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
+   - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
 
 # Multi Repo Quickstart
