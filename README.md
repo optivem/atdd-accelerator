@@ -45,9 +45,9 @@ What is the Repository Strategy that you use in your Real Life Project:
    - `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)` --> KEEP
    - `[![commit-stage-monolith-typescript](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-typescript.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-typescript.yml)` --> DELETE
 
-5. Now update the repository link, i.e. we'll be replacing `optivem/atdd-accelerator-template-mono-repo` by your concrete repository link, e.g. `jsmith/eshop`
+5. Now update the repository link, i.e. we'll be replacing `optivem/atdd-accelerator-template-mono-repo` by your concrete repository link, e.g. `valentinajemuovic/eshop`
    - BEFORE: `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)`
-   - AFTER: `[![commit-stage-monolith-java](https://github.com/jsmith/eshop/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/jsmith/eshop/actions/workflows/commit-stage-monolith-java.yml)`
+   - AFTER: `[![commit-stage-monolith-java](https://github.com/valentinajemuovic/eshop/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/valentinajemuovic/eshop/actions/workflows/commit-stage-monolith-java.yml)`
 
 
 4. Open up the README.md file, in the `System` section, verify that the status badge is `passing`.
@@ -57,7 +57,7 @@ _Note for Step 2: Within this template, the System is a Monolith. That's because
 
 _Note for Step 3: We have only one commit Stage because we're using a Monolith, so that's why we have commit-stage-monolith-java.yml. However, later if you decide to switch to Frontend & Monolithic Backend, you might have commit-stage-frontend-react.yml, commit-stage-backend-java.yml; or if you switch to Frontend & Microservice Backend, then you might have commit-stage-frontend-react.yml, commit-stage-microservice1-java.yml, commit-stage-microservice2-dotnet.yml, commit-stage-microservice3-java.yml, etc._
 
-6. Go to your repository, e.g. `https://github.com/jsmith/eshop` and see the packages generated, example, keep only the one for your System Language (to delete the rest, click on the Package, go to `Package Settings`, then `Delete this package`):
+6. Go to your repository, e.g. `https://github.com/valentinajemuovic/eshop` and see the packages generated, example, keep only the one for your System Language (to delete the rest, click on the Package, go to `Package Settings`, then `Delete this package`):
 `eshop/monolith-dotnet` --> DELETE
 `eshop/monolith-java` --> KEEP
 `eshop/monolith-typescript` --> DELETE
@@ -100,7 +100,7 @@ _Note for Step 3: We have only one commit Stage because we're using a Monolith, 
 
 4. Now change the path so that it corresponds to this Repository, specifically replacing this part `optivem/atdd-accelerator-template-mono-repo` for example:
     - TEMPLATE: `image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-java:latest`
-    - UPDATED: `image: ghcr.io/jsmith/eshop/monolith-java:latest`
+    - UPDATED: `image: ghcr.io/valentinajemuovic/eshop/monolith-java:latest`
 _Note: This step is critical that you get the path right! Otherwise, your System Tests & Release will fail!_
 
 5. Furthermore, for the chosen language, set the ports:
@@ -133,7 +133,7 @@ _Note: This step is critical that you get the path right! Otherwise, your System
 
 - OLD: `[![release-stage-typescript](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-typescript.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-typescript.yml)`
 
-- UPDATED: `[![release-stage-typescript](https://github.com/jsmith/eshop/actions/workflows/release-stage-typescript.yml/badge.svg)](https://github.com/jsmith/eshop/actions/workflows/release-stage-typescript.yml)`
+- UPDATED: `[![release-stage-typescript](https://github.com/valentinajemuovic/eshop/actions/workflows/release-stage-typescript.yml/badge.svg)](https://github.com/valentinajemuovic/eshop/actions/workflows/release-stage-typescript.yml)`
 
 10. Click on the status badge in `System Release`, which has `no status`, then click on `Run workflow`. Reload the page. Wait for several minutes. 
 
