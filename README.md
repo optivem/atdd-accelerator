@@ -49,6 +49,9 @@ What is the Repository Strategy that you use in your Real Life Project:
    - BEFORE: `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)`
    - AFTER: `[![commit-stage-monolith-java](https://github.com/valentinajemuovic/eshop/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/valentinajemuovic/eshop/actions/workflows/commit-stage-monolith-java.yml)`
 
+6. Commit & push changes.
+
+6. Go to your repository on GitHub website, e.g. `https://github.com/valentinajemuovic/eshop`
 
 4. Open up the README.md file, in the `System` section, verify that the status badge is `passing`.
 
@@ -138,6 +141,11 @@ _Note: This step is critical that you get the path right! Otherwise, your System
 10. Click on the status badge in `System Release`, which has `no status`, then click on `Run workflow`. Reload the page. Wait for several minutes. 
 
 11. Go back to the README.md file, in System Release, verify that status is `passing`.
+
+## Documentation
+
+Status badge
+Website link
 
 ## Project Naming
 
