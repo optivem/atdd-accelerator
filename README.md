@@ -44,19 +44,28 @@ _Note for Step 3: We have only one commit Stage because we're using a Monolith, 
 ## Choose System Test Language
 
 1. Choose your System Test Language, this is the language you'll be using to write System Tests (Smoke Tests, E2E Tests, Acceptance Tests). The choice of this language is an independent decision compared to what you've chosen for the System Language, so you can choose same or different. Please choose from one of the following options: Java | .NET | TypeScript. For example, I'll choose TypeScript, since my QA Automation Engineers are familar with TypeScript.
+
 2. Keep the System Test folder only for that language, and delete all rest, e.g. since I've chosen TypeScript, then:
     - `system-test-dotnet` --> DELETE
     - `system-test-java` --> DELETE
     - `system-test-typescript` --> KEEP
-2. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
+
+3. Then open up the System Test folder (in my case `system-test-typescript`), and in the image section, keep only the one that corresponds to your System Language (in my case, Java), delete all the rest:
+    - `image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-java:latest` --> KEEP
+    - `image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-dotnet:latest` --> DELETE
+    - `image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-typescript:latest` --> DELETE
+
+4. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
    - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
-2. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
+
+5. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
    - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
-3. Keep the Release Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
+
+6. Keep the Release Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
    - `.github\workflows\release-stage-dotnet.yml` --> DELETE
    - `.github\workflows\release-stage-java.yml` --> DELETE
    - `.github\workflows\release-stage-typescript.yml` --> KEEP
