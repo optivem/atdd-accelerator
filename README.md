@@ -12,10 +12,38 @@ What is the Repository Strategy that you use in your Real Life Project:
 
 ## Option A: Automated Setup (Recommended)
 
-### Prerequisites
-- [PowerShell 7+](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell) (cross-platform)
-- [GitHub CLI](https://cli.github.com/) installed and authenticated (`gh auth login`)
-- [Git](https://git-scm.com/) installed
+### Prerequisites Installation
+First, install the required tools. You can do this manually or use our automated installer:
+
+#### Option 1: Automated Prerequisites Installation
+```powershell
+# Download and run the prerequisites installer
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/optivem/atdd-accelerator/main/scripts/install-prerequisites.ps1" -OutFile "install-prerequisites.ps1"
+.\install-prerequisites.ps1
+```
+
+#### Option 2: Manual Prerequisites Installation
+- **PowerShell 7+**: [Install Guide](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell)
+  - Windows: `winget install Microsoft.PowerShell`
+  - Linux: `sudo apt install powershell` (Ubuntu) 
+  - Mac: `brew install powershell`
+- **GitHub CLI**: [Install Guide](https://cli.github.com/)
+  - Windows: `winget install GitHub.cli`
+  - Linux: `sudo apt install gh` (Ubuntu)
+  - Mac: `brew install gh`
+- **Git**: [Install Guide](https://git-scm.com/)
+  - Windows: `winget install Git.Git`
+  - Linux: `sudo apt install git`
+  - Mac: `brew install git`
+
+#### Verify Your Setup:
+```powershell
+# Check installations
+pwsh --version      # PowerShell 7+
+git --version       # Git
+gh --version        # GitHub CLI
+gh auth status      # GitHub authentication
+```
 
 ### Quick Setup
 1. Download the setup script: [setup-mono-repo.ps1](https://raw.githubusercontent.com/optivem/atdd-accelerator/main/scripts/setup-mono-repo.ps1)
