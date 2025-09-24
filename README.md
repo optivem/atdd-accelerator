@@ -36,10 +36,26 @@ What is the Repository Strategy that you use in your Real Life Project:
    - `.github\workflows\commit-stage-monolith-java.yml` --> KEEP
    - `.github\workflows\commit-stage-monolith-typescript.yml` --> DELETE
 
+4. Open up the README.md file, see the section `System`. Keep only the status badge for our chosen language (in my example, Java) and delete all the REST
+
+   - `[![commit-stage-monolith-dotnet](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-dotnet.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-dotnet.yml)` --> DELETE
+   - `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)` --> KEEP
+   - `[![commit-stage-monolith-typescript](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-typescript.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-typescript.yml)` --> DELETE
+
+5. Now update the repository link, i.e. we'll be replacing `optivem/atdd-accelerator-template-mono-repo` by your concrete repository link, e.g. `jsmith/eshop`
+   - BEFORE: `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)`
+   - AFTER: `[![commit-stage-monolith-java](https://github.com/jsmith/eshop/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/jsmith/eshop/actions/workflows/commit-stage-monolith-java.yml)`
+
 
 _Note for Step 2: Within this template, the System is a Monolith. That's because, for purposes of the ATDD Accelerator Program, it really doesn't matter what System Architecture you use, whether it's Monolith, or Frontend & Monolithic Backend, or Frontend & Microservice Backend, or whatever else. Please keep the Monolith for now, later, at the end of the setup, you can change it to anything else._
 
 _Note for Step 3: We have only one commit Stage because we're using a Monolith, so that's why we have commit-stage-monolith-java.yml. However, later if you decide to switch to Frontend & Monolithic Backend, you might have commit-stage-frontend-react.yml, commit-stage-backend-java.yml; or if you switch to Frontend & Microservice Backend, then you might have commit-stage-frontend-react.yml, commit-stage-microservice1-java.yml, commit-stage-microservice2-dotnet.yml, commit-stage-microservice3-java.yml, etc._
+
+6. Go to your repository, e.g. `https://github.com/jsmith/eshop` and see the packages generated, example, keep only the one for your System Language (to delete the rest, click on the Package, go to `Package Settings`, then `Delete this package`):
+`eshop/monolith-dotnet` --> DELETE
+`eshop/monolith-java` --> KEEP
+`eshop/monolith-typescript` --> DELETE
+
 
 ## Choose System Test Language
 
@@ -51,24 +67,66 @@ _Note for Step 3: We have only one commit Stage because we're using a Monolith, 
     - `system-test-typescript` --> KEEP
 
 3. Then open up the System Test folder (in my case `system-test-typescript`), and in the image section, keep only the one that corresponds to your System Language (in my case, Java), delete all the rest:
-    - `image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-java:latest` --> KEEP
-    - `image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-dotnet:latest` --> DELETE
-    - `image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-typescript:latest` --> DELETE
 
-4. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
-   - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
-   - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
-   - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
+```
+  monolith:
+    image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-dotnet:latest
+    ports:
+      - "8080:80"
+```
+--> DELETE
+
+```
+  monolith:
+    image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-java:latest
+    ports:
+      - "8080:8080"
+```
+--> KEEP
+
+```
+  monolith:
+    image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-typescript:latest
+    ports:
+      - "8080:3000"
+```
+--> DELETE
+
+4. Now change the path so that it corresponds to this Repository, specifically replacing this part `optivem/atdd-accelerator-template-mono-repo` for example:
+    - TEMPLATE: `image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-java:latest`
+    - UPDATED: `image: ghcr.io/jsmith/eshop/monolith-java:latest`
+_Note: This step is critical that you get the path right! Otherwise, your System Tests & Release will fail!_
+
+5. Furthermore, for the chosen language, set the ports:
+
 
 5. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
    - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
 
-6. Keep the Release Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
+6. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
+   - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
+   - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
+   - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
+
+7. Keep the Release Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
    - `.github\workflows\release-stage-dotnet.yml` --> DELETE
    - `.github\workflows\release-stage-java.yml` --> DELETE
    - `.github\workflows\release-stage-typescript.yml` --> KEEP
 
+8. In the README.md file, in the `System Release` section, keep only the System Test Language, delete all the rest (in my example, I've chosen TypeScript)
+
+`[![release-stage-dotnet](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-dotnet.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-dotnet.yml)` --> DELETE
+
+`[![release-stage-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-java.yml)` --> DELETE
+
+`[![release-stage-typescript](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-typescript.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-typescript.yml)` --> KEEP
+
+9. In that `System Release` section, for the status badge that remains, replace `optivem/atdd-accelerator-template-mono-repo` by your repository path, for example:
+
+- OLD: `[![release-stage-typescript](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-typescript.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-typescript.yml)`
+
+- UPDATED: `[![release-stage-typescript](https://github.com/jsmith/eshop/actions/workflows/release-stage-typescript.yml/badge.svg)](https://github.com/jsmith/eshop/actions/workflows/release-stage-typescript.yml)`
 
 # Multi Repo Quickstart
