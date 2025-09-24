@@ -36,6 +36,9 @@ What is the Repository Strategy that you use in your Real Life Project:
    - `.github\workflows\commit-stage-monolith-java.yml` --> KEEP
    - `.github\workflows\commit-stage-monolith-typescript.yml` --> DELETE
 
+
+
+
 4. Open up the README.md file, see the section `System`. Keep only the status badge for our chosen language (in my example, Java) and delete all the REST
 
    - `[![commit-stage-monolith-dotnet](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-dotnet.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-dotnet.yml)` --> DELETE
@@ -45,6 +48,9 @@ What is the Repository Strategy that you use in your Real Life Project:
 5. Now update the repository link, i.e. we'll be replacing `optivem/atdd-accelerator-template-mono-repo` by your concrete repository link, e.g. `jsmith/eshop`
    - BEFORE: `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)`
    - AFTER: `[![commit-stage-monolith-java](https://github.com/jsmith/eshop/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/jsmith/eshop/actions/workflows/commit-stage-monolith-java.yml)`
+
+
+4. Open up the README.md file, in the `System` section, verify that the status badge is `passing`.
 
 
 _Note for Step 2: Within this template, the System is a Monolith. That's because, for purposes of the ATDD Accelerator Program, it really doesn't matter what System Architecture you use, whether it's Monolith, or Frontend & Monolithic Backend, or Frontend & Microservice Backend, or whatever else. Please keep the Monolith for now, later, at the end of the setup, you can change it to anything else._
@@ -128,5 +134,13 @@ _Note: This step is critical that you get the path right! Otherwise, your System
 - OLD: `[![release-stage-typescript](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-typescript.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/release-stage-typescript.yml)`
 
 - UPDATED: `[![release-stage-typescript](https://github.com/jsmith/eshop/actions/workflows/release-stage-typescript.yml/badge.svg)](https://github.com/jsmith/eshop/actions/workflows/release-stage-typescript.yml)`
+
+10. Click on the status badge in `System Release`, which has `no status`, then click on `Run workflow`. Reload the page. Wait for several minutes. 
+
+11. Go back to the README.md file, in System Release, verify that status is `passing`.
+
+## Project Naming
+
+Now you can open up the project in IDE, and wherever you see reference to optivem/template, you need to replace it by your project naming.
 
 # Multi Repo Quickstart
