@@ -85,7 +85,21 @@ Test Language: $SystemTestLanguage
         Write-Info "Continuing with existing repository..."
     }
     
-    # Step 3: Clone repository (if not skipped)
+    # Step 3: Configure GitHub Actions permissions (immediately after creation)
+    Write-Step "Configuring GitHub Actions permissions..."
+    
+    try {
+        # Set workflow permissions to read and write
+        $permissionResult = gh api repos/$GitHubUsername/$RepositoryName --method PATCH --field actions_permissions_enabled=true --field actions_default_workflow_permissions=write --field actions_can_approve_pull_request_reviews=true 2>&1
+        Write-Success "GitHub Actions permissions configured (read and write)"
+    }
+    catch {
+        Write-Warning "Failed to set GitHub Actions permissions automatically: $($_.Exception.Message)"
+        Write-Info "You may need to set permissions manually at: https://github.com/$GitHubUsername/$RepositoryName/settings/actions"
+    }
+    
+    # Step 4: Clone repository (if not skipped)
+    # Step 4: Clone repository (if not skipped)
     if (-not $SkipClone) {
         Write-Step "Cloning repository..."
         
@@ -118,7 +132,7 @@ Test Language: $SystemTestLanguage
     Push-Location $RepositoryName
     Write-Info "Working in directory: $(Get-Location)"
     
-    # Step 4: Clean up System Language folders
+    # Step 5: Clean up System Language folders
     Write-Step "Cleaning up System Language folders (keeping: $SystemLanguage)..."
     
     $systemFolders = @("monolith-dotnet", "monolith-java", "monolith-typescript")
@@ -136,15 +150,19 @@ Test Language: $SystemTestLanguage
         }
     }
     
-    # Step 5: Clean up System Language workflow files
+    # Step 6: Clean up System Language workflow files
     Write-Step "Cleaning up System Language workflow files..."
     
     $workflowPath = ".github/workflows"
     if (Test-Path $workflowPath) {
-        $systemWorkflows = Get-ChildItem "$workflowPath/commit-stage-monolith-*.yml"
+        $systemWorkflows = Get-ChildItem "$workflowPath/commit-stage-monolith-*.yml" -ErrorAction SilentlyContinue
         $keepSystemWorkflow = "commit-stage-monolith-$($SystemLanguage.ToLower()).yml"
         
+        Write-Info "Looking for workflow files in: $workflowPath"
+        Write-Info "Keep workflow: $keepSystemWorkflow"
+        
         foreach ($workflow in $systemWorkflows) {
+            Write-Info "Found workflow: $($workflow.Name)"
             if ($workflow.Name -eq $keepSystemWorkflow) {
                 Write-Success "Keeping $($workflow.Name)"
             }
@@ -153,9 +171,13 @@ Test Language: $SystemTestLanguage
                 Write-Success "Removed $($workflow.Name)"
             }
         }
+        
+        # Verify what's left
+        $remainingWorkflows = Get-ChildItem "$workflowPath/commit-stage-monolith-*.yml" -ErrorAction SilentlyContinue
+        Write-Info "Remaining commit-stage workflows: $($remainingWorkflows.Name -join ', ')"
     }
     
-    # Step 6: Clean up System Test Language folders
+    # Step 7: Clean up System Test Language folders
     Write-Step "Cleaning up System Test Language folders (keeping: $SystemTestLanguage)..."
     
     $testFolders = @("system-test-dotnet", "system-test-java", "system-test-typescript")
@@ -173,7 +195,7 @@ Test Language: $SystemTestLanguage
         }
     }
     
-    # Step 7: Clean up System Test Language workflow files
+    # Step 8: Clean up System Test Language workflow files
     Write-Step "Cleaning up System Test Language workflow files..."
     
     if (Test-Path $workflowPath) {
@@ -187,7 +209,10 @@ Test Language: $SystemTestLanguage
             "release-stage-$($SystemTestLanguage.ToLower()).yml"
         )
         
+        Write-Info "Keep test workflows: $($keepTestWorkflows -join ', ')"
+        
         foreach ($workflow in $testWorkflows) {
+            Write-Info "Found test workflow: $($workflow.Name)"
             if ($workflow.Name -in $keepTestWorkflows) {
                 Write-Success "Keeping $($workflow.Name)"
             }
@@ -196,9 +221,16 @@ Test Language: $SystemTestLanguage
                 Write-Success "Removed $($workflow.Name)"
             }
         }
+        
+        # Verify what's left
+        $remainingTestWorkflows = @(
+            Get-ChildItem "$workflowPath/local-acceptance-stage-*.yml" -ErrorAction SilentlyContinue
+            Get-ChildItem "$workflowPath/release-stage-*.yml" -ErrorAction SilentlyContinue
+        )
+        Write-Info "Remaining test workflows: $($remainingTestWorkflows.Name -join ', ')"
     }
     
-    # Step 8: Update README.md badges and paths
+    # Step 9: Update README.md badges and paths
     Write-Step "Updating README.md with repository-specific paths..."
     
     if (Test-Path "README.md") {
@@ -231,7 +263,7 @@ Test Language: $SystemTestLanguage
         Write-Success "Updated README.md"
     }
     
-    # Step 9: Update docker-compose.yml in system test folder
+    # Step 10: Update docker-compose.yml in system test folder
     Write-Step "Updating docker-compose configuration..."
     
     $dockerComposePath = "$keepTestFolder/docker-compose.yml"
@@ -247,7 +279,7 @@ Test Language: $SystemTestLanguage
         Write-Success "Updated docker-compose.yml"
     }
     
-    # Step 10: Commit and push changes
+    # Step 11: Commit and push changes
     Write-Step "Committing and pushing changes..."
     
     try {
@@ -262,7 +294,7 @@ Test Language: $SystemTestLanguage
         Write-Info "You may need to commit and push manually"
     }
     
-    # Step 11: Final summary and next steps
+    # Step 12: Final summary and next steps
     Write-Host @"
 
 SETUP COMPLETE!
@@ -272,14 +304,15 @@ System Language: $SystemLanguage
 Test Language: $SystemTestLanguage
 
 NEXT STEPS:
-1. Wait for GitHub Actions to complete building
-2. Verify the system status badge shows 'passing'
-3. Set up GitHub Pages for documentation:
+1. ✅ GitHub Actions permissions: Automatically configured for Docker image publishing
+2. Wait for GitHub Actions to complete building (check: https://github.com/$GitHubUsername/$RepositoryName/actions)
+3. Verify the system status badge shows 'passing'
+4. Set up GitHub Pages for documentation:
    - Go to Settings > Pages
    - Source: Deploy from a branch
    - Branch: main, Folder: /docs
-4. Run the release workflow to verify system tests
-5. Update project naming throughout the codebase
+5. Run the release workflow to verify system tests
+6. Update project naming throughout the codebase
 
 Quick Links:
 - Repository: https://github.com/$GitHubUsername/$RepositoryName
