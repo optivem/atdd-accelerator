@@ -141,8 +141,33 @@ _Note: This step is critical that you get the path right! Otherwise, your System
 
 ## Documentation
 
-Status badge
-Website link
+1. On your GitHub repository, go to settings, for example I go here `https://github.com/valentinajemuovic/eshop/settings`
+
+2. Click on `Pages`.
+
+3. In `Build and deployment`, select the following:
+   - `Source`: `Deploy from a branch`
+   - `Branch`: `main`
+   - `Select folder`: `/docs`
+   - Click on `Save`
+
+4. Go back to main page, for example I go on `https://github.com/valentinajemuovic/eshop`
+
+5. In the top right corner, you'll see the `About` section, click on the gear symbol, then in `Website`, tick `Use your GitHub Pages website`. Copy-paste that website link (in my case, it's `https://valentinajemuovic.github.io/eshop/`). Click on `Save changes`
+
+6. In the README.md file, go to the section `Documentation`, adn replace the link:
+- OLD: `[Documentation](https://optivem.github.io/atdd-accelerator-template-mono-repo/)`
+- UPDATED: `[Documentation](https://valentinajemuovic.github.io/eshop/)`
+
+7. Find the status badge for `[pages-build-deployment]`. Replace that link to point to your Website, e.g.
+- OLD: `[![pages-build-deployment](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/pages/pages-build-deployment)`
+- NEW: `[![pages-build-deployment](https://github.com/valentinajemuovic/eshop/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/valentinajemuovic/eshop/actions/workflows/pages/pages-build-deployment)`
+
+8. Commit & push the changes.
+
+9. Check that the `pages-build-deployment` badge has status `passing`.
+
+10. In the top-right `About` section, click on the Website link (in my case `https://valentinajemuovic.github.io/eshop/`) and check that it opens.
 
 ## Project Naming
 
