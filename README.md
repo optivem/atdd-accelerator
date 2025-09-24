@@ -76,7 +76,7 @@ _Note for Step 3: We have only one commit Stage because we're using a Monolith, 
     - `system-test-java` --> DELETE
     - `system-test-typescript` --> KEEP
 
-3. Then open up the System Test folder (in my case `system-test-typescript`), and in the image section, keep only the one that corresponds to your System Language (in my case, Java), delete all the rest:
+3. Then open up the System Test folder (in my case `system-test-typescript`), and in the image section, uncomment out all the options, and keep only the one that corresponds to your System Language (in my case, Java), delete all the rest:
 
 ```
   monolith:
@@ -107,14 +107,6 @@ _Note for Step 3: We have only one commit Stage because we're using a Monolith, 
     - UPDATED: `image: ghcr.io/valentinajemuovic/eshop/monolith-java:latest`
 _Note: This step is critical that you get the path right! Otherwise, your System Tests & Release will fail!_
 
-5. Furthermore, for the chosen language, set the ports:
-
-
-5. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
-   - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
-   - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
-   - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
-
 6. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
    - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
@@ -139,7 +131,11 @@ _Note: This step is critical that you get the path right! Otherwise, your System
 
 - UPDATED: `[![release-stage-typescript](https://github.com/valentinajemuovic/eshop/actions/workflows/release-stage-typescript.yml/badge.svg)](https://github.com/valentinajemuovic/eshop/actions/workflows/release-stage-typescript.yml)`
 
-10. Click on the status badge in `System Release`, which has `no status`, then click on `Run workflow`. Reload the page. Wait for several minutes. 
+10. Commit and push the changes.
+
+11. Open your repository on GitHub online, for example I go on my repository https://github.com/valentinajemuovic/eshop
+
+10. In the section `System Release`, check that the status badge has `no status`. Click on the status badge, then click on `Run workflow`. Reload the page. Wait for several minutes. Occassionally keep re-loading again, until it finishes, so that you can see when it finishes. It should finish successfully.
 
 11. Go back to the README.md file, in System Release, verify that status is `passing`.
 
