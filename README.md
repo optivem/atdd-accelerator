@@ -36,12 +36,21 @@ gh auth login
 
 
 ### Quick Setup
+
+#### One-Line Setup (Recommended):
+```powershell
+# Download and run in one command
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/optivem/atdd-accelerator/main/scripts/setup-mono-repo.ps1" -OutFile "setup-mono-repo.ps1"; .\setup-mono-repo.ps1 -RepositoryName "your-project-name" -SystemLanguage "Java" -SystemTestLanguage "TypeScript"
+```
+
+#### Alternative - Two-Step Setup:
 1. Download the setup script: [setup-mono-repo.ps1](https://raw.githubusercontent.com/optivem/atdd-accelerator/main/scripts/setup-mono-repo.ps1)
 2. Run PowerShell and execute:
 ```powershell
 .\setup-mono-repo.ps1 -RepositoryName "your-project-name" -SystemLanguage "Java" -SystemTestLanguage "TypeScript"
 ```
-3. Wait for the script to complete (2-3 minutes)
+
+**Setup Time:** 2-3 minutes
 4. Follow the displayed next steps for GitHub Pages setup
 
 ### What the script automates:

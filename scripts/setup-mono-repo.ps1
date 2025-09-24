@@ -23,16 +23,16 @@ param(
 )
 
 # Color output functions
-function Write-Success { param($Message) Write-Host "✅ $Message" -ForegroundColor Green }
-function Write-Info { param($Message) Write-Host "ℹ️  $Message" -ForegroundColor Cyan }
-function Write-Warning { param($Message) Write-Host "⚠️  $Message" -ForegroundColor Yellow }
-function Write-Error { param($Message) Write-Host "❌ $Message" -ForegroundColor Red }
-function Write-Step { param($Message) Write-Host "🔄 $Message" -ForegroundColor Blue }
+function Write-Success { param($Message) Write-Host "[SUCCESS] $Message" -ForegroundColor Green }
+function Write-Info { param($Message) Write-Host "[INFO] $Message" -ForegroundColor Cyan }
+function Write-Warning { param($Message) Write-Host "[WARNING] $Message" -ForegroundColor Yellow }
+function Write-Error { param($Message) Write-Host "[ERROR] $Message" -ForegroundColor Red }
+function Write-Step { param($Message) Write-Host "[STEP] $Message" -ForegroundColor Blue }
 
 # Main execution
 try {
     Write-Host @"
-🚀 ATDD Accelerator Mono Repo Setup
+ATDD Accelerator Mono Repo Setup
 ====================================
 Repository Name: $RepositoryName
 System Language: $SystemLanguage
@@ -211,7 +211,7 @@ Test Language: $SystemTestLanguage
         $systemLanguages = @("dotnet", "java", "typescript")
         foreach ($lang in $systemLanguages) {
             if ($lang -ne $SystemLanguage.ToLower()) {
-                $badgePattern = "\[!\[commit-stage-monolith-$lang\].*?\)\)"
+                $badgePattern = "\\[!\\[commit-stage-monolith-$lang\\].*?\\)\\)"
                 $readmeContent = $readmeContent -replace $badgePattern, ""
             }
         }
@@ -219,13 +219,13 @@ Test Language: $SystemTestLanguage
         # Remove unused release badges
         foreach ($lang in $systemLanguages) {
             if ($lang -ne $SystemTestLanguage.ToLower()) {
-                $badgePattern = "\[!\[release-stage-$lang\].*?\)\)"
+                $badgePattern = "\\[!\\[release-stage-$lang\\].*?\\)\\)"
                 $readmeContent = $readmeContent -replace $badgePattern, ""
             }
         }
         
         # Clean up extra newlines
-        $readmeContent = $readmeContent -replace "`n`n`n+", "`n`n"
+        $readmeContent = $readmeContent -replace "(`r?`n){3,}", "`r`n`r`n"
         
         Set-Content "README.md" -Value $readmeContent -NoNewline
         Write-Success "Updated README.md"
@@ -265,13 +265,13 @@ Test Language: $SystemTestLanguage
     # Step 11: Final summary and next steps
     Write-Host @"
 
-🎉 SETUP COMPLETE!
+SETUP COMPLETE!
 ==================
 Repository: https://github.com/$GitHubUsername/$RepositoryName
 System Language: $SystemLanguage
 Test Language: $SystemTestLanguage
 
-📋 NEXT STEPS:
+NEXT STEPS:
 1. Wait for GitHub Actions to complete building
 2. Verify the system status badge shows 'passing'
 3. Set up GitHub Pages for documentation:
@@ -281,7 +281,7 @@ Test Language: $SystemTestLanguage
 4. Run the release workflow to verify system tests
 5. Update project naming throughout the codebase
 
-🔗 Quick Links:
+Quick Links:
 - Repository: https://github.com/$GitHubUsername/$RepositoryName
 - Actions: https://github.com/$GitHubUsername/$RepositoryName/actions
 - Settings: https://github.com/$GitHubUsername/$RepositoryName/settings
@@ -302,7 +302,7 @@ finally {
 # Usage examples
 Write-Host @"
 
-📖 USAGE EXAMPLES:
+USAGE EXAMPLES:
 # Basic usage
 .\setup-mono-repo.ps1 -RepositoryName "eshop" -SystemLanguage "Java" -SystemTestLanguage "TypeScript"
 
