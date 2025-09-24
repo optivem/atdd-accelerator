@@ -16,8 +16,8 @@ What is the Repository Strategy that you use in your Real Life Project:
 2. Go to https://github.com/optivem/atdd-accelerator-template-mono-repo
 3. Click on "Use this template" > "Create a new repository"
 4. Fill in these details:
-   a. Repository name: this should be your System Name, e.g. nova-shop
-   b. Visibility: Public
+   - Repository name: this should be your System Name, e.g. nova-shop
+   - Visibility: Public
 5. Click "Create Repository"
 6. Wait for several minutes
 7. Click on "Code" -> "Local" -> "Clone" -> "Open with GitHub Desktop"
