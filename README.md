@@ -52,5 +52,14 @@ _Note for Step 3: We have only one commit Stage because we're using a Monolith, 
    - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
+2. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
+   - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
+   - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
+   - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
+3. Keep the Release Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
+   - `.github\workflows\release-stage-dotnet.yml` --> DELETE
+   - `.github\workflows\release-stage-java.yml` --> DELETE
+   - `.github\workflows\release-stage-typescript.yml` --> KEEP
+
 
 # Multi Repo Quickstart
