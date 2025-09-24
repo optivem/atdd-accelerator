@@ -56,14 +56,15 @@ What is the Repository Strategy that you use in your Real Life Project:
 4. Open up the README.md file, in the `System` section, verify that the status badge is `passing`.
 
 
-_Note for Step 2: Within this template, the System is a Monolith. That's because, for purposes of the ATDD Accelerator Program, it really doesn't matter what System Architecture you use, whether it's Monolith, or Frontend & Monolithic Backend, or Frontend & Microservice Backend, or whatever else. Please keep the Monolith for now, later, at the end of the setup, you can change it to anything else._
 
-_Note for Step 3: We have only one commit Stage because we're using a Monolith, so that's why we have commit-stage-monolith-java.yml. However, later if you decide to switch to Frontend & Monolithic Backend, you might have commit-stage-frontend-react.yml, commit-stage-backend-java.yml; or if you switch to Frontend & Microservice Backend, then you might have commit-stage-frontend-react.yml, commit-stage-microservice1-java.yml, commit-stage-microservice2-dotnet.yml, commit-stage-microservice3-java.yml, etc._
-
-6. Go to your repository, e.g. `https://github.com/valentinajemuovic/eshop` and see the packages generated, example, keep only the one for your System Language (to delete the rest, click on the Package, go to `Package Settings`, then `Delete this package`):
+6. See the packages generated, example, keep only the one for your System Language (to delete the rest, click on the Package, go to `Package Settings`, then `Delete this package`):
 `eshop/monolith-dotnet` --> DELETE
 `eshop/monolith-java` --> KEEP
 `eshop/monolith-typescript` --> DELETE
+
+_Note for Step 2: Within this template, the System is a Monolith. That's because, for purposes of the ATDD Accelerator Program, it really doesn't matter what System Architecture you use, whether it's Monolith, or Frontend & Monolithic Backend, or Frontend & Microservice Backend, or whatever else. Please keep the Monolith for now, later, at the end of the setup, you can change it to anything else._
+
+_Note for Step 3: We have only one commit Stage because we're using a Monolith, so that's why we have commit-stage-monolith-java.yml. However, later if you decide to switch to Frontend & Monolithic Backend, you might have commit-stage-frontend-react.yml, commit-stage-backend-java.yml; or if you switch to Frontend & Microservice Backend, then you might have commit-stage-frontend-react.yml, commit-stage-microservice1-java.yml, commit-stage-microservice2-dotnet.yml, commit-stage-microservice3-java.yml, etc._
 
 
 ## Choose System Test Language
