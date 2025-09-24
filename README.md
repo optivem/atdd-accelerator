@@ -45,7 +45,7 @@ What is the Repository Strategy that you use in your Real Life Project:
    - `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)` --> KEEP
    - `[![commit-stage-monolith-typescript](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-typescript.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-typescript.yml)` --> DELETE
 
-5. Now update the repository link, i.e. we'll be replacing `optivem/atdd-accelerator-template-mono-repo` by your concrete repository link, e.g. `valentinajemuovic/eshop`
+5. In the `System` section, update the status badge by providing your repository path, i.e. we'll be replacing `optivem/atdd-accelerator-template-mono-repo` by your concrete repository link, e.g. `valentinajemuovic/eshop`
    - BEFORE: `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)`
    - AFTER: `[![commit-stage-monolith-java](https://github.com/valentinajemuovic/eshop/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/valentinajemuovic/eshop/actions/workflows/commit-stage-monolith-java.yml)`
 
