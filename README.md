@@ -10,11 +10,45 @@ What is the Repository Strategy that you use in your Real Life Project:
 
 # Mono Repo Quickstart
 
-## Repository Name
+## Option A: Automated Setup (Recommended)
+
+### Prerequisites
+- [PowerShell 7+](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell) (cross-platform)
+- [GitHub CLI](https://cli.github.com/) installed and authenticated (`gh auth login`)
+- [Git](https://git-scm.com/) installed
+
+### Quick Setup
+1. Download the setup script: [setup-mono-repo.ps1](https://raw.githubusercontent.com/optivem/atdd-accelerator/main/scripts/setup-mono-repo.ps1)
+2. Run PowerShell and execute:
+```powershell
+.\setup-mono-repo.ps1 -RepositoryName "your-project-name" -SystemLanguage "Java" -SystemTestLanguage "TypeScript"
+```
+3. Wait for the script to complete (2-3 minutes)
+4. Follow the displayed next steps for GitHub Pages setup
+
+### What the script automates:
+- ✅ Creates repository from template
+- ✅ Clones to your local machine  
+- ✅ Removes unused language folders
+- ✅ Cleans up workflow files
+- ✅ Updates README badges with your repository
+- ✅ Updates docker-compose configuration
+- ✅ Commits and pushes all changes
+
+### Script Parameters:
+- `-RepositoryName` - Your repository name (e.g., "eshop")
+- `-SystemLanguage` - Java | DotNet | TypeScript
+- `-SystemTestLanguage` - Java | DotNet | TypeScript  
+- `-GitHubUsername` - (optional, auto-detected)
+- `-SkipClone` - Skip cloning if repo exists locally
+
+## Option B: Manual Setup
+
+### Repository Name
 
 Choose your Repository Name
 
-## Create Repository
+### Create Repository
 
 1. Log into GitHub
 2. Go to https://github.com/optivem/atdd-accelerator-template-mono-repo
