@@ -10,13 +10,17 @@ What is the Repository Strategy that you use in your Real Life Project:
 
 # Mono Repo Quickstart
 
+## Repository Name
+
+Choose your Repository Name
+
 ## Create Repository
 
 1. Log into GitHub
 2. Go to https://github.com/optivem/atdd-accelerator-template-mono-repo
 3. Click on `Use this template` > `Create a new repository`
 4. Fill in these details:
-   - Repository name: this should be your System Name, e.g. nova-shop
+   - Repository name: this should be your Repository Name, e.g. eshop
    - Visibility: Public
 5. Click `Create Repository`
 6. Wait for several minutes
