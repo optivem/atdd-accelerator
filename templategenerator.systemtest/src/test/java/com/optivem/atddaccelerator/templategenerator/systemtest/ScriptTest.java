@@ -55,7 +55,6 @@ class SetupScriptTest {
         githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
     }
 
-    @Disabled
     @Test
     void githubRepositoryTypeScript() {
         templateGeneratorClient.generateNewRepository(repoName, Language.TYPESCRIPT);

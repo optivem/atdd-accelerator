@@ -43,7 +43,7 @@ try {
     # Remove unused language folders based on SystemLanguage
     Write-Output "Removing unused language folders..."
     
-    if ($SystemLanguage -eq "dotnet") {
+    if ($SystemLanguage -ieq "dotnet") {
         # Keep monolith-dotnet, remove others
         if (Test-Path "monolith-java") {
             Remove-Item -Recurse -Force "monolith-java"
@@ -54,6 +54,17 @@ try {
             git rm -r "monolith-typescript"
         }
         git commit -m "Remove unused language folders: monolith-java, monolith-typescript"
+    } elseif ($SystemLanguage -ieq "typescript") {
+        # Keep monolith-typescript, remove others
+        if (Test-Path "monolith-java") {
+            Remove-Item -Recurse -Force "monolith-java"
+            git rm -r "monolith-java"
+        }
+        if (Test-Path "monolith-dotnet") {
+            Remove-Item -Recurse -Force "monolith-dotnet"
+            git rm -r "monolith-dotnet"
+        }
+        git commit -m "Remove unused language folders: monolith-java, monolith-dotnet"
     } else {
         # Default to Java - remove monolith-dotnet and monolith-typescript
         if (Test-Path "monolith-dotnet") {
