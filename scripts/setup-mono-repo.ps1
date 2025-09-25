@@ -9,6 +9,22 @@ param(
     [string]$SystemLanguage
 )
 
+function Test-SystemLanguage {
+    param([string]$SystemLanguage)
+    
+    $validLanguages = @("java", "dotnet", "typescript")
+    
+    if ([string]::IsNullOrWhiteSpace($SystemLanguage)) {
+        throw "SystemLanguage parameter is required. Valid options: $($validLanguages -join ', ')"
+    }
+    
+    if ($SystemLanguage.ToLower() -notin $validLanguages) {
+        throw "Invalid SystemLanguage: '$SystemLanguage'. Valid options: $($validLanguages -join ', ')"
+    }
+    
+    Write-Output "SystemLanguage '$SystemLanguage' is valid"
+}
+
 function Get-GitHubUsername {
     param([string]$ProvidedUsername)
     
@@ -149,6 +165,8 @@ try {
     Write-Output "Repository Name: $RepositoryName"
     Write-Output "System Language: $SystemLanguage"
     
+    Test-SystemLanguage -SystemLanguage $SystemLanguage
+
     $GitHubUsername = Get-GitHubUsername -ProvidedUsername $GitHubUsername
     Write-Output "GitHub Username: $GitHubUsername"
     

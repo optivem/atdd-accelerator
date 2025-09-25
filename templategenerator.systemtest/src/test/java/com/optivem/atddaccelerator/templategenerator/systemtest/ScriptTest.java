@@ -30,13 +30,15 @@ class SetupScriptTest {
 
     @AfterEach
     void teardown() {
-        if (githubClient != null) {
+        var created = templateGeneratorClient.isCreated(repoName);
+
+        if(created && githubClient != null) {
             githubClient.deleteRepository();
         }
     }
 
     @Test
-    void githubRepositoryJava() {
+    void shouldCreateJavaRepository() {
         templateGeneratorClient.generateNewRepository(repoName, Language.JAVA);
 
         githubClient.verifyRepositoryExists();
@@ -51,7 +53,7 @@ class SetupScriptTest {
     }
 
     @Test
-    void githubRepositoryDotNet() {
+    void shouldCreateDotNetRepository() {
         templateGeneratorClient.generateNewRepository(repoName, Language.DOTNET);
 
         githubClient.verifyRepositoryExists();
@@ -62,14 +64,19 @@ class SetupScriptTest {
     }
     
     @Test
-    void githubRepositoryTypeScript() {
+    void shouldCreateTypeScriptRepository() {
         templateGeneratorClient.generateNewRepository(repoName, Language.TYPESCRIPT);
 
         githubClient.verifyRepositoryExists();
-        
+
         githubClient.verifyPathExists(Folders.MONOLITH_TYPESCRIPT);
         githubClient.verifyPathDoesNotExist(Folders.MONOLITH_JAVA);
         githubClient.verifyPathDoesNotExist(Folders.MONOLITH_DOTNET);
+    }
+
+    @Test
+    void shouldReturnErrorForInvalidLanguage() {
+        templateGeneratorClient.generateNewRepositoryExpectError(repoName, "invalidLang");
     }
 
 
