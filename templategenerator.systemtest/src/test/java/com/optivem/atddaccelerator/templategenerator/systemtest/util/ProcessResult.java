@@ -11,4 +11,8 @@ public class ProcessResult {
     public boolean isSuccess() {
         return exitCode == 0;
     }
+
+    public boolean isError() {
+        return !isSuccess();
+    }
 }

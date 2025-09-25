@@ -40,9 +40,11 @@ class SetupScriptTest {
         templateGeneratorClient.generateNewRepository(repoName, Language.JAVA);
         githubClient.verifyRepositoryExists();
         sleep();
-        githubClient.verifyFolderExists(Folders.MONOLITH_JAVA);
-        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_DOTNET);
-        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
+        githubClient.verifyPathExists(Folders.MONOLITH_JAVA);
+        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_DOTNET);
+        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
+
+        githubClient.verifyPathExists(".github/workflows/commit-stage-monolith-java.yml");
     }
 
     @Test
@@ -50,19 +52,19 @@ class SetupScriptTest {
         templateGeneratorClient.generateNewRepository(repoName, Language.DOTNET);
         githubClient.verifyRepositoryExists();
         sleep();
-        githubClient.verifyFolderExists(Folders.MONOLITH_DOTNET);
-        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_JAVA);
-        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
+        githubClient.verifyPathExists(Folders.MONOLITH_DOTNET);
+        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_JAVA);
+        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
     }
-
+    
     @Test
     void githubRepositoryTypeScript() {
         templateGeneratorClient.generateNewRepository(repoName, Language.TYPESCRIPT);
         githubClient.verifyRepositoryExists();
         sleep();
-        githubClient.verifyFolderExists(Folders.MONOLITH_TYPESCRIPT);
-        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_JAVA);
-        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_DOTNET);
+        githubClient.verifyPathExists(Folders.MONOLITH_TYPESCRIPT);
+        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_JAVA);
+        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_DOTNET);
     }
 
     private static void sleep() {

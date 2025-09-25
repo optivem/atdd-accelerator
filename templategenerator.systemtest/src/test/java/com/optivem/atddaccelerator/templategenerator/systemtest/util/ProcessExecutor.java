@@ -50,4 +50,10 @@ public class ProcessExecutor {
         assertThat(result.isSuccess()).withFailMessage(() -> "Process failed with exit code " + result.getExitCode() + "\nErrors: " + result.getErrors()).isTrue();
         return result;
     }
+
+    public static ProcessResult executeProcessExpectError(String... command) {
+        var result = executeProcess(command);
+        assertThat(result.isError()).withFailMessage(() -> "Process failed with exit code " + result.getExitCode() + "\nErrors: " + result.getErrors()).isTrue();
+        return result;
+    }
 }

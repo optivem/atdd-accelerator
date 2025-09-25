@@ -1,7 +1,6 @@
 package com.optivem.atddaccelerator.templategenerator.systemtest.clients;
 
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.executeProcess;
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.executeProcessExpectSuccess;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,6 +10,11 @@ public class GithubClient {
 
     public GithubClient(String owner, String repoName) {
         this.repositoryPath = owner + "/" + repoName;
+    }
+
+    public static GithubClient createRandom(String owner) {
+        var repoName = "repo-" + System.currentTimeMillis();
+        return new GithubClient(owner, repoName);
     }
 
     public String getRepositoryPath() {
@@ -25,18 +29,11 @@ public class GithubClient {
         executeProcessExpectSuccess("gh", "repo", "delete", repositoryPath, "--yes");
     }
 
-    public void verifyFolderExists(String folderName) {
-        var result = executeProcessExpectSuccess( "gh", "api", "/repos/" + repositoryPath + "/contents");
-        assertThat(result.getOutput()).contains("\"name\":\"" + folderName + "\"");
+    public void verifyPathExists(String path) {
+        executeProcessExpectSuccess("gh", "api", "/repos/" + repositoryPath + "/contents/" + path);
     }
 
-    public void verifyFolderDoesNotExist(String folderName) {
-        var result = executeProcessExpectSuccess( "gh", "api", "/repos/" + repositoryPath + "/contents");
-        assertThat(result.getOutput()).doesNotContain("\"name\":\"" + folderName + "\"");
-    }
-
-    public static GithubClient createRandom(String owner) {
-        var repoName = "repo-" + System.currentTimeMillis();
-        return new GithubClient(owner, repoName);
+    public void verifyPathDoesNotExist(String path) {
+        executeProcessExpectError("gh", "api", "/repos/" + repositoryPath + "/contents/" + path);
     }
 }
