@@ -27,11 +27,35 @@ try {
     
     # Create repository from template
     Write-Output "Creating repository from template..."
-    gh repo create $RepositoryName --template "optivem/atdd-accelerator-template-mono-repo" --public
+    gh repo create $RepositoryName --template "optivem/atdd-accelerator-template-mono-repo" --public --clone
     
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to create repository"
     }
+    
+    # Change to the repository directory
+    Set-Location $RepositoryName
+    
+    # Remove unused language folders
+    Write-Output "Removing unused language folders..."
+    
+    # Remove monolith-dotnet folder
+    if (Test-Path "monolith-dotnet") {
+        Write-Output "Removing monolith-dotnet folder..."
+        Remove-Item -Recurse -Force "monolith-dotnet"
+        git rm -r "monolith-dotnet"
+    }
+    
+    # Remove monolith-typescript folder
+    if (Test-Path "monolith-typescript") {
+        Write-Output "Removing monolith-typescript folder..."
+        Remove-Item -Recurse -Force "monolith-typescript"
+        git rm -r "monolith-typescript"
+    }
+    
+    # Commit all changes at once
+    git commit -m "Remove unused language folders: monolith-dotnet, monolith-typescript"
+    git push origin main
     
     Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"
     Write-Output "Setup completed successfully"
