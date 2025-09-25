@@ -14,33 +14,42 @@ class SetupScriptTest {
     @Disabled
     @Test
     void setupScript_shouldReturnExitCode0() throws IOException, InterruptedException {
-        // Run setup-mono-repo.ps1
-        Process process = new ProcessBuilder("pwsh", "scripts/setup-mono-repo.ps1").start();
-        
-        // Read stdout
-        BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        var processBuilder = new ProcessBuilder("pwsh", "scripts/setup-mono-repo999.ps1");
+        execute(processBuilder);
+    }
+
+    private static void execute(ProcessBuilder processBuilder) {
+        int exitCode;
         StringBuilder output = new StringBuilder();
-        String line;
-        while ((line = stdout.readLine()) != null) {
-            output.append(line).append("\n");
-        }
-        
-        // Read stderr
-        BufferedReader stderr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         StringBuilder errors = new StringBuilder();
-        while ((line = stderr.readLine()) != null) {
-            errors.append(line).append("\n");
+
+        try {
+            Process process = processBuilder.start();
+
+            // Read stdout
+            BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = stdout.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+
+            // Read stderr
+            BufferedReader stderr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            while ((line = stderr.readLine()) != null) {
+                errors.append(line).append("\n");
+            }
+
+            exitCode = process.waitFor();
+
+        }catch(Exception e) {
+            throw new RuntimeException("Failed to execute script", e);
         }
-        
-        // Wait for process to complete
-        int exitCode = process.waitFor();
-        
-        // Print debug info
-        System.out.println("Exit Code: " + exitCode);
-        System.out.println("Stdout: " + output.toString());
-        System.out.println("Stderr: " + errors.toString());
-        
-        // Assert that the response is 0
-        assertThat(exitCode).isEqualTo(0);
+
+        assertThat(exitCode)
+                .withFailMessage("Exit code is not 0.\nErrors: %s\nOutput: %s", errors.toString(), output.toString())
+                .isZero();
+
     }
 }
