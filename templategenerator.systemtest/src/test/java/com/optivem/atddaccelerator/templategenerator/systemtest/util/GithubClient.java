@@ -19,7 +19,7 @@ public class GithubClient {
     }
 
     public void deleteRepository() {
-        executeProcess("gh", "auth", "refresh", "-h", "github.com", "-s", "delete_repo");
+        // executeProcess("gh", "auth", "refresh", "-h", "github.com", "-s", "delete_repo");
         executeProcess("gh", "repo", "delete", repositoryPath, "--confirm");
     }
 
