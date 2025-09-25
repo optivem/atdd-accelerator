@@ -39,7 +39,6 @@ class SetupScriptTest {
     void githubRepositoryJava() {
         templateGeneratorClient.generateNewRepository(repoName, Language.JAVA);
         githubClient.verifyRepositoryExists();
-        sleep();
         githubClient.verifyPathExists(Folders.MONOLITH_JAVA);
         githubClient.verifyPathDoesNotExist(Folders.MONOLITH_DOTNET);
         githubClient.verifyPathDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
@@ -51,7 +50,6 @@ class SetupScriptTest {
     void githubRepositoryDotNet() {
         templateGeneratorClient.generateNewRepository(repoName, Language.DOTNET);
         githubClient.verifyRepositoryExists();
-        sleep();
         githubClient.verifyPathExists(Folders.MONOLITH_DOTNET);
         githubClient.verifyPathDoesNotExist(Folders.MONOLITH_JAVA);
         githubClient.verifyPathDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
@@ -61,19 +59,12 @@ class SetupScriptTest {
     void githubRepositoryTypeScript() {
         templateGeneratorClient.generateNewRepository(repoName, Language.TYPESCRIPT);
         githubClient.verifyRepositoryExists();
-        sleep();
         githubClient.verifyPathExists(Folders.MONOLITH_TYPESCRIPT);
         githubClient.verifyPathDoesNotExist(Folders.MONOLITH_JAVA);
         githubClient.verifyPathDoesNotExist(Folders.MONOLITH_DOTNET);
     }
 
-    private static void sleep() {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
     private static String newName() {
         var repoName = "repo-" + System.currentTimeMillis();

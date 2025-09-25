@@ -56,4 +56,12 @@ public class ProcessExecutor {
         assertThat(result.isError()).withFailMessage(() -> "Process failed with exit code " + result.getExitCode() + "\nErrors: " + result.getErrors()).isTrue();
         return result;
     }
+
+    public static void waitTime(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
