@@ -1,6 +1,8 @@
 package com.optivem.atddaccelerator.templategenerator.systemtest.clients;
 
 import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.executeProcess;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.executeProcessExpectSuccess;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GithubClient {
@@ -16,18 +18,19 @@ public class GithubClient {
     }
 
     public void verifyRepositoryExists() {
-        var result = executeProcess("gh", "repo", "view", repositoryPath);
-        assertTrue(result.isSuccess());
+        executeProcessExpectSuccess("gh", "repo", "view", repositoryPath);
     }
 
     public void deleteRepository() {
-        var result = executeProcess("gh", "repo", "delete", repositoryPath, "--yes");
-        assertTrue(result.isSuccess());
+        executeProcessExpectSuccess("gh", "repo", "delete", repositoryPath, "--yes");
     }
 
-    public void verifyFolderExists(String folderPath) {
-        var result = executeProcess( "gh", "api", "/repos/" + repositoryPath + "/contents");
-        assertTrue(result.isSuccess());
+    public void verifyFolderExists(String folderName) {
+        var result = executeProcessExpectSuccess( "gh", "api", "/repos/" + repositoryPath + "/contents");
+
+        assertThat(result.getOutput()).contains("\"name\":\"README.md\"");
+        assertThat(result.getOutput()).contains("\"name\":\"monolith-java\"");
+        assertThat(result.getOutput()).contains("\"name\":\"" + folderName + "\"");
     }
 
     public static GithubClient createRandom(String owner) {

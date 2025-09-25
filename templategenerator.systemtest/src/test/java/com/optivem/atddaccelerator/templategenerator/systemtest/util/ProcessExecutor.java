@@ -44,4 +44,10 @@ public class ProcessExecutor {
 
         return new ProcessResult(exitCode, outputStr, errorsStr);
     }
+
+    public static ProcessResult executeProcessExpectSuccess(String... command) {
+        var result = executeProcess(command);
+        assertThat(result.isSuccess()).withFailMessage(() -> "Process failed with exit code " + result.getExitCode() + "\nErrors: " + result.getErrors()).isTrue();
+        return result;
+    }
 }

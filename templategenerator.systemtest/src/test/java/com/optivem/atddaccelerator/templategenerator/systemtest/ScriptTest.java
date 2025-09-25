@@ -36,7 +36,8 @@ class SetupScriptTest {
     void githubRepository_fullTest() throws IOException, InterruptedException {
         templateGeneratorClient.generateNewRepository(repoName);
         githubClient.verifyRepositoryExists();
-
+        Thread.sleep(5000);
+        githubClient.verifyFolderExists("monolith-java");
     }
 
     public static String newName() {
