@@ -27,7 +27,7 @@ try {
     
     # Create repository from template
     Write-Output "Creating repository from template..."
-    gh repo create $RepositoryName --template "optivem/atdd-accelerator-template-mono-repo" --public --yes
+    gh repo create $RepositoryName --template "optivem/atdd-accelerator-template-mono-repo" --public
     
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to create repository"
