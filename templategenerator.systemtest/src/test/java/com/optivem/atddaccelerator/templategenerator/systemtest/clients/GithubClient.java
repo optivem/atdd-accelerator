@@ -36,4 +36,21 @@ public class GithubClient {
     public void verifyPathDoesNotExist(String path) {
         executeProcessExpectError("gh", "api", "/repos/" + repositoryPath + "/contents/" + path);
     }
+
+    public void verifyReadmeContainsBadge(String badge) {
+        var readmeContent = getReadmeContent();
+        assertTrue(readmeContent.contains(badge), "README.md does not contain badge: " + badge);
+    }
+
+    public void verifyReadmeDoesNotContainBadge(String badge) {
+        var readmeContent = getReadmeContent();
+        assertThat(readmeContent).doesNotContain(badge);
+    }
+
+    private String getReadmeContent() {
+        var result = executeProcessExpectSuccess("gh", "api", "/repos/" + repositoryPath + "/readme", "--jq", ".content");
+        var content = result.getOutput().replaceAll("\\s+", "");
+        var decodedBytes = java.util.Base64.getDecoder().decode(content);
+        return new String(decodedBytes);
+    }
 }

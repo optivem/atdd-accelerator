@@ -59,8 +59,71 @@ function New-RepositoryFromTemplate {
     }
 }
 
+function Update-ReadmeBadges {
+    param(
+        [string]$SystemLanguage,
+        [string]$RepositoryOwner,
+        [string]$RepositoryName
+    )
+    
+    Write-Output "Updating README badges..."
+    
+    if (-not (Test-Path "README.md")) {
+        Write-Warning "README.md not found, skipping badge update"
+        return $false
+    }
+    
+    $readmeContent = Get-Content "README.md" -Raw
+    
+    # Define badge patterns to remove based on language
+    $badgesToRemove = @()
+    $badgesToUpdate = @()
+    
+    switch ($SystemLanguage.ToLower()) {
+        "java" {
+            $badgesToRemove = @("commit-stage-monolith-dotnet", "commit-stage-monolith-typescript")
+            $badgesToUpdate = @("commit-stage-monolith-java")
+        }
+        "dotnet" {
+            $badgesToRemove = @("commit-stage-monolith-java", "commit-stage-monolith-typescript") 
+            $badgesToUpdate = @("commit-stage-monolith-dotnet")
+        }
+        "typescript" {
+            $badgesToRemove = @("commit-stage-monolith-java", "commit-stage-monolith-dotnet")
+            $badgesToUpdate = @("commit-stage-monolith-typescript")
+        }
+    }
+    
+    $originalContent = $readmeContent
+    
+    # Remove unwanted badges (entire lines)
+    foreach ($badge in $badgesToRemove) {
+        $pattern = ".*\[!\[$badge\].*\n"
+        $readmeContent = $readmeContent -replace $pattern, ""
+    }
+    
+    # Update repository paths in remaining badges
+    foreach ($badge in $badgesToUpdate) {
+        $readmeContent = $readmeContent -replace "optivem/atdd-accelerator-template-mono-repo", "$RepositoryOwner/$RepositoryName"
+    }
+    
+    # Check if content changed
+    if ($readmeContent -ne $originalContent) {
+        Set-Content "README.md" -Value $readmeContent -NoNewline
+        git add "README.md"
+        Write-Output "README badges updated"
+        return $true
+    }
+    
+    return $false
+}
+
 function Remove-UnusedLanguageFolders {
-    param([string]$SystemLanguage)
+    param(
+        [string]$SystemLanguage,
+        [string]$RepositoryOwner,
+        [string]$RepositoryName
+    )
     
     Write-Output "Removing unused language folders..."
     
@@ -87,7 +150,7 @@ function Remove-UnusedLanguageFolders {
         "typescript" = ".github/workflows/commit-stage-monolith-typescript.yml"
     }
     
-    # Remove the defaulting - just get the values directly
+    # Get the values directly
     $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
     $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
     
@@ -117,10 +180,22 @@ function Remove-UnusedLanguageFolders {
         }
     }
     
+    # Update README badges
+    $readmeUpdated = Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
+    
     # Commit and return whether changes were made
-    if ($removedItems.Count -gt 0) {
-        $removedList = $removedItems -join ", "
-        git commit -m "Remove unused language folders and workflows: $removedList"
+    $hasChanges = ($removedItems.Count -gt 0) -or $readmeUpdated
+    if ($hasChanges) {
+        if ($removedItems.Count -gt 0 -and $readmeUpdated) {
+            $removedList = $removedItems -join ", "
+            $commitMessage = "Remove unused language folders/workflows and update README: $removedList"
+        } elseif ($removedItems.Count -gt 0) {
+            $removedList = $removedItems -join ", "
+            $commitMessage = "Remove unused language folders and workflows: $removedList"
+        } else {
+            $commitMessage = "Update README badges"
+        }
+        git commit -m $commitMessage
         return $true
     }
     
@@ -175,8 +250,8 @@ try {
     # Change to the repository directory
     Set-Location $RepositoryName
     
-    Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage
-    Push-RepositoryChanges
+    $hasChanges = Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
+    Push-RepositoryChanges -HasChanges $hasChanges
     
     Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"
     Write-Output "Setup completed successfully"

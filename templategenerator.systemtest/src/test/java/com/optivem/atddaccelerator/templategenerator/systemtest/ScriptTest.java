@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SetupScriptTest {
+class ScriptTest {
 
 
     private static final String REPO_OWNER = "valentinajemuovic";
@@ -47,7 +47,27 @@ class SetupScriptTest {
         githubClient.verifyPathExists(RepositoryPaths.COMMIT_STAGE_JAVA);
         githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
         githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
+
+        githubClient.verifyReadmeContainsBadge("commit-stage-monolith-java");
+        githubClient.verifyReadmeDoesNotContainBadge("commit-stage-monolith-dotnet");
+        githubClient.verifyReadmeDoesNotContainBadge("commit-stage-monolith-typescript");
     }
+
+
+    /*
+     * 
+4. Open up the README.md file, see the section `System`. Keep only the status badge for our chosen language (in my example, Java) and delete all the REST
+
+   - `[![commit-stage-monolith-dotnet](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-dotnet.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-dotnet.yml)` --> DELETE
+   - `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)` --> KEEP
+   - `[![commit-stage-monolith-typescript](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-typescript.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-typescript.yml)` --> DELETE
+
+5. In the `System` section, update the status badge by providing your repository path, i.e. we'll be replacing `optivem/atdd-accelerator-template-mono-repo` by your concrete repository link, e.g. `valentinajemuovic/eshop`
+   - BEFORE: `[![commit-stage-monolith-java](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/optivem/atdd-accelerator-template-mono-repo/actions/workflows/commit-stage-monolith-java.yml)`
+   - AFTER: `[![commit-stage-monolith-java](https://github.com/valentinajemuovic/eshop/actions/workflows/commit-stage-monolith-java.yml/badge.svg)](https://github.com/valentinajemuovic/eshop/actions/workflows/commit-stage-monolith-java.yml)`
+     * 
+     */
+
 
     @Test
     void shouldCreateDotNetRepository() {
@@ -78,7 +98,7 @@ class SetupScriptTest {
         githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
         githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
     }
-    
+
     @Test
     void shouldReturnErrorForInvalidLanguage() {
         templateGeneratorClient.generateNewRepositoryExpectError(repoName, "invalidLang");
