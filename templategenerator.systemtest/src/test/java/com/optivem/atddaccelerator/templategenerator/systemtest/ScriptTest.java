@@ -2,6 +2,7 @@ package com.optivem.atddaccelerator.templategenerator.systemtest;
 
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.TemplateGeneratorClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,10 +35,12 @@ class SetupScriptTest {
 
     @Test
     void githubRepository_fullTest() throws IOException, InterruptedException {
-        templateGeneratorClient.generateNewRepository(repoName);
+        templateGeneratorClient.generateNewRepository(repoName, Language.JAVA);
         githubClient.verifyRepositoryExists();
         Thread.sleep(5000);
         githubClient.verifyFolderExists("monolith-java");
+        githubClient.verifyFolderDoesNotExist("monolith-dotnet");
+        githubClient.verifyFolderDoesNotExist("monolith-typescript");
     }
 
     public static String newName() {

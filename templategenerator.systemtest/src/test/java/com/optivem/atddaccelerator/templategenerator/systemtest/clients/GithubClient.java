@@ -27,10 +27,12 @@ public class GithubClient {
 
     public void verifyFolderExists(String folderName) {
         var result = executeProcessExpectSuccess( "gh", "api", "/repos/" + repositoryPath + "/contents");
-
-        assertThat(result.getOutput()).contains("\"name\":\"README.md\"");
-        assertThat(result.getOutput()).contains("\"name\":\"monolith-java\"");
         assertThat(result.getOutput()).contains("\"name\":\"" + folderName + "\"");
+    }
+
+    public void verifyFolderDoesNotExist(String folderName) {
+        var result = executeProcessExpectSuccess( "gh", "api", "/repos/" + repositoryPath + "/contents");
+        assertThat(result.getOutput()).doesNotContain("\"name\":\"" + folderName + "\"");
     }
 
     public static GithubClient createRandom(String owner) {
