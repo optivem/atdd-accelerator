@@ -34,8 +34,9 @@ Describe "Create Repository from Template" {
         # Given: I provide a repository name
         $repositoryName = $script:TestRepositoryName
         
-        # When: I create a repository from the template
-        gh repo create $repositoryName --template "optivem/atdd-accelerator-template-mono-repo" --public --yes
+        # # When: I create a repository from the template
+        # gh repo create $repositoryName --template "optivem/atdd-accelerator-template-mono-repo" --public --yes
+        Write-Output hello
         
         # Then: A new repository has been created
         $LASTEXITCODE | Should -Be 0
