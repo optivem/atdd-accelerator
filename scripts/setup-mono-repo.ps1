@@ -71,13 +71,9 @@ function Remove-UnusedLanguageFolders {
         "typescript" = ".github/workflows/commit-stage-monolith-typescript.yml"
     }
     
-    # Default to Java if SystemLanguage not specified or unknown
+    # Remove the defaulting - just get the values directly
     $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
     $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
-    if (-not $keepFolder) {
-        $keepFolder = "monolith-java"
-        $keepWorkflow = ".github/workflows/commit-stage-monolith-java.yml"
-    }
     
     Write-Output "Keeping folder: $keepFolder"
     Write-Output "Keeping workflow: $keepWorkflow"
