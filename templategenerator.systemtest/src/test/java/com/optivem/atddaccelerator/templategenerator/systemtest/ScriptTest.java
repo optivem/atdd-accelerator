@@ -2,14 +2,11 @@ package com.optivem.atddaccelerator.templategenerator.systemtest;
 
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.TemplateGeneratorClient;
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.Folders;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.RepositoryPaths;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,13 +40,13 @@ class SetupScriptTest {
 
         githubClient.verifyRepositoryExists();
 
-        githubClient.verifyPathExists(Folders.MONOLITH_JAVA);
-        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_DOTNET);
-        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
+        githubClient.verifyPathExists(RepositoryPaths.MONOLITH_JAVA);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
 
-        githubClient.verifyPathExists(".github/workflows/commit-stage-monolith-java.yml");
-        githubClient.verifyPathDoesNotExist(".github/workflows/commit-stage-monolith-dotnet.yml");
-        githubClient.verifyPathDoesNotExist(".github/workflows/commit-stage-monolith-typescript.yml");
+        githubClient.verifyPathExists(RepositoryPaths.COMMIT_STAGE_JAVA);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
     }
 
     @Test
@@ -58,9 +55,13 @@ class SetupScriptTest {
 
         githubClient.verifyRepositoryExists();
 
-        githubClient.verifyPathExists(Folders.MONOLITH_DOTNET);
-        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_JAVA);
-        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
+        githubClient.verifyPathExists(RepositoryPaths.MONOLITH_DOTNET);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
+
+        githubClient.verifyPathExists(RepositoryPaths.COMMIT_STAGE_DOTNET);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
     }
     
     @Test
@@ -69,11 +70,15 @@ class SetupScriptTest {
 
         githubClient.verifyRepositoryExists();
 
-        githubClient.verifyPathExists(Folders.MONOLITH_TYPESCRIPT);
-        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_JAVA);
-        githubClient.verifyPathDoesNotExist(Folders.MONOLITH_DOTNET);
-    }
+        githubClient.verifyPathExists(RepositoryPaths.MONOLITH_TYPESCRIPT);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
 
+        githubClient.verifyPathExists(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
+    }
+    
     @Test
     void shouldReturnErrorForInvalidLanguage() {
         templateGeneratorClient.generateNewRepositoryExpectError(repoName, "invalidLang");
