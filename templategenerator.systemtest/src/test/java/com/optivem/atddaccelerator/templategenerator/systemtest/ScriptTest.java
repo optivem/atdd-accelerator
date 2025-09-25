@@ -55,6 +55,8 @@ class ScriptTest {
         githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
         githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
+        githubClient.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+
     }
 
     @Test
@@ -76,6 +78,8 @@ class ScriptTest {
         githubClient.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET, badgeSvg, badgeWorkflow);
         githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
         githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+
+        githubClient.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
     }
     
     @Test
@@ -97,6 +101,8 @@ class ScriptTest {
         githubClient.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT, badgeSvg, badgeWorkflow);
         githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
         githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+
+        githubClient.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
     }
 
     @Test
