@@ -39,7 +39,7 @@ public class GithubClient {
 
     public void verifyReadmeContainsBadge(String badge) {
         var readmeContent = getReadmeContent();
-        assertTrue(readmeContent.contains(badge), "README.md does not contain badge: " + badge);
+        assertTrue(readmeContent.contains(badge));
     }
 
     public void verifyReadmeDoesNotContainBadge(String badge) {
@@ -52,5 +52,12 @@ public class GithubClient {
         var content = result.getOutput().replaceAll("\\s+", "");
         var decodedBytes = java.util.Base64.getDecoder().decode(content);
         return new String(decodedBytes);
+    }
+
+    public void verifyReadmeContainsBadge(String badge, String badgeSvg, String badgeWorkflow) {
+        var readmeContent = getReadmeContent();
+        assertTrue(readmeContent.contains(badge));
+        assertTrue(readmeContent.contains(badgeSvg));
+        assertTrue(readmeContent.contains(badgeWorkflow));
     }
 }
