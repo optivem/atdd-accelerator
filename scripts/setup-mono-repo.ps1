@@ -3,7 +3,58 @@
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true, HelpMessage="Repository name (e.g., eshop)")]
+      # Clean up System Language folders
+    Write-Step "Cleanin    # Clean up System Test Language folders
+    Write-Step "Cleaning up System Test Language folders (keeping: $SystemT    # Commit and push changes
+    Write-Step "Committing and pushing changes..."
+    
+    try {
+        git add -A
+        $commitMessage = "chore: automated setup for $SystemLanguage system with $SystemTestLanguage tests"
+        git commit -m $commitMessage
+        git push
+        Write-Success "Changes committed and pushed"
+    }
+    catch {
+        Write-Warning "Git operations failed: $($_.Exception.Message)"
+        Write-Info "You may need to commit and push manually"
+    }
+    
+    # Final summary and next steps
+    
+    $testFolders = @("system-test-dotnet", "system-test-java", "system-test-typescript")
+    $keepTestFolder = "system-test-$($SystemTestLanguage.ToLower())"
+    
+    foreach ($folder in $testFolders) {
+        if ($folder -eq $keepTestFolder) {
+            Write-Success "Keeping $folder"
+        }
+        else {
+            if (Test-Path $folder) {
+                Remove-Item -Path $folder -Recurse -Force
+                Write-Success "Removed $folder"
+            }
+        }
+    }
+    
+    # Clean up System Test Language workflow filese folders (keeping: $SystemLanguage)..."
+    
+    $systemFolders = @("monolith-dotnet", "monolith-java", "monolith-typescript")
+    $keepSystemFolder = "monolith-$($SystemLanguage.ToLower())"
+    
+    foreach ($folder in $systemFolders) {
+        if ($folder -eq $keepSystemFolder) {
+            Write-Success "Keeping $folder"
+        }
+        else {
+            if (Test-Path $folder) {
+                Remove-Item -Path $folder -Recurse -Force
+                Write-Success "Removed $folder"
+            }
+        }
+    }
+    
+    # Clean up System Language workflow filesory=$true, HelpMessage="Repository name (e.g., eshop)")]
     [ValidateNotNullOrEmpty()]
     [string]$RepositoryName,
     
@@ -39,7 +90,7 @@ System Language: $SystemLanguage
 Test Language: $SystemTestLanguage
 "@ -ForegroundColor Magenta
 
-    # Step 1: Validate prerequisites
+    # Validate prerequisites
     Write-Step "Validating prerequisites..."
     
     # Check GitHub CLI
@@ -72,7 +123,7 @@ Test Language: $SystemTestLanguage
         }
     }
     
-    # Step 2: Create repository from template
+    # Create repository from template
     Write-Step "Creating repository '$RepositoryName' from template..."
     
     try {
@@ -85,7 +136,7 @@ Test Language: $SystemTestLanguage
         Write-Info "Continuing with existing repository..."
     }
     
-    # Step 3: Configure GitHub Actions permissions (immediately after creation)
+    # Configure GitHub Actions permissions (immediately after creation)
     Write-Step "Configuring GitHub Actions permissions..."
     
     try {
@@ -98,8 +149,8 @@ Test Language: $SystemTestLanguage
         Write-Info "You may need to set permissions manually at: https://github.com/$GitHubUsername/$RepositoryName/settings/actions"
     }
     
-    # Step 4: Clone repository (if not skipped)
-    # Step 4: Clone repository (if not skipped)
+    # Clone repository (if not skipped)
+    # Clone repository (if not skipped)
     if (-not $SkipClone) {
         Write-Step "Cloning repository..."
         
@@ -132,7 +183,7 @@ Test Language: $SystemTestLanguage
     Push-Location $RepositoryName
     Write-Info "Working in directory: $(Get-Location)"
     
-    # Step 5: Clean up System Language folders
+    # Clean up System Language folders
     Write-Step "Cleaning up System Language folders (keeping: $SystemLanguage)..."
     
     $systemFolders = @("monolith-dotnet", "monolith-java", "monolith-typescript")
@@ -150,7 +201,7 @@ Test Language: $SystemTestLanguage
         }
     }
     
-    # Step 6: Clean up System Language workflow files
+    # Clean up System Language workflow files
     Write-Step "Cleaning up System Language workflow files..."
     
     $workflowPath = ".github/workflows"
@@ -177,7 +228,7 @@ Test Language: $SystemTestLanguage
         Write-Info "Remaining commit-stage workflows: $($remainingWorkflows.Name -join ', ')"
     }
     
-    # Step 7: Clean up System Test Language folders
+    # Clean up System Test Language folders
     Write-Step "Cleaning up System Test Language folders (keeping: $SystemTestLanguage)..."
     
     $testFolders = @("system-test-dotnet", "system-test-java", "system-test-typescript")
@@ -195,7 +246,7 @@ Test Language: $SystemTestLanguage
         }
     }
     
-    # Step 8: Clean up System Test Language workflow files
+    # Clean up System Test Language workflow files
     Write-Step "Cleaning up System Test Language workflow files..."
     
     if (Test-Path $workflowPath) {
@@ -230,7 +281,7 @@ Test Language: $SystemTestLanguage
         Write-Info "Remaining test workflows: $($remainingTestWorkflows.Name -join ', ')"
     }
     
-    # Step 9: Update README.md badges and paths
+    # Update README.md badges and paths
     Write-Step "Updating README.md with repository-specific paths..."
     
     if (Test-Path "README.md") {
@@ -263,7 +314,7 @@ Test Language: $SystemTestLanguage
         Write-Success "Updated README.md"
     }
     
-    # Step 10: Update docker-compose.yml in system test folder
+    # Update docker-compose.yml in system test folder
     Write-Step "Updating docker-compose configuration..."
     
     $dockerComposePath = "$keepTestFolder/docker-compose.yml"
@@ -279,7 +330,7 @@ Test Language: $SystemTestLanguage
         Write-Success "Updated docker-compose.yml"
     }
     
-    # Step 11: Commit and push changes
+    # Commit and push changes
     Write-Step "Committing and pushing changes..."
     
     try {
@@ -294,7 +345,7 @@ Test Language: $SystemTestLanguage
         Write-Info "You may need to commit and push manually"
     }
     
-    # Step 12: Final summary and next steps
+    # Final summary and next steps
     Write-Host @"
 
 SETUP COMPLETE!
