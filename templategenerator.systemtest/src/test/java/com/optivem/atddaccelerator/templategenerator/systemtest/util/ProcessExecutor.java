@@ -7,7 +7,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProcessExecutor {
 
-    public static void execute(ProcessBuilder processBuilder) {
+    public static void executeProcess(String... command)
+    {
+        var processBuilder = new ProcessBuilder(command);
+
         int exitCode;
         StringBuilder output = new StringBuilder();
         StringBuilder errors = new StringBuilder();
