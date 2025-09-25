@@ -1,5 +1,7 @@
 # ATDD Accelerator Quickstart
 
+[![System Test](https://github.com/optivem/atdd-accelerator/actions/workflows/system-test.yml/badge.svg)](https://github.com/optivem/atdd-accelerator/actions/workflows/system-test.yml)
+
 This is a quickstart guide for the [ATDD Accelerator](https://atdd-accelerator.optivem.com/). This is designed to help you complete your Sandbox Project Setup.
 
 # Choose Repository Strategy
