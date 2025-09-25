@@ -2,9 +2,11 @@ package com.optivem.atddaccelerator.templategenerator.systemtest;
 
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.TemplateGeneratorClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.Folders;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -34,16 +36,45 @@ class SetupScriptTest {
     }
 
     @Test
-    void githubRepository_fullTest() throws IOException, InterruptedException {
+    void githubRepositoryJava() {
         templateGeneratorClient.generateNewRepository(repoName, Language.JAVA);
         githubClient.verifyRepositoryExists();
-        Thread.sleep(5000);
-        githubClient.verifyFolderExists("monolith-java");
-        githubClient.verifyFolderDoesNotExist("monolith-dotnet");
-        githubClient.verifyFolderDoesNotExist("monolith-typescript");
+        sleep();
+        githubClient.verifyFolderExists(Folders.MONOLITH_JAVA);
+        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_DOTNET);
+        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
     }
 
-    public static String newName() {
+    @Test
+    void githubRepositoryDotNet() {
+        templateGeneratorClient.generateNewRepository(repoName, Language.DOTNET);
+        githubClient.verifyRepositoryExists();
+        sleep();
+        githubClient.verifyFolderExists(Folders.MONOLITH_DOTNET);
+        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_JAVA);
+        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_TYPESCRIPT);
+    }
+
+    @Disabled
+    @Test
+    void githubRepositoryTypeScript() {
+        templateGeneratorClient.generateNewRepository(repoName, Language.TYPESCRIPT);
+        githubClient.verifyRepositoryExists();
+        sleep();
+        githubClient.verifyFolderExists(Folders.MONOLITH_TYPESCRIPT);
+        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_JAVA);
+        githubClient.verifyFolderDoesNotExist(Folders.MONOLITH_DOTNET);
+    }
+
+    private static void sleep() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String newName() {
         var repoName = "repo-" + System.currentTimeMillis();
         return repoName;
     }

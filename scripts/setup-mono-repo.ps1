@@ -3,12 +3,16 @@ param(
     [string]$RepositoryName,
     
     [Parameter(Mandatory=$false)]
-    [string]$GitHubUsername
+    [string]$GitHubUsername,
+    
+    [Parameter(Mandatory=$false)]
+    [string]$SystemLanguage
 )
 
 try {
     Write-Output "ATDD Accelerator Setup Script"
     Write-Output "Repository Name: $RepositoryName"
+    Write-Output "System Language: $SystemLanguage"
     
     # Get GitHub username if not provided
     if (-not $GitHubUsername) {
@@ -36,25 +40,33 @@ try {
     # Change to the repository directory
     Set-Location $RepositoryName
     
-    # Remove unused language folders
+    # Remove unused language folders based on SystemLanguage
     Write-Output "Removing unused language folders..."
     
-    # Remove monolith-dotnet folder
-    if (Test-Path "monolith-dotnet") {
-        Write-Output "Removing monolith-dotnet folder..."
-        Remove-Item -Recurse -Force "monolith-dotnet"
-        git rm -r "monolith-dotnet"
+    if ($SystemLanguage -eq "dotnet") {
+        # Keep monolith-dotnet, remove others
+        if (Test-Path "monolith-java") {
+            Remove-Item -Recurse -Force "monolith-java"
+            git rm -r "monolith-java"
+        }
+        if (Test-Path "monolith-typescript") {
+            Remove-Item -Recurse -Force "monolith-typescript"
+            git rm -r "monolith-typescript"
+        }
+        git commit -m "Remove unused language folders: monolith-java, monolith-typescript"
+    } else {
+        # Default to Java - remove monolith-dotnet and monolith-typescript
+        if (Test-Path "monolith-dotnet") {
+            Remove-Item -Recurse -Force "monolith-dotnet"
+            git rm -r "monolith-dotnet"
+        }
+        if (Test-Path "monolith-typescript") {
+            Remove-Item -Recurse -Force "monolith-typescript"
+            git rm -r "monolith-typescript"
+        }
+        git commit -m "Remove unused language folders: monolith-dotnet, monolith-typescript"
     }
     
-    # Remove monolith-typescript folder
-    if (Test-Path "monolith-typescript") {
-        Write-Output "Removing monolith-typescript folder..."
-        Remove-Item -Recurse -Force "monolith-typescript"
-        git rm -r "monolith-typescript"
-    }
-    
-    # Commit all changes at once
-    git commit -m "Remove unused language folders: monolith-dotnet, monolith-typescript"
     git push origin main
     
     Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"
