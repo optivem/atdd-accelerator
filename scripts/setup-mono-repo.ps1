@@ -60,9 +60,25 @@ try {
     Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"
     Write-Output "Setup completed successfully"
     
+    # Clean up the local clone
+    Write-Output "Cleaning up local repository clone..."
+    Set-Location ..
+    Remove-Item -Recurse -Force $RepositoryName
+    Write-Output "Local repository cleanup completed"
+    
     exit 0
     
 } catch {
     Write-Error "Setup failed: $_"
+    # Clean up on error too
+    try {
+        Set-Location ..
+        if (Test-Path $RepositoryName) {
+            Remove-Item -Recurse -Force $RepositoryName
+            Write-Output "Cleaned up local repository after error"
+        }
+    } catch {
+        Write-Warning "Could not clean up local repository: $_"
+    }
     exit 1
 }
