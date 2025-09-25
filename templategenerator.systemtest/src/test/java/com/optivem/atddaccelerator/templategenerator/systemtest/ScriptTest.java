@@ -1,6 +1,8 @@
 package com.optivem.atddaccelerator.templategenerator.systemtest;
 
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.GithubClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.TemplateGeneratorClient;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,23 +13,36 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SetupScriptTest {
 
-    private static final String SCRIPT_PATH = "../scripts/setup-mono-repo.ps1";
+
     private static final String REPO_OWNER = "valentinajemuovic";
 
+    private TemplateGeneratorClient templateGeneratorClient = new TemplateGeneratorClient();
     private GithubClient githubClient;
+    private String repoName;
 
     @BeforeEach
     void setup() {
-        githubClient = new GithubClient();
+        repoName = newName();
+        githubClient = new GithubClient(REPO_OWNER, repoName);
+    }
+
+    @AfterEach
+    void teardown() {
+        if (githubClient != null) {
+            githubClient.deleteRepository();
+        }
     }
 
     @Test
-    void setupScript_shouldReturnExitCode0() throws IOException, InterruptedException {
-        executeProcess("pwsh", SCRIPT_PATH);
+    void githubRepository_shouldExist() throws IOException, InterruptedException {
+        templateGeneratorClient.generateNewRepository(repoName);
+        githubClient.viewRepository();
     }
 
-    @Test
-    void githubRepository_shouldExist_viaGhCli() throws IOException, InterruptedException {
-        githubClient.viewRepository(REPO_OWNER, "flowers2");
+    public static String newName() {
+        var repoName = "repo-" + System.currentTimeMillis();
+        return repoName;
     }
+
+
 }
