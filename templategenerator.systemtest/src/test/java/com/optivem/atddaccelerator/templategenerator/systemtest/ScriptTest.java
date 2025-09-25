@@ -11,10 +11,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SetupScriptTest {
 
-    @Disabled
+    private static final String SCRIPT_PATH = "../scripts/setup-mono-repo.ps1";
+
     @Test
     void setupScript_shouldReturnExitCode0() throws IOException, InterruptedException {
-        var processBuilder = new ProcessBuilder("pwsh", "scripts/setup-mono-repo999.ps1");
+        var processBuilder = new ProcessBuilder("pwsh", SCRIPT_PATH);
         execute(processBuilder);
     }
 
