@@ -51,37 +51,68 @@ function Remove-UnusedLanguageFolders {
     # Define all language folders
     $allFolders = @("monolith-java", "monolith-dotnet", "monolith-typescript")
     
-    # Map language to folder to keep
+    # Define all workflow files
+    $allWorkflows = @(
+        ".github/workflows/commit-stage-monolith-java.yml",
+        ".github/workflows/commit-stage-monolith-dotnet.yml", 
+        ".github/workflows/commit-stage-monolith-typescript.yml"
+    )
+    
+    # Map language to folder and workflow to keep
     $languageToFolder = @{
         "java" = "monolith-java"
         "dotnet" = "monolith-dotnet" 
         "typescript" = "monolith-typescript"
     }
     
+    $languageToWorkflow = @{
+        "java" = ".github/workflows/commit-stage-monolith-java.yml"
+        "dotnet" = ".github/workflows/commit-stage-monolith-dotnet.yml"
+        "typescript" = ".github/workflows/commit-stage-monolith-typescript.yml"
+    }
+    
     # Default to Java if SystemLanguage not specified or unknown
     $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
+    $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
     if (-not $keepFolder) {
         $keepFolder = "monolith-java"
+        $keepWorkflow = ".github/workflows/commit-stage-monolith-java.yml"
     }
     
     Write-Output "Keeping folder: $keepFolder"
+    Write-Output "Keeping workflow: $keepWorkflow"
     
-    # Remove all folders except the one to keep
-    $removedFolders = @()
+    # Remove unused folders and workflows
+    $removedItems = @()
+    
+    # Remove folders
     foreach ($folder in $allFolders) {
         if ($folder -ne $keepFolder -and (Test-Path $folder)) {
             Write-Output "Removing folder: $folder"
             Remove-Item -Recurse -Force $folder
             git rm -r $folder
-            $removedFolders += $folder
+            $removedItems += $folder
         }
     }
     
-    # Commit changes if any folders were removed
-    if ($removedFolders.Count -gt 0) {
-        $removedList = $removedFolders -join ", "
-        git commit -m "Remove unused language folders: $removedList"
+    # Remove workflow files
+    foreach ($workflow in $allWorkflows) {
+        if ($workflow -ne $keepWorkflow -and (Test-Path $workflow)) {
+            Write-Output "Removing workflow: $workflow"
+            Remove-Item -Force $workflow
+            git rm $workflow
+            $removedItems += $workflow
+        }
     }
+    
+    # Commit and return whether changes were made
+    if ($removedItems.Count -gt 0) {
+        $removedList = $removedItems -join ", "
+        git commit -m "Remove unused language folders and workflows: $removedList"
+        return $true
+    }
+    
+    return $false
 }
 
 function Push-RepositoryChanges {
