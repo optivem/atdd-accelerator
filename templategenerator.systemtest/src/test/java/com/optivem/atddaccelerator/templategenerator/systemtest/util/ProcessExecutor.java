@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProcessExecutor {
 
-    public static void executeProcess(String... command)
+    public static ProcessResult executeProcess(String... command)
     {
         var processBuilder = new ProcessBuilder(command);
 
@@ -39,9 +39,9 @@ public class ProcessExecutor {
             throw new RuntimeException("Failed to execute script", e);
         }
 
-        assertThat(exitCode)
-                .withFailMessage("Exit code is not 0.\nErrors: %s\nOutput: %s", errors.toString(), output.toString())
-                .isZero();
+        var outputStr = output.toString();
+        var errorsStr = errors.toString();
 
+        return new ProcessResult(exitCode, outputStr, errorsStr);
     }
 }

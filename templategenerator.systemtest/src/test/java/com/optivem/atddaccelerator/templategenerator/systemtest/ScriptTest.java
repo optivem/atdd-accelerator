@@ -1,14 +1,13 @@
 package com.optivem.atddaccelerator.templategenerator.systemtest;
 
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.GithubClient;
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.TemplateGeneratorClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.clients.TemplateGeneratorClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.executeProcess;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SetupScriptTest {
@@ -34,9 +33,10 @@ class SetupScriptTest {
     }
 
     @Test
-    void githubRepository_shouldExist() throws IOException, InterruptedException {
+    void githubRepository_fullTest() throws IOException, InterruptedException {
         templateGeneratorClient.generateNewRepository(repoName);
-        githubClient.viewRepository();
+        githubClient.verifyRepositoryExists();
+
     }
 
     public static String newName() {
