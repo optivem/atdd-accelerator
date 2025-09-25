@@ -9,91 +9,102 @@ param(
     [string]$SystemLanguage
 )
 
-try {
-    Write-Output "ATDD Accelerator Setup Script"
-    Write-Output "Repository Name: $RepositoryName"
-    Write-Output "System Language: $SystemLanguage"
+function Get-GitHubUsername {
+    param([string]$ProvidedUsername)
     
-    # Get GitHub username if not provided
-    if (-not $GitHubUsername) {
-        $authStatus = gh auth status 2>&1
-        if ($LASTEXITCODE -ne 0) {
-            throw "GitHub CLI not authenticated. Please run: gh auth login"
-        }
-        
-        $GitHubUsername = ($authStatus | Select-String "Logged in to github\.com account (.+?) " | ForEach-Object { $_.Matches[0].Groups[1].Value })
-        if (-not $GitHubUsername) {
-            $GitHubUsername = ($authStatus | Select-String "Logged in to github\.com as (.+)" | ForEach-Object { $_.Matches[0].Groups[1].Value })
-        }
+    if ($ProvidedUsername) {
+        return $ProvidedUsername
     }
     
-    Write-Output "GitHub Username: $GitHubUsername"
+    $authStatus = gh auth status 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        throw "GitHub CLI not authenticated. Please run: gh auth login"
+    }
     
-    # Create repository from template
+    $username = ($authStatus | Select-String "Logged in to github\.com account (.+?) " | ForEach-Object { $_.Matches[0].Groups[1].Value })
+    if (-not $username) {
+        $username = ($authStatus | Select-String "Logged in to github\.com as (.+)" | ForEach-Object { $_.Matches[0].Groups[1].Value })
+    }
+    
+    return $username
+}
+
+function New-RepositoryFromTemplate {
+    param(
+        [string]$RepositoryName,
+        [string]$TemplateName = "optivem/atdd-accelerator-template-mono-repo"
+    )
+    
     Write-Output "Creating repository from template..."
-    gh repo create $RepositoryName --template "optivem/atdd-accelerator-template-mono-repo" --public --clone
+    gh repo create $RepositoryName --template $TemplateName --public --clone
     
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to create repository"
     }
+}
+
+function Remove-UnusedLanguageFolders {
+    param([string]$SystemLanguage)
     
-    # Change to the repository directory
-    Set-Location $RepositoryName
-    
-    # Remove unused language folders based on SystemLanguage
     Write-Output "Removing unused language folders..."
     
-    if ($SystemLanguage -ieq "dotnet") {
-        # Keep monolith-dotnet, remove others
-        if (Test-Path "monolith-java") {
-            Remove-Item -Recurse -Force "monolith-java"
-            git rm -r "monolith-java"
-        }
-        if (Test-Path "monolith-typescript") {
-            Remove-Item -Recurse -Force "monolith-typescript"
-            git rm -r "monolith-typescript"
-        }
-        git commit -m "Remove unused language folders: monolith-java, monolith-typescript"
-    } elseif ($SystemLanguage -ieq "typescript") {
-        # Keep monolith-typescript, remove others
-        if (Test-Path "monolith-java") {
-            Remove-Item -Recurse -Force "monolith-java"
-            git rm -r "monolith-java"
-        }
-        if (Test-Path "monolith-dotnet") {
-            Remove-Item -Recurse -Force "monolith-dotnet"
-            git rm -r "monolith-dotnet"
-        }
-        git commit -m "Remove unused language folders: monolith-java, monolith-dotnet"
-    } else {
-        # Default to Java - remove monolith-dotnet and monolith-typescript
-        if (Test-Path "monolith-dotnet") {
-            Remove-Item -Recurse -Force "monolith-dotnet"
-            git rm -r "monolith-dotnet"
-        }
-        if (Test-Path "monolith-typescript") {
-            Remove-Item -Recurse -Force "monolith-typescript"
-            git rm -r "monolith-typescript"
-        }
-        git commit -m "Remove unused language folders: monolith-dotnet, monolith-typescript"
+    # Define all language folders
+    $allFolders = @("monolith-java", "monolith-dotnet", "monolith-typescript")
+    
+    # Map language to folder to keep
+    $languageToFolder = @{
+        "java" = "monolith-java"
+        "dotnet" = "monolith-dotnet" 
+        "typescript" = "monolith-typescript"
     }
     
+    # Default to Java if SystemLanguage not specified or unknown
+    $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
+    if (-not $keepFolder) {
+        $keepFolder = "monolith-java"
+    }
+    
+    Write-Output "Keeping folder: $keepFolder"
+    
+    # Remove all folders except the one to keep
+    $removedFolders = @()
+    foreach ($folder in $allFolders) {
+        if ($folder -ne $keepFolder -and (Test-Path $folder)) {
+            Write-Output "Removing folder: $folder"
+            Remove-Item -Recurse -Force $folder
+            git rm -r $folder
+            $removedFolders += $folder
+        }
+    }
+    
+    # Commit changes if any folders were removed
+    if ($removedFolders.Count -gt 0) {
+        $removedList = $removedFolders -join ", "
+        git commit -m "Remove unused language folders: $removedList"
+    }
+}
+
+function Push-RepositoryChanges {
+    Write-Output "Pushing changes to remote repository..."
     git push origin main
     
-    Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"
-    Write-Output "Setup completed successfully"
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to push changes"
+    }
+}
+
+function Remove-LocalRepository {
+    param([string]$RepositoryName)
     
-    # Clean up the local clone
     Write-Output "Cleaning up local repository clone..."
     Set-Location ..
     Remove-Item -Recurse -Force $RepositoryName
     Write-Output "Local repository cleanup completed"
+}
+
+function Invoke-ErrorCleanup {
+    param([string]$RepositoryName)
     
-    exit 0
-    
-} catch {
-    Write-Error "Setup failed: $_"
-    # Clean up on error too
     try {
         Set-Location ..
         if (Test-Path $RepositoryName) {
@@ -103,5 +114,34 @@ try {
     } catch {
         Write-Warning "Could not clean up local repository: $_"
     }
+}
+
+# Main execution
+try {
+    Write-Output "ATDD Accelerator Setup Script"
+    Write-Output "Repository Name: $RepositoryName"
+    Write-Output "System Language: $SystemLanguage"
+    
+    $GitHubUsername = Get-GitHubUsername -ProvidedUsername $GitHubUsername
+    Write-Output "GitHub Username: $GitHubUsername"
+    
+    New-RepositoryFromTemplate -RepositoryName $RepositoryName
+    
+    # Change to the repository directory
+    Set-Location $RepositoryName
+    
+    Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage
+    Push-RepositoryChanges
+    
+    Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"
+    Write-Output "Setup completed successfully"
+    
+    Remove-LocalRepository -RepositoryName $RepositoryName
+    
+    exit 0
+    
+} catch {
+    Write-Error "Setup failed: $_"
+    Invoke-ErrorCleanup -RepositoryName $RepositoryName
     exit 1
 }
