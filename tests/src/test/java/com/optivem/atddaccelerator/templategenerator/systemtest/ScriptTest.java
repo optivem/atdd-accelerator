@@ -101,25 +101,30 @@ class ScriptTest {
         gitHub.verifyPagesEnabled();
         gitHub.verifyPagesSourceIsMainDocs();
 
-        // Pipeline Badges - Release & System Test
+        // Pipeline Badge - GitHub Pages
+        gitHub.verifyReadmeContainsBadge(Badges.PAGES_BUILD_DEPLOYMENT);
 
+        // Pipeline Badge - Local Acceptance Stage
         gitHub.verifyReadmeContainsBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_DOTNET);
 
+        // Pipeline Badge - Acceptance Stage
         gitHub.verifyReadmeContainsBadge(Badges.ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.ACCEPTANCE_STAGE_TEST_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.ACCEPTANCE_STAGE_TEST_DOTNET);
 
+        // Pipeline Badge - QA Stage
         gitHub.verifyReadmeContainsBadge(Badges.QA_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.QA_STAGE_TEST_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.QA_STAGE_TEST_DOTNET);
 
+        // Pipeline Badge - PROD Stage
         gitHub.verifyReadmeContainsBadge(Badges.PROD_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.PROD_STAGE_TEST_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.PROD_STAGE_TEST_DOTNET);
 
-        gitHub.verifyReadmeContainsBadge(Badges.PAGES_BUILD_DEPLOYMENT);
+
 
 
     }
