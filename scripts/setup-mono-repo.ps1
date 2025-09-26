@@ -253,6 +253,13 @@ function Remove-UnusedLanguageFolders {
         ".github/workflows/acceptance-stage-test-typescript.yml"
     )
     
+    # Define all QA stage test workflows
+    $allQAWorkflows = @(
+        ".github/workflows/qa-stage-test-java.yml",
+        ".github/workflows/qa-stage-test-dotnet.yml",
+        ".github/workflows/qa-stage-test-typescript.yml"
+    )
+    
     # Map languages to items to keep
     $languageToFolder = @{
         "java" = "monolith-java"
@@ -284,18 +291,26 @@ function Remove-UnusedLanguageFolders {
         "typescript" = ".github/workflows/acceptance-stage-test-typescript.yml"
     }
     
+    $languageToQAWorkflow = @{
+        "java" = ".github/workflows/qa-stage-test-java.yml"
+        "dotnet" = ".github/workflows/qa-stage-test-dotnet.yml"
+        "typescript" = ".github/workflows/qa-stage-test-typescript.yml"
+    }
+    
     # Get the values directly
     $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
     $keepSystemTest = $languageToSystemTest[$SystemTestLanguage.ToLower()]
     $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
     $keepLocalAcceptanceWorkflow = $languageToLocalAcceptanceWorkflow[$SystemTestLanguage.ToLower()]
     $keepAcceptanceWorkflow = $languageToAcceptanceWorkflow[$SystemTestLanguage.ToLower()]
+    $keepQAWorkflow = $languageToQAWorkflow[$SystemTestLanguage.ToLower()]
     
     Write-Output "Keeping folder: $keepFolder"
     Write-Output "Keeping system test: $keepSystemTest"
     Write-Output "Keeping workflow: $keepWorkflow"
     Write-Output "Keeping local acceptance workflow: $keepLocalAcceptanceWorkflow"
     Write-Output "Keeping acceptance workflow: $keepAcceptanceWorkflow"
+    Write-Output "Keeping QA workflow: $keepQAWorkflow"
     
     # Remove unused items
     $removedItems = @()
@@ -347,6 +362,16 @@ function Remove-UnusedLanguageFolders {
             Remove-Item -Force $acceptanceWorkflow
             git rm $acceptanceWorkflow
             $removedItems += $acceptanceWorkflow
+        }
+    }
+    
+    # Remove QA stage test workflow files
+    foreach ($qaWorkflow in $allQAWorkflows) {
+        if ($qaWorkflow -ne $keepQAWorkflow -and (Test-Path $qaWorkflow)) {
+            Write-Output "Removing QA workflow: $qaWorkflow"
+            Remove-Item -Force $qaWorkflow
+            git rm $qaWorkflow
+            $removedItems += $qaWorkflow
         }
     }
     
