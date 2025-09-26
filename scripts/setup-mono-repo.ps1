@@ -16,6 +16,7 @@ param(
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 . "$scriptDir\remove-unused-language-folders.ps1"
 . "$scriptDir\update-readme-badges.ps1"
+. "$scriptDir\setup-github-pages.ps1"
 
 function Test-SystemLanguage {
     param([string]$SystemLanguage)
@@ -213,6 +214,15 @@ try {
     $hasChanges = Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
     Push-RepositoryChanges -HasChanges $hasChanges
     
+    # Enable GitHub Pages
+    $pagesEnabled = Enable-GitHubPages -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
+    
+    if ($pagesEnabled) {
+        Write-Output "GitHub Pages enabled successfully"
+    } else {
+        Write-Warning "GitHub Pages setup failed, but continuing..."
+    }
+
     Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"
     Write-Output "Setup completed successfully"
     

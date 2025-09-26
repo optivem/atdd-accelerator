@@ -121,4 +121,9 @@ public class GitHubDsl {
             throw new RuntimeException(e);
         }
     }
+
+    public void verifyPagesEnabled() {
+        var result = client.viewPages();
+        assertSuccess(result, "GitHub Pages should be enabled.");
+    }
 }

@@ -190,7 +190,7 @@ _Note: This step is critical that you get the path right! Otherwise, your System
    - `.github\workflows\release-stage-java.yml` --> DELETE
    - `.github\workflows\release-stage-typescript.yml` --> KEEP
 
-TODO: VJ: Continue here
+
 
 8. In the README.md file, in the `System Release` section, keep only the System Test Language, delete all the rest (in my example, I've chosen TypeScript)
 

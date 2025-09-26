@@ -113,6 +113,10 @@ class ScriptTest {
         gitHub.verifyReadmeContainsBadge(Badges.PROD_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.PROD_STAGE_TEST_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.PROD_STAGE_TEST_DOTNET);
+
+        // Documentation
+
+        gitHub.verifyPagesEnabled();
     }
 
     @Test

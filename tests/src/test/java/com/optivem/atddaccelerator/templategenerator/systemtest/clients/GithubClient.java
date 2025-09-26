@@ -46,6 +46,10 @@ public class GithubClient {
         return executeProcess("gh", "api", "/repos/" + repositoryPath + "/contents/" + path);
     }
 
+    public ProcessResult viewPages() {
+        return executeProcess("gh", "api", "/repos/" + repositoryPath + "/pages");
+    }
+
     public String getFileContent(String filePath) {
         var result = executeProcess("gh", "api",
                 "-H", "Accept: application/vnd.github.raw",
@@ -61,5 +65,6 @@ public class GithubClient {
                 "--json", "status,conclusion",
                 "--repo", repositoryPath);
     }
+
 
 }
