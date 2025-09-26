@@ -7,8 +7,8 @@ import static com.optivem.atddaccelerator.templategenerator.systemtest.util.Proc
 public class GeneratorClient {
     private static final String SCRIPT_PATH = "../scripts/setup-mono-repo.ps1";
 
-    public ProcessResult generateRepository(String repoName, String systemLanguage) {
-        return executeProcess("pwsh", SCRIPT_PATH, "-RepositoryName", repoName, "-SystemLanguage", systemLanguage);
+    public ProcessResult generateRepository(String repoName, String systemLanguage, String systemTestLanguage) {
+        return executeProcess("pwsh", SCRIPT_PATH, "-RepositoryName", repoName, "-SystemLanguage", systemLanguage, "-SystemTestLanguage", systemTestLanguage);
     }
 
 }

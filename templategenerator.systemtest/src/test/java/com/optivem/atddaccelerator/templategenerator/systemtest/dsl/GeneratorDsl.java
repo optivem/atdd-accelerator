@@ -5,7 +5,6 @@ import com.optivem.atddaccelerator.templategenerator.systemtest.clients.Generato
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.executeProcess;
 import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.waitTime;
 import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertFailure;
 import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertSuccess;
@@ -26,16 +25,16 @@ public class GeneratorDsl {
         return created.contains(repoName);
     }
 
-    public void generateNewRepository(String repoName, String systemLanguage) {
-        var result = client.generateRepository(repoName, systemLanguage);
+    public void generateNewRepository(String repoName, String systemLanguage, String systemTestLanguage) {
+        var result = client.generateRepository(repoName, systemLanguage, systemTestLanguage);
         assertSuccess(result);
 
         waitTime(MILLIS);
         created.add(repoName);
     }
 
-    public void generateNewRepositoryExpectError(String repoName, String systemLanguage) {
-        var result = client.generateRepository(repoName, systemLanguage);
+    public void generateNewRepositoryExpectError(String repoName, String systemLanguage, String systemTestLanguage) {
+        var result = client.generateRepository(repoName, systemLanguage, systemTestLanguage);
         assertFailure(result);
     }
 }

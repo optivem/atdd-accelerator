@@ -6,7 +6,10 @@ param(
     [string]$GitHubUsername,
     
     [Parameter(Mandatory=$false)]
-    [string]$SystemLanguage
+    [string]$SystemLanguage,
+
+    [Parameter(Mandatory=$false)]
+    [string]$SystemTestLanguage
 )
 
 function Test-SystemLanguage {
@@ -174,11 +177,14 @@ function Update-DockerComposeFiles {
 function Remove-UnusedLanguageFolders {
     param(
         [string]$SystemLanguage,
+        [string]$SystemTestLanguage,
         [string]$RepositoryOwner,
         [string]$RepositoryName
     )
     
     Write-Output "Removing unused language folders..."
+    Write-Output "System Language: $SystemLanguage"
+    Write-Output "System Test Language: $SystemTestLanguage"
     
     # Define all language folders
     $allFolders = @("monolith-java", "monolith-dotnet", "monolith-typescript")
@@ -212,9 +218,9 @@ function Remove-UnusedLanguageFolders {
         "typescript" = ".github/workflows/commit-stage-monolith-typescript.yml"
     }
     
-    # Get the values directly
+    # Get the values directly - USE DIFFERENT LANGUAGES FOR DIFFERENT PURPOSES
     $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
-    $keepSystemTest = $languageToSystemTest[$SystemLanguage.ToLower()]
+    $keepSystemTest = $languageToSystemTest[$SystemTestLanguage.ToLower()]  # Use SystemTestLanguage here!
     $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
     
     Write-Output "Keeping folder: $keepFolder"
@@ -325,7 +331,7 @@ try {
     # Change to the repository directory
     Set-Location $RepositoryName
     
-    $hasChanges = Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
+    $hasChanges = Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
     Push-RepositoryChanges -HasChanges $hasChanges
     
     Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"

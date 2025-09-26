@@ -34,12 +34,12 @@ public class GitHubDsl {
 
     public void verifyPathExists(String path) {
         var result = client.viewPath(path);
-        assertSuccess(result);
+        assertSuccess(result, "Path '" + path + "' should exist.");
     }
 
     public void verifyPathDoesNotExist(String path) {
         var result = client.viewPath(path);
-        assertFailure(result);
+        assertFailure(result, "Path '" + path + "' should not exist.");
     }
 
     public void deleteRepository() {
