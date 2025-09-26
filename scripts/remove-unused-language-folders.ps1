@@ -1,3 +1,35 @@
+function Remove-LanguageSpecificItems {
+    param(
+        [string]$ItemType,
+        [string]$Language,
+        [array]$AllItems,
+        [hashtable]$LanguageToItemMapping,
+        [array]$RemovedItems,
+        [switch]$IsFolder
+    )
+    
+    $keepItem = $LanguageToItemMapping[$Language.ToLower()]
+    Write-Output "Keeping $ItemType`: $keepItem"
+    
+    foreach ($item in $AllItems) {
+        if ($item -ne $keepItem -and (Test-Path $item)) {
+            Write-Output "Removing $ItemType`: $item"
+            
+            if ($IsFolder) {
+                Remove-Item -Recurse -Force $item
+                git rm -r $item
+            } else {
+                Remove-Item -Force $item
+                git rm $item
+            }
+            
+            $RemovedItems += $item
+        }
+    }
+    
+    return $RemovedItems
+}
+
 function Remove-MonolithFolders {
     param(
         [string]$SystemLanguage,
@@ -5,26 +37,13 @@ function Remove-MonolithFolders {
     )
     
     $allFolders = @("monolith-java", "monolith-dotnet", "monolith-typescript")
-    
     $languageToFolder = @{
         "java" = "monolith-java"
         "dotnet" = "monolith-dotnet" 
         "typescript" = "monolith-typescript"
     }
     
-    $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
-    Write-Output "Keeping folder: $keepFolder"
-    
-    foreach ($folder in $allFolders) {
-        if ($folder -ne $keepFolder -and (Test-Path $folder)) {
-            Write-Output "Removing folder: $folder"
-            Remove-Item -Recurse -Force $folder
-            git rm -r $folder
-            $RemovedItems += $folder
-        }
-    }
-    
-    return $RemovedItems
+    return Remove-LanguageSpecificItems -ItemType "folder" -Language $SystemLanguage -AllItems $allFolders -LanguageToItemMapping $languageToFolder -RemovedItems $RemovedItems -IsFolder
 }
 
 function Remove-SystemTestFolders {
@@ -34,26 +53,13 @@ function Remove-SystemTestFolders {
     )
     
     $allSystemTests = @("system-test-java", "system-test-dotnet", "system-test-typescript")
-    
     $languageToSystemTest = @{
         "java" = "system-test-java"
         "dotnet" = "system-test-dotnet"
         "typescript" = "system-test-typescript"
     }
     
-    $keepSystemTest = $languageToSystemTest[$SystemTestLanguage.ToLower()]
-    Write-Output "Keeping system test: $keepSystemTest"
-    
-    foreach ($systemTest in $allSystemTests) {
-        if ($systemTest -ne $keepSystemTest -and (Test-Path $systemTest)) {
-            Write-Output "Removing system test: $systemTest"
-            Remove-Item -Recurse -Force $systemTest
-            git rm -r $systemTest
-            $RemovedItems += $systemTest
-        }
-    }
-    
-    return $RemovedItems
+    return Remove-LanguageSpecificItems -ItemType "system test" -Language $SystemTestLanguage -AllItems $allSystemTests -LanguageToItemMapping $languageToSystemTest -RemovedItems $RemovedItems -IsFolder
 }
 
 function Remove-CommitWorkflows {
@@ -67,26 +73,13 @@ function Remove-CommitWorkflows {
         ".github/workflows/commit-stage-monolith-dotnet.yml", 
         ".github/workflows/commit-stage-monolith-typescript.yml"
     )
-    
     $languageToWorkflow = @{
         "java" = ".github/workflows/commit-stage-monolith-java.yml"
         "dotnet" = ".github/workflows/commit-stage-monolith-dotnet.yml"
         "typescript" = ".github/workflows/commit-stage-monolith-typescript.yml"
     }
     
-    $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
-    Write-Output "Keeping workflow: $keepWorkflow"
-    
-    foreach ($workflow in $allWorkflows) {
-        if ($workflow -ne $keepWorkflow -and (Test-Path $workflow)) {
-            Write-Output "Removing workflow: $workflow"
-            Remove-Item -Force $workflow
-            git rm $workflow
-            $RemovedItems += $workflow
-        }
-    }
-    
-    return $RemovedItems
+    return Remove-LanguageSpecificItems -ItemType "commit workflow" -Language $SystemLanguage -AllItems $allWorkflows -LanguageToItemMapping $languageToWorkflow -RemovedItems $RemovedItems
 }
 
 function Remove-LocalAcceptanceWorkflows {
@@ -100,26 +93,13 @@ function Remove-LocalAcceptanceWorkflows {
         ".github/workflows/local-acceptance-stage-test-dotnet.yml",
         ".github/workflows/local-acceptance-stage-test-typescript.yml"
     )
-    
     $languageToLocalAcceptanceWorkflow = @{
         "java" = ".github/workflows/local-acceptance-stage-test-java.yml"
         "dotnet" = ".github/workflows/local-acceptance-stage-test-dotnet.yml"
         "typescript" = ".github/workflows/local-acceptance-stage-test-typescript.yml"
     }
     
-    $keepLocalAcceptanceWorkflow = $languageToLocalAcceptanceWorkflow[$SystemTestLanguage.ToLower()]
-    Write-Output "Keeping local acceptance workflow: $keepLocalAcceptanceWorkflow"
-    
-    foreach ($localAcceptanceWorkflow in $allLocalAcceptanceWorkflows) {
-        if ($localAcceptanceWorkflow -ne $keepLocalAcceptanceWorkflow -and (Test-Path $localAcceptanceWorkflow)) {
-            Write-Output "Removing local acceptance workflow: $localAcceptanceWorkflow"
-            Remove-Item -Force $localAcceptanceWorkflow
-            git rm $localAcceptanceWorkflow
-            $RemovedItems += $localAcceptanceWorkflow
-        }
-    }
-    
-    return $RemovedItems
+    return Remove-LanguageSpecificItems -ItemType "local acceptance workflow" -Language $SystemTestLanguage -AllItems $allLocalAcceptanceWorkflows -LanguageToItemMapping $languageToLocalAcceptanceWorkflow -RemovedItems $RemovedItems
 }
 
 function Remove-AcceptanceWorkflows {
@@ -133,26 +113,13 @@ function Remove-AcceptanceWorkflows {
         ".github/workflows/acceptance-stage-test-dotnet.yml",
         ".github/workflows/acceptance-stage-test-typescript.yml"
     )
-    
     $languageToAcceptanceWorkflow = @{
         "java" = ".github/workflows/acceptance-stage-test-java.yml"
         "dotnet" = ".github/workflows/acceptance-stage-test-dotnet.yml"
         "typescript" = ".github/workflows/acceptance-stage-test-typescript.yml"
     }
     
-    $keepAcceptanceWorkflow = $languageToAcceptanceWorkflow[$SystemTestLanguage.ToLower()]
-    Write-Output "Keeping acceptance workflow: $keepAcceptanceWorkflow"
-    
-    foreach ($acceptanceWorkflow in $allAcceptanceWorkflows) {
-        if ($acceptanceWorkflow -ne $keepAcceptanceWorkflow -and (Test-Path $acceptanceWorkflow)) {
-            Write-Output "Removing acceptance workflow: $acceptanceWorkflow"
-            Remove-Item -Force $acceptanceWorkflow
-            git rm $acceptanceWorkflow
-            $RemovedItems += $acceptanceWorkflow
-        }
-    }
-    
-    return $RemovedItems
+    return Remove-LanguageSpecificItems -ItemType "acceptance workflow" -Language $SystemTestLanguage -AllItems $allAcceptanceWorkflows -LanguageToItemMapping $languageToAcceptanceWorkflow -RemovedItems $RemovedItems
 }
 
 function Remove-QAWorkflows {
@@ -166,26 +133,13 @@ function Remove-QAWorkflows {
         ".github/workflows/qa-stage-test-dotnet.yml",
         ".github/workflows/qa-stage-test-typescript.yml"
     )
-
     $languageToQAWorkflow = @{
         "java" = ".github/workflows/qa-stage-test-java.yml"
         "dotnet" = ".github/workflows/qa-stage-test-dotnet.yml"
         "typescript" = ".github/workflows/qa-stage-test-typescript.yml"
     }
-
-    $keepQAWorkflow = $languageToQAWorkflow[$SystemTestLanguage.ToLower()]
-    Write-Output "Keeping QA workflow: $keepQAWorkflow"
-
-    foreach ($qaWorkflow in $allQAWorkflows) {
-        if ($qaWorkflow -ne $keepQAWorkflow -and (Test-Path $qaWorkflow)) {
-            Write-Output "Removing QA workflow: $qaWorkflow"
-            Remove-Item -Force $qaWorkflow
-            git rm $qaWorkflow
-            $RemovedItems += $qaWorkflow
-        }
-    }
     
-    return $RemovedItems
+    return Remove-LanguageSpecificItems -ItemType "QA workflow" -Language $SystemTestLanguage -AllItems $allQAWorkflows -LanguageToItemMapping $languageToQAWorkflow -RemovedItems $RemovedItems
 }
 
 function Remove-UnusedLanguageFolders {
