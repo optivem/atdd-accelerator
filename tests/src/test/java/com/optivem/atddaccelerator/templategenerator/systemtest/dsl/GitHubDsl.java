@@ -126,4 +126,27 @@ public class GitHubDsl {
         var result = client.viewPages();
         assertSuccess(result, "GitHub Pages should be enabled.");
     }
+
+    public void verifyPagesSourceIsMainDocs() {
+        var result = client.viewPages();
+        assertSuccess(result, "Failed to get GitHub Pages info.");
+
+        var json = result.getOutput();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            var root = mapper.readTree(json);
+            var source = root.path("source");
+            String branch = source.path("branch").asText();
+            String path = source.path("path").asText();
+
+            assertThat(branch)
+                    .as("GitHub Pages source branch should be 'main'")
+                    .isEqualTo("main");
+            assertThat(path)
+                    .as("GitHub Pages source path should be '/docs'")
+                    .isEqualTo("/docs");
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse GitHub Pages JSON", e);
+        }
+    }
 }
