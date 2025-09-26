@@ -46,14 +46,12 @@ public class GithubClient {
         return executeProcess("gh", "api", "/repos/" + repositoryPath + "/contents/" + path);
     }
 
-    public String getReadmeContent() {
-        // TODO: VJ: Make consistent
-        var result = executeProcess("gh", "api", "/repos/" + repositoryPath + "/readme", "--jq", ".content");
+    public String getFileContent(String filePath) {
+        var result = executeProcess("gh", "api",
+                "-H", "Accept: application/vnd.github.raw",
+                "/repos/" + repositoryPath + "/contents/" + filePath);
         assertSuccess(result);
-
-        var content = result.getOutput().replaceAll("\\s+", "");
-        var decodedBytes = java.util.Base64.getDecoder().decode(content);
-        return new String(decodedBytes);
+        return result.getOutput();
     }
 
     public ProcessResult viewWorkflowRuns(String workflowFileName) {

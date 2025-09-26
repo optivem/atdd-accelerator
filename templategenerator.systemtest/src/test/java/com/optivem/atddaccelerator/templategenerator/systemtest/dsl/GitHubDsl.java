@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GitHubDsl {
 
+    private static final String README_PATH = "README.md";
+
     private final GithubClient client;
 
     public GitHubDsl(GithubClient client) {
@@ -46,27 +48,34 @@ public class GitHubDsl {
     }
 
     public void verifyReadmeContainsBadge(String badge) {
-        var readmeContent = client.getReadmeContent();
+        var readmeContent = getReadmeContent();
         assertTrue(readmeContent.contains(badge));
     }
 
     public void verifyReadmeDoesNotContainBadge(String badge) {
-        var readmeContent = client.getReadmeContent();
+        var readmeContent = getReadmeContent();
         assertThat(readmeContent).doesNotContain(badge);
     }
 
     public void verifyReadmeContainsBadge(String badge, String badgeSvg, String badgeWorkflow) {
-        var readmeContent = client.getReadmeContent();
+        var readmeContent = getReadmeContent();
         assertTrue(readmeContent.contains(badge));
         assertTrue(readmeContent.contains(badgeSvg));
         assertTrue(readmeContent.contains(badgeWorkflow));
     }
 
+    private String getReadmeContent() {
+        return client.getFileContent(README_PATH);
+    }
+
     public void verifyDockerComposeContainsImage(String dockerComposePath, String image) {
-        // var result = executeProcessExpectSuccess("gh", "api", "/repos/" + repositoryPath + "/" + dockerComposePath, "--jq", ".content");
+        var dockerComposeContent = client.getFileContent(dockerComposePath);
+        assertThat(dockerComposeContent).contains(image);
     }
 
     public void verifyDockerComposeDoesNotContainImage(String dockerComposePath, String image) {
+        var dockerComposeContent = client.getFileContent(dockerComposePath);
+        assertThat(dockerComposeContent).doesNotContain(image);
     }
 
     public void verifyWorkflowPasses(String workflowFileName) {
