@@ -13,4 +13,12 @@ public class Badges {
     public static String ACCEPTANCE_STAGE_TEST_JAVA = "acceptance-stage-test-java";
     public static String ACCEPTANCE_STAGE_TEST_DOTNET = "acceptance-stage-test-dotnet";
     public static String ACCEPTANCE_STAGE_TEST_TYPESCRIPT = "acceptance-stage-test-typescript";
+
+    public static String QA_STAGE_TEST_JAVA = "qa-stage-test-java";
+    public static String QA_STAGE_TEST_DOTNET = "qa-stage-test-dotnet";
+    public static String QA_STAGE_TEST_TYPESCRIPT = "qa-stage-test-typescript";
+
+    public static String PROD_STAGE_TEST_JAVA = "prod-stage-test-java";
+    public static String PROD_STAGE_TEST_DOTNET = "prod-stage-test-dotnet";
+    public static String PROD_STAGE_TEST_TYPESCRIPT = "prod-stage-test-typescript";
 }

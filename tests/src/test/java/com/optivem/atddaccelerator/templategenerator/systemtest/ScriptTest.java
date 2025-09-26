@@ -105,6 +105,14 @@ class ScriptTest {
         gitHub.verifyReadmeContainsBadge(Badges.ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.ACCEPTANCE_STAGE_TEST_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.ACCEPTANCE_STAGE_TEST_DOTNET);
+
+        gitHub.verifyReadmeContainsBadge(Badges.QA_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.QA_STAGE_TEST_JAVA);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.QA_STAGE_TEST_DOTNET);
+
+        gitHub.verifyReadmeContainsBadge(Badges.PROD_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.PROD_STAGE_TEST_JAVA);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.PROD_STAGE_TEST_DOTNET);
     }
 
     @Test
