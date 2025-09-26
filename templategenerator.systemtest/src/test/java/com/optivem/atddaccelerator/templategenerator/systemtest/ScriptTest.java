@@ -68,15 +68,15 @@ class ScriptTest {
         gitHub.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_DOTNET);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT);
 
-        // var javaImageName = String.format("ghcr.io/%s/%s/monolith-java:latest", REPO_OWNER, repoName);
+        var javaImageName = String.format("ghcr.io/%s/%s/monolith-java:latest", REPO_OWNER, repoName);
         // var dotnetImageName = String.format("ghcr.io/%s/%s/monolith-dotnet:latest", REPO_OWNER, repoName);
         // var typescriptImageName = String.format("ghcr.io/%s/%s/monolith-typescript:latest", REPO_OWNER, repoName);
 
-        // var dockerCompose = "system-test-java/docker-compose.yml";
+        var dockerCompose = "system-test-java/docker-compose.yml";
 
-        // githubClient.verifyDockerComposeContainsImage(dockerCompose, javaImageName);
-        // githubClient.verifyDockerComposeDoesNotContainImage(dockerCompose, dotnetImageName);
-        // githubClient.verifyDockerComposeDoesNotContainImage(dockerCompose, typescriptImageName);
+        gitHub.verifyDockerComposeContainsImage(dockerCompose, javaImageName);
+        // gitHub.verifyDockerComposeDoesNotContainImage(dockerCompose, dotnetImageName);
+        // gitHub.verifyDockerComposeDoesNotContainImage(dockerCompose, typescriptImageName);
 
     }
 

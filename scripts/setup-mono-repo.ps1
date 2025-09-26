@@ -118,6 +118,59 @@ function Update-ReadmeBadges {
     return $false
 }
 
+function Update-DockerComposeFiles {
+    param(
+        [string]$SystemLanguage,
+        [string]$RepositoryOwner,
+        [string]$RepositoryName
+    )
+    
+    Write-Output "Updating Docker Compose files..."
+    
+    # Find all docker-compose files in system-test folders
+    $dockerComposeFiles = Get-ChildItem -Path "system-test-*" -Include "docker-compose.yml" -Recurse -ErrorAction SilentlyContinue
+    
+    $filesUpdated = $false
+    
+    foreach ($file in $dockerComposeFiles) {
+        Write-Output "Updating Docker Compose file: $($file.FullName)"
+        
+        $content = Get-Content $file.FullName -Raw
+        $originalContent = $content
+        
+        # Replace the repository owner and name in image references
+        $content = $content -replace "ghcr\.io/optivem/atdd-accelerator-template-mono-repo/", "ghcr.io/$RepositoryOwner/$RepositoryName/"
+        
+        # For the selected language, uncomment the relevant service block
+        switch ($SystemLanguage.ToLower()) {
+            "java" {
+                # Uncomment Java service and comment out others
+                $content = $content -replace "# monolith:\s*\n\s*# {2}image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-java:latest", "monolith:`n  image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-java:latest"
+                $content = $content -replace "monolith:\s*\n\s*image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-(dotnet|typescript):latest", "# monolith:`n#   image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-`$1:latest"
+            }
+            "dotnet" {
+                # Uncomment .NET service and comment out others  
+                $content = $content -replace "# monolith:\s*\n\s*# {2}image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-dotnet:latest", "monolith:`n  image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-dotnet:latest"
+                $content = $content -replace "monolith:\s*\n\s*image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-(java|typescript):latest", "# monolith:`n#   image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-`$1:latest"
+            }
+            "typescript" {
+                # Uncomment TypeScript service and comment out others
+                $content = $content -replace "# monolith:\s*\n\s*# {2}image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-typescript:latest", "monolith:`n  image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-typescript:latest"
+                $content = $content -replace "monolith:\s*\n\s*image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-(java|dotnet):latest", "# monolith:`n#   image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-`$1:latest"
+            }
+        }
+        
+        if ($content -ne $originalContent) {
+            Set-Content -Path $file.FullName -Value $content -NoNewline
+            git add $file.FullName
+            $filesUpdated = $true
+            Write-Output "Updated: $($file.FullName)"
+        }
+    }
+    
+    return $filesUpdated
+}
+
 function Remove-UnusedLanguageFolders {
     param(
         [string]$SystemLanguage,
@@ -204,18 +257,18 @@ function Remove-UnusedLanguageFolders {
     # Update README badges
     $readmeUpdated = Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
     
+    # Update Docker Compose files
+    $dockerComposeUpdated = Update-DockerComposeFiles -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
+    
     # Commit and return whether changes were made
-    $hasChanges = ($removedItems.Count -gt 0) -or $readmeUpdated
+    $hasChanges = ($removedItems.Count -gt 0) -or $readmeUpdated -or $dockerComposeUpdated
     if ($hasChanges) {
-        if ($removedItems.Count -gt 0 -and $readmeUpdated) {
-            $removedList = $removedItems -join ", "
-            $commitMessage = "Remove unused language folders/system tests/workflows and update README: $removedList"
-        } elseif ($removedItems.Count -gt 0) {
-            $removedList = $removedItems -join ", "
-            $commitMessage = "Remove unused language folders, system tests and workflows: $removedList"
-        } else {
-            $commitMessage = "Update README badges"
-        }
+        $changes = @()
+        if ($removedItems.Count -gt 0) { $changes += "Remove unused folders/workflows" }
+        if ($readmeUpdated) { $changes += "Update README badges" }
+        if ($dockerComposeUpdated) { $changes += "Update Docker Compose files" }
+        
+        $commitMessage = $changes -join ", "
         git commit -m $commitMessage
         return $true
     }
