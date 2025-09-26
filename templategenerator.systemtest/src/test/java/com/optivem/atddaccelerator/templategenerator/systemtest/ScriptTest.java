@@ -1,7 +1,9 @@
 package com.optivem.atddaccelerator.templategenerator.systemtest;
 
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
-import com.optivem.atddaccelerator.templategenerator.systemtest.clients.TemplateGeneratorClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GeneratorClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.GeneratorDsl;
+import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.GitHubDsl;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Badges;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.RepositoryPaths;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
@@ -16,22 +18,23 @@ class ScriptTest {
 
     private static final String REPO_OWNER = "valentinajemuovic";
 
-    private TemplateGeneratorClient templateGeneratorClient = new TemplateGeneratorClient();
-    private GithubClient githubClient;
+    private GeneratorDsl generator;
+    private GitHubDsl gitHub;
     private String repoName;
 
     @BeforeEach
     void setup() {
         repoName = newName();
-        githubClient = new GithubClient(REPO_OWNER, repoName);
+        generator = new GeneratorDsl(new GeneratorClient());
+        gitHub = new GitHubDsl(new GithubClient(REPO_OWNER, repoName));
     }
 
     @AfterEach
     void teardown() {
-        var created = templateGeneratorClient.isCreated(repoName);
+        var created = generator.isCreated(repoName);
 
-        if(created && githubClient != null) {
-            githubClient.deleteRepository();
+        if(created && gitHub != null) {
+            gitHub.deleteRepository();
         }
     }
 
@@ -40,29 +43,29 @@ class ScriptTest {
 
         // System
 
-        templateGeneratorClient.generateNewRepository(repoName, Language.JAVA);
+        generator.generateNewRepository(repoName, Language.JAVA);
 
-        githubClient.verifyRepositoryExists();
+        gitHub.verifyRepositoryExists();
 
-        githubClient.verifyPathExists(RepositoryPaths.MONOLITH_JAVA);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
+        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
 
-        githubClient.verifyPathExists(RepositoryPaths.COMMIT_STAGE_JAVA);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
+        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
 
         var badgeSvg = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml/badge.svg", REPO_OWNER, repoName);
         var badgeWorkflow = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml", REPO_OWNER, repoName);
-        githubClient.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA, badgeSvg, badgeWorkflow);
-        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA, badgeSvg, badgeWorkflow);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
         // System Test
 
-        githubClient.verifyPathExists(RepositoryPaths.SYSTEM_TEST_JAVA);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_DOTNET);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT);
+        gitHub.verifyPathExists(RepositoryPaths.SYSTEM_TEST_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_DOTNET);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT);
 
         // var javaImageName = String.format("ghcr.io/%s/%s/monolith-java:latest", REPO_OWNER, repoName);
         // var dotnetImageName = String.format("ghcr.io/%s/%s/monolith-dotnet:latest", REPO_OWNER, repoName);
@@ -78,26 +81,26 @@ class ScriptTest {
 
     @Test
     void shouldCreateJavaRepositoryFull() {
-        templateGeneratorClient.generateNewRepository(repoName, Language.JAVA);
+        generator.generateNewRepository(repoName, Language.JAVA);
 
-        githubClient.verifyRepositoryExists();
+        gitHub.verifyRepositoryExists();
 
-        githubClient.verifyPathExists(RepositoryPaths.MONOLITH_JAVA);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
+        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
 
-        githubClient.verifyPathExists(RepositoryPaths.COMMIT_STAGE_JAVA);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
+        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
 
         var badgeSvg = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml/badge.svg", REPO_OWNER, repoName);
         var badgeWorkflow = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml", REPO_OWNER, repoName);
-        githubClient.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA, badgeSvg, badgeWorkflow);
-        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA, badgeSvg, badgeWorkflow);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
         // Slow running
-        githubClient.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_JAVA);
 
         // TODO: Verify only one package remains, that rest are deleted
 
@@ -105,53 +108,53 @@ class ScriptTest {
 
     @Test
     void shouldCreateDotNetRepositoryFull() {
-        templateGeneratorClient.generateNewRepository(repoName, Language.DOTNET);
+        generator.generateNewRepository(repoName, Language.DOTNET);
 
-        githubClient.verifyRepositoryExists();
+        gitHub.verifyRepositoryExists();
 
-        githubClient.verifyPathExists(RepositoryPaths.MONOLITH_DOTNET);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
+        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_DOTNET);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
 
-        githubClient.verifyPathExists(RepositoryPaths.COMMIT_STAGE_DOTNET);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
+        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_DOTNET);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
 
         var badgeSvg = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-dotnet.yml/badge.svg", REPO_OWNER, repoName);
         var badgeWorkflow = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-dotnet.yml", REPO_OWNER, repoName);
-        githubClient.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET, badgeSvg, badgeWorkflow);
-        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET, badgeSvg, badgeWorkflow);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
-        githubClient.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
+        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
     }
     
     @Test
     void shouldCreateTypeScriptRepositoryFull() {
-        templateGeneratorClient.generateNewRepository(repoName, Language.TYPESCRIPT);
+        generator.generateNewRepository(repoName, Language.TYPESCRIPT);
 
-        githubClient.verifyRepositoryExists();
+        gitHub.verifyRepositoryExists();
 
-        githubClient.verifyPathExists(RepositoryPaths.MONOLITH_TYPESCRIPT);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
+        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_TYPESCRIPT);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
 
-        githubClient.verifyPathExists(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
-        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
+        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
 
         var badgeSvg = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-typescript.yml/badge.svg", REPO_OWNER, repoName);
         var badgeWorkflow = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-typescript.yml", REPO_OWNER, repoName);
-        githubClient.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT, badgeSvg, badgeWorkflow);
-        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT, badgeSvg, badgeWorkflow);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
 
-        githubClient.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
     }
 
     @Test
     void shouldReturnErrorForInvalidLanguage() {
-        templateGeneratorClient.generateNewRepositoryExpectError(repoName, "invalidLang");
+        generator.generateNewRepositoryExpectError(repoName, "invalidLang");
     }
 
 
