@@ -77,6 +77,10 @@ class ScriptTest {
         gitHub.verifyDockerComposeContainsImage(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, javaImageName);
         gitHub.verifyDockerComposeDoesNotContainImage(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, dotnetImageName);
         gitHub.verifyDockerComposeDoesNotContainImage(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, typescriptImageName);
+
+        gitHub.verifyPathExists(RepositoryPaths.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.LOCAL_ACCEPTANCE_STAGE_TEST_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.LOCAL_ACCEPTANCE_STAGE_TEST_DOTNET);
     }
 
     @Test

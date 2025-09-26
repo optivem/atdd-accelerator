@@ -239,7 +239,14 @@ function Remove-UnusedLanguageFolders {
         ".github/workflows/commit-stage-monolith-typescript.yml"
     )
     
-    # Map language to items to keep
+    # Define all local acceptance stage test workflows
+    $allLocalAcceptanceWorkflows = @(
+        ".github/workflows/local-acceptance-stage-test-java.yml",
+        ".github/workflows/local-acceptance-stage-test-dotnet.yml",
+        ".github/workflows/local-acceptance-stage-test-typescript.yml"
+    )
+    
+    # Map languages to items to keep
     $languageToFolder = @{
         "java" = "monolith-java"
         "dotnet" = "monolith-dotnet" 
@@ -258,14 +265,22 @@ function Remove-UnusedLanguageFolders {
         "typescript" = ".github/workflows/commit-stage-monolith-typescript.yml"
     }
     
-    # Get the values directly - USE DIFFERENT LANGUAGES FOR DIFFERENT PURPOSES
+    $languageToLocalAcceptanceWorkflow = @{
+        "java" = ".github/workflows/local-acceptance-stage-test-java.yml"
+        "dotnet" = ".github/workflows/local-acceptance-stage-test-dotnet.yml"
+        "typescript" = ".github/workflows/local-acceptance-stage-test-typescript.yml"
+    }
+    
+    # Get the values directly
     $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
-    $keepSystemTest = $languageToSystemTest[$SystemTestLanguage.ToLower()]  # Use SystemTestLanguage here!
+    $keepSystemTest = $languageToSystemTest[$SystemTestLanguage.ToLower()]
     $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
+    $keepLocalAcceptanceWorkflow = $languageToLocalAcceptanceWorkflow[$SystemTestLanguage.ToLower()]
     
     Write-Output "Keeping folder: $keepFolder"
     Write-Output "Keeping system test: $keepSystemTest"
     Write-Output "Keeping workflow: $keepWorkflow"
+    Write-Output "Keeping local acceptance workflow: $keepLocalAcceptanceWorkflow"
     
     # Remove unused items
     $removedItems = @()
@@ -290,13 +305,23 @@ function Remove-UnusedLanguageFolders {
         }
     }
     
-    # Remove workflow files
+    # Remove commit stage workflow files
     foreach ($workflow in $allWorkflows) {
         if ($workflow -ne $keepWorkflow -and (Test-Path $workflow)) {
             Write-Output "Removing workflow: $workflow"
             Remove-Item -Force $workflow
             git rm $workflow
             $removedItems += $workflow
+        }
+    }
+    
+    # Remove local acceptance stage test workflow files
+    foreach ($localAcceptanceWorkflow in $allLocalAcceptanceWorkflows) {
+        if ($localAcceptanceWorkflow -ne $keepLocalAcceptanceWorkflow -and (Test-Path $localAcceptanceWorkflow)) {
+            Write-Output "Removing local acceptance workflow: $localAcceptanceWorkflow"
+            Remove-Item -Force $localAcceptanceWorkflow
+            git rm $localAcceptanceWorkflow
+            $removedItems += $localAcceptanceWorkflow
         }
     }
     

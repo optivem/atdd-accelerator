@@ -16,4 +16,9 @@ public class RepositoryPaths {
     public static final String SYSTEM_TEST_JAVA_DOCKER_COMPOSE = "system-test-java/docker-compose.yml";
     public static final String SYSTEM_TEST_DOTNET_DOCKER_COMPOSE = "system-test-dotnet/docker-compose.yml";
     public static final String SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE = "system-test-typescript/docker-compose.yml";
+
+
+    public static final String LOCAL_ACCEPTANCE_STAGE_TEST_JAVA = ".github/workflows/local-acceptance-stage-test-java.yml";
+    public static final String LOCAL_ACCEPTANCE_STAGE_TEST_DOTNET = ".github/workflows/local-acceptance-stage-test-dotnet.yml";
+    public static final String LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT = ".github/workflows/local-acceptance-stage-test-typescript.yml";
 }

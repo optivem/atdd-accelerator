@@ -169,10 +169,14 @@ _Note for Step 3: We have only one commit Stage because we're using a Monolith, 
 ```
 --> DELETE
 
+
 4. Now change the path so that it corresponds to this Repository, specifically replacing this part `optivem/atdd-accelerator-template-mono-repo` for example:
     - TEMPLATE: `image: ghcr.io/optivem/atdd-accelerator-template-mono-repo/monolith-java:latest`
     - UPDATED: `image: ghcr.io/valentinajemuovic/eshop/monolith-java:latest`
 _Note: This step is critical that you get the path right! Otherwise, your System Tests & Release will fail!_
+
+
+TODO: VJ: Continue here
 
 6. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
    - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
