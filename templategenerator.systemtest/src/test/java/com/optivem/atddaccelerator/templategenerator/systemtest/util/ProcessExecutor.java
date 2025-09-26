@@ -45,17 +45,7 @@ public class ProcessExecutor {
         return new ProcessResult(exitCode, outputStr, errorsStr);
     }
 
-    public static ProcessResult executeProcessExpectSuccess(String... command) {
-        var result = executeProcess(command);
-        assertThat(result.isSuccess()).withFailMessage(() -> "Process finished with exit code " + result.getExitCode() + "\nErrors: " + result.getErrors()).isTrue();
-        return result;
-    }
 
-    public static ProcessResult executeProcessExpectError(String... command) {
-        var result = executeProcess(command);
-        assertThat(result.isError()).withFailMessage(() -> "Process finished with exit code " + result.getExitCode() + "\nErrors: " + result.getErrors()).isTrue();
-        return result;
-    }
 
     public static void waitTime(int millis) {
         try {

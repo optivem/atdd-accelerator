@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.*;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertFailure;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertSuccess;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TemplateGeneratorClient {
@@ -21,13 +23,16 @@ public class TemplateGeneratorClient {
     }
 
     public void generateNewRepository(String repoName, String systemLanguage) {
-        executeProcessExpectSuccess("pwsh", SCRIPT_PATH, "-RepositoryName", repoName, "-SystemLanguage", systemLanguage);
+        var result = executeProcess("pwsh", SCRIPT_PATH, "-RepositoryName", repoName, "-SystemLanguage", systemLanguage);
+        assertSuccess(result);
+
         waitTime(MILLIS);
         created.add(repoName);
     }
 
     public void generateNewRepositoryExpectError(String repoName, String systemLanguage) {
-        executeProcessExpectError("pwsh", SCRIPT_PATH, "-RepositoryName", repoName, "-SystemLanguage", systemLanguage);
+        var result = executeProcess("pwsh", SCRIPT_PATH, "-RepositoryName", repoName, "-SystemLanguage", systemLanguage);
+        assertFailure(result);
     }
 
 }
