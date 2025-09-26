@@ -11,20 +11,20 @@ import dev.failsafe.RetryPolicy;
 import java.time.Duration;
 import java.util.List;
 
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.executeProcess;
 import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertFailure;
 import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertSuccess;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GitHubDsl {
 
     private static final String README_PATH = "README.md";
 
     private final GithubClient client;
+    private final String repositoryPath;
 
     public GitHubDsl(GithubClient client) {
         this.client = client;
+        this.repositoryPath = client.getRepositoryPath();
     }
 
     public void verifyRepositoryExists() {
@@ -49,7 +49,13 @@ public class GitHubDsl {
 
     public void verifyReadmeContainsBadge(String badge) {
         var readmeContent = getReadmeContent();
+
+        var badgeSvg = String.format("https://github.com/%s/actions/workflows/commit-stage-monolith-java.yml/badge.svg", repositoryPath);
+        var badgeWorkflow = String.format("https://github.com/%s/actions/workflows/commit-stage-monolith-java.yml", repositoryPath);
+
         assertThat(readmeContent).contains(badge).as("README should contain badge: " + badge);
+        assertThat(readmeContent).contains(badgeSvg).as("README should contain badge SVG: " + badgeSvg);
+        assertThat(readmeContent).contains(badgeWorkflow).as("README should contain badge workflow link: " + badgeWorkflow);
     }
 
     public void verifyReadmeDoesNotContainBadge(String badge) {
@@ -57,12 +63,12 @@ public class GitHubDsl {
         assertThat(readmeContent).doesNotContain(badge).as("README should not contain badge: " + badge);
     }
 
-    public void verifyReadmeContainsBadge(String badge, String badgeSvg, String badgeWorkflow) {
-        var readmeContent = getReadmeContent();
-        assertThat(readmeContent).contains(badge).as("README should contain badge: " + badge);
-        assertThat(readmeContent).contains(badgeSvg).as("README should contain badge SVG: " + badgeSvg);
-        assertThat(readmeContent).contains(badgeWorkflow).as("README should contain badge workflow link: " + badgeWorkflow);
-    }
+//    public void verifyReadmeContainsBadge(String badge, String badgeSvg, String badgeWorkflow) {
+//        var readmeContent = getReadmeContent();
+//        assertThat(readmeContent).contains(badge).as("README should contain badge: " + badge);
+//        assertThat(readmeContent).contains(badgeSvg).as("README should contain badge SVG: " + badgeSvg);
+//        assertThat(readmeContent).contains(badgeWorkflow).as("README should contain badge workflow link: " + badgeWorkflow);
+//    }
 
     private String getReadmeContent() {
         return client.getFileContent(README_PATH);

@@ -56,9 +56,7 @@ class ScriptTest {
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
 
-        var badgeSvg = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml/badge.svg", REPO_OWNER, repoName);
-        var badgeWorkflow = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml", REPO_OWNER, repoName);
-        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA, badgeSvg, badgeWorkflow);
+        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
@@ -116,9 +114,7 @@ class ScriptTest {
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
 
-        var badgeSvg = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml/badge.svg", REPO_OWNER, repoName);
-        var badgeWorkflow = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml", REPO_OWNER, repoName);
-        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA, badgeSvg, badgeWorkflow);
+        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
@@ -144,9 +140,7 @@ class ScriptTest {
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
 
-        var badgeSvg = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-dotnet.yml/badge.svg", REPO_OWNER, repoName);
-        var badgeWorkflow = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-dotnet.yml", REPO_OWNER, repoName);
-        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET, badgeSvg, badgeWorkflow);
+        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
@@ -167,10 +161,8 @@ class ScriptTest {
         gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
-
-        var badgeSvg = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-typescript.yml/badge.svg", REPO_OWNER, repoName);
-        var badgeWorkflow = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-typescript.yml", REPO_OWNER, repoName);
-        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT, badgeSvg, badgeWorkflow);
+        
+        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
 
