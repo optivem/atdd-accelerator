@@ -22,7 +22,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: templategenerator.systemtest
+        working-directory: tests
 
     steps:
     - uses: actions/checkout@v4
