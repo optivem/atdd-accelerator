@@ -21,7 +21,6 @@ function Get-LanguageItems {
 
 function Remove-LanguageSpecificItems {
     param(
-        [string]$ItemType,
         [string]$Language,
         [array]$AllItems,
         [hashtable]$LanguageToItemMapping,
@@ -30,11 +29,11 @@ function Remove-LanguageSpecificItems {
     )
     
     $keepItem = $LanguageToItemMapping[$Language.ToLower()]
-    Write-Output "Keeping $ItemType`: $keepItem"
+    Write-Output "Keeping: $keepItem"
     
     foreach ($item in $AllItems) {
         if ($item -ne $keepItem -and (Test-Path $item)) {
-            Write-Output "Removing $ItemType`: $item"
+            Write-Output "Removing: $item"
             
             if ($IsFolder) {
                 Remove-Item -Recurse -Force $item
@@ -58,7 +57,7 @@ function Remove-MonolithFolders {
     )
     
     $items = Get-LanguageItems -PathTemplate "monolith-{language}"
-    return Remove-LanguageSpecificItems -ItemType "folder" -Language $SystemLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems -IsFolder
+    return Remove-LanguageSpecificItems -Language $SystemLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems -IsFolder
 }
 
 function Remove-SystemTestFolders {
@@ -68,7 +67,7 @@ function Remove-SystemTestFolders {
     )
     
     $items = Get-LanguageItems -PathTemplate "system-test-{language}"
-    return Remove-LanguageSpecificItems -ItemType "system test" -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems -IsFolder
+    return Remove-LanguageSpecificItems -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems -IsFolder
 }
 
 function Remove-CommitWorkflows {
@@ -78,7 +77,7 @@ function Remove-CommitWorkflows {
     )
     
     $items = Get-LanguageItems -PathTemplate ".github/workflows/commit-stage-monolith-{language}.yml"
-    return Remove-LanguageSpecificItems -ItemType "commit workflow" -Language $SystemLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
+    return Remove-LanguageSpecificItems -Language $SystemLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
 }
 
 function Remove-LocalAcceptanceWorkflows {
@@ -88,7 +87,7 @@ function Remove-LocalAcceptanceWorkflows {
     )
     
     $items = Get-LanguageItems -PathTemplate ".github/workflows/local-acceptance-stage-test-{language}.yml"
-    return Remove-LanguageSpecificItems -ItemType "local acceptance workflow" -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
+    return Remove-LanguageSpecificItems -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
 }
 
 function Remove-AcceptanceWorkflows {
@@ -98,7 +97,7 @@ function Remove-AcceptanceWorkflows {
     )
     
     $items = Get-LanguageItems -PathTemplate ".github/workflows/acceptance-stage-test-{language}.yml"
-    return Remove-LanguageSpecificItems -ItemType "acceptance workflow" -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
+    return Remove-LanguageSpecificItems -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
 }
 
 function Remove-QAWorkflows {
@@ -108,7 +107,7 @@ function Remove-QAWorkflows {
     )
     
     $items = Get-LanguageItems -PathTemplate ".github/workflows/qa-stage-test-{language}.yml"
-    return Remove-LanguageSpecificItems -ItemType "QA workflow" -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
+    return Remove-LanguageSpecificItems -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
 }
 
 function Remove-UnusedLanguageFolders {
