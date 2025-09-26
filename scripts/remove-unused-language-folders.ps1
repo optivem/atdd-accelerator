@@ -1,3 +1,39 @@
+function Remove-QAWorkflows {
+    param(
+        [string]$SystemTestLanguage,
+        [array]$RemovedItems
+    )
+    
+    # Define all QA stage test workflows
+    $allQAWorkflows = @(
+        ".github/workflows/qa-stage-test-java.yml",
+        ".github/workflows/qa-stage-test-dotnet.yml",
+        ".github/workflows/qa-stage-test-typescript.yml"
+    )
+
+    $languageToQAWorkflow = @{
+        "java" = ".github/workflows/qa-stage-test-java.yml"
+        "dotnet" = ".github/workflows/qa-stage-test-dotnet.yml"
+        "typescript" = ".github/workflows/qa-stage-test-typescript.yml"
+    }
+
+    $keepQAWorkflow = $languageToQAWorkflow[$SystemTestLanguage.ToLower()]
+    
+    Write-Output "Keeping QA workflow: $keepQAWorkflow"
+
+    # Remove QA stage test workflow files
+    foreach ($qaWorkflow in $allQAWorkflows) {
+        if ($qaWorkflow -ne $keepQAWorkflow -and (Test-Path $qaWorkflow)) {
+            Write-Output "Removing QA workflow: $qaWorkflow"
+            Remove-Item -Force $qaWorkflow
+            git rm $qaWorkflow
+            $RemovedItems += $qaWorkflow
+        }
+    }
+    
+    return $RemovedItems
+}
+
 function Remove-UnusedLanguageFolders {
     param(
         [string]$SystemLanguage,
@@ -37,13 +73,6 @@ function Remove-UnusedLanguageFolders {
         ".github/workflows/acceptance-stage-test-typescript.yml"
     )
     
-    # Define all QA stage test workflows
-    $allQAWorkflows = @(
-        ".github/workflows/qa-stage-test-java.yml",
-        ".github/workflows/qa-stage-test-dotnet.yml",
-        ".github/workflows/qa-stage-test-typescript.yml"
-    )
-    
     # Map languages to items to keep
     $languageToFolder = @{
         "java" = "monolith-java"
@@ -75,26 +104,18 @@ function Remove-UnusedLanguageFolders {
         "typescript" = ".github/workflows/acceptance-stage-test-typescript.yml"
     }
     
-    $languageToQAWorkflow = @{
-        "java" = ".github/workflows/qa-stage-test-java.yml"
-        "dotnet" = ".github/workflows/qa-stage-test-dotnet.yml"
-        "typescript" = ".github/workflows/qa-stage-test-typescript.yml"
-    }
-    
     # Get the values directly
     $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
     $keepSystemTest = $languageToSystemTest[$SystemTestLanguage.ToLower()]
     $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
     $keepLocalAcceptanceWorkflow = $languageToLocalAcceptanceWorkflow[$SystemTestLanguage.ToLower()]
     $keepAcceptanceWorkflow = $languageToAcceptanceWorkflow[$SystemTestLanguage.ToLower()]
-    $keepQAWorkflow = $languageToQAWorkflow[$SystemTestLanguage.ToLower()]
     
     Write-Output "Keeping folder: $keepFolder"
     Write-Output "Keeping system test: $keepSystemTest"
     Write-Output "Keeping workflow: $keepWorkflow"
     Write-Output "Keeping local acceptance workflow: $keepLocalAcceptanceWorkflow"
     Write-Output "Keeping acceptance workflow: $keepAcceptanceWorkflow"
-    Write-Output "Keeping QA workflow: $keepQAWorkflow"
     
     # Remove unused items
     $removedItems = @()
@@ -149,15 +170,8 @@ function Remove-UnusedLanguageFolders {
         }
     }
     
-    # Remove QA stage test workflow files
-    foreach ($qaWorkflow in $allQAWorkflows) {
-        if ($qaWorkflow -ne $keepQAWorkflow -and (Test-Path $qaWorkflow)) {
-            Write-Output "Removing QA workflow: $qaWorkflow"
-            Remove-Item -Force $qaWorkflow
-            git rm $qaWorkflow
-            $removedItems += $qaWorkflow
-        }
-    }
+    # Remove QA workflows using helper method
+    $removedItems = Remove-QAWorkflows -SystemTestLanguage $SystemTestLanguage -RemovedItems $removedItems
     
     # Update README badges
     $readmeUpdated = Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
