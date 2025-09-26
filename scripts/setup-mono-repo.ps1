@@ -141,30 +141,70 @@ function Update-DockerComposeFiles {
         $content = Get-Content $file.FullName -Raw
         $originalContent = $content
         
-        # Replace the repository owner and name in image references
+        # First, update repository references
         $content = $content -replace "ghcr\.io/optivem/atdd-accelerator-template-mono-repo/", "ghcr.io/$RepositoryOwner/$RepositoryName/"
         
-        # For the selected language, uncomment the relevant service block
-        switch ($SystemLanguage.ToLower()) {
-            "java" {
-                # Uncomment Java service and comment out others
-                $content = $content -replace "# monolith:\s*\n\s*# {2}image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-java:latest", "monolith:`n  image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-java:latest"
-                $content = $content -replace "monolith:\s*\n\s*image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-(dotnet|typescript):latest", "# monolith:`n#   image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-`$1:latest"
+        # Define the target language service
+        $targetService = "monolith-$($SystemLanguage.ToLower())"
+        
+        # Split content into lines for processing
+        $lines = $content -split "`n"
+        $newLines = @()
+        
+        $i = 0
+        while ($i -lt $lines.Length) {
+            $line = $lines[$i]
+            
+            # Check if this line starts a monolith service block
+            if ($line -match "^\s*#?\s*monolith:\s*$") {
+                # Look ahead to find the image line to determine the language
+                $serviceLanguage = ""
+                $serviceLines = @()
+                $serviceLines += $line
+                
+                $j = $i + 1
+                while ($j -lt $lines.Length -and $lines[$j] -match "^\s+(#\s*)?[^a-zA-Z]") {
+                    $serviceLines += $lines[$j]
+                    if ($lines[$j] -match "image:.*/(monolith-(java|dotnet|typescript)):latest") {
+                        $serviceLanguage = $matches[2]
+                    }
+                    $j++
+                }
+                
+                # If this is the target language, keep and uncomment the service
+                if ($serviceLanguage -eq $SystemLanguage.ToLower()) {
+                    foreach ($serviceLine in $serviceLines) {
+                        # Uncomment and add to new lines
+                        $cleanLine = $serviceLine -replace "^\s*#\s*", ""
+                        if ($cleanLine -match "^monolith:\s*$") {
+                            $newLines += "monolith:"
+                        } elseif ($cleanLine -match "^\s*image:") {
+                            $newLines += "  image: " + ($cleanLine -replace "^\s*image:\s*", "")
+                        } elseif ($cleanLine -match "^\s*ports:") {
+                            $newLines += "  ports:"
+                        } elseif ($cleanLine -match "^\s*-\s*") {
+                            $newLines += "    " + ($cleanLine -replace "^\s*-\s*", "- ")
+                        } else {
+                            $newLines += $cleanLine
+                        }
+                    }
+                }
+                # If not target language, skip this entire service block
+                
+                # Move index past this service block
+                $i = $j - 1
+            } else {
+                # Not a monolith service line, keep as-is
+                $newLines += $line
             }
-            "dotnet" {
-                # Uncomment .NET service and comment out others  
-                $content = $content -replace "# monolith:\s*\n\s*# {2}image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-dotnet:latest", "monolith:`n  image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-dotnet:latest"
-                $content = $content -replace "monolith:\s*\n\s*image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-(java|typescript):latest", "# monolith:`n#   image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-`$1:latest"
-            }
-            "typescript" {
-                # Uncomment TypeScript service and comment out others
-                $content = $content -replace "# monolith:\s*\n\s*# {2}image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-typescript:latest", "monolith:`n  image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-typescript:latest"
-                $content = $content -replace "monolith:\s*\n\s*image: ghcr\.io/$RepositoryOwner/$RepositoryName/monolith-(java|dotnet):latest", "# monolith:`n#   image: ghcr.io/$RepositoryOwner/$RepositoryName/monolith-`$1:latest"
-            }
+            $i++
         }
         
-        if ($content -ne $originalContent) {
-            Set-Content -Path $file.FullName -Value $content -NoNewline
+        # Join lines back together
+        $newContent = $newLines -join "`n"
+        
+        if ($newContent -ne $originalContent) {
+            Set-Content -Path $file.FullName -Value $newContent -NoNewline
             git add $file.FullName
             $filesUpdated = $true
             Write-Output "Updated: $($file.FullName)"

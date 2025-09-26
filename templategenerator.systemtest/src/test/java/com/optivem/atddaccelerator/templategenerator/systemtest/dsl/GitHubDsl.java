@@ -49,19 +49,19 @@ public class GitHubDsl {
 
     public void verifyReadmeContainsBadge(String badge) {
         var readmeContent = getReadmeContent();
-        assertTrue(readmeContent.contains(badge));
+        assertThat(readmeContent).contains(badge).as("README should contain badge: " + badge);
     }
 
     public void verifyReadmeDoesNotContainBadge(String badge) {
         var readmeContent = getReadmeContent();
-        assertThat(readmeContent).doesNotContain(badge);
+        assertThat(readmeContent).doesNotContain(badge).as("README should not contain badge: " + badge);
     }
 
     public void verifyReadmeContainsBadge(String badge, String badgeSvg, String badgeWorkflow) {
         var readmeContent = getReadmeContent();
-        assertTrue(readmeContent.contains(badge));
-        assertTrue(readmeContent.contains(badgeSvg));
-        assertTrue(readmeContent.contains(badgeWorkflow));
+        assertThat(readmeContent).contains(badge).as("README should contain badge: " + badge);
+        assertThat(readmeContent).contains(badgeSvg).as("README should contain badge SVG: " + badgeSvg);
+        assertThat(readmeContent).contains(badgeWorkflow).as("README should contain badge workflow link: " + badgeWorkflow);
     }
 
     private String getReadmeContent() {
@@ -70,18 +70,19 @@ public class GitHubDsl {
 
     public void verifyDockerComposeContainsImage(String dockerComposePath, String image) {
         var dockerComposeContent = client.getFileContent(dockerComposePath);
-        assertThat(dockerComposeContent).contains(image);
+        assertThat(dockerComposeContent).contains(image).as("Docker Compose should contain image: " + image);
     }
 
     public void verifyDockerComposeDoesNotContainImage(String dockerComposePath, String image) {
         var dockerComposeContent = client.getFileContent(dockerComposePath);
-        assertThat(dockerComposeContent).doesNotContain(image);
+        assertThat(dockerComposeContent).doesNotContain(image).as("Docker Compose should not contain image: " + image);
     }
 
     public void verifyWorkflowPasses(String workflowFileName) {
         var workflowRun = waitUntilCompleted(workflowFileName);
 
-        assertThat(workflowRun.getConclusion()).isEqualTo("success");
+        assertThat(workflowRun.getConclusion()).isEqualTo("success",
+                "Workflow '" + workflowFileName + "' should pass, but concluded with: " + workflowRun.getConclusion());
     }
 
     private WorkflowRunResult waitUntilCompleted(String workflowFileName) {
@@ -106,7 +107,7 @@ public class GitHubDsl {
 
     private WorkflowRunResult getWorklowRunResult(String workflowFileName) {
         var result = client.viewWorkflowRuns(workflowFileName);
-        assertSuccess(result);
+        assertSuccess(result, "Failed to get workflow runs for '" + workflowFileName + "'.");
 
         var jsonOutput = result.getOutput();
         var workflowRunes = parseWorkflowRuns(jsonOutput);
