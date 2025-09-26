@@ -100,6 +100,9 @@ function Remove-UnusedLanguageFolders {
     # Remove QA workflows
     $removedItems = Remove-ItemsByTemplate -PathTemplate ".github/workflows/qa-stage-test-{language}.yml" -Language $SystemTestLanguage -RemovedItems $removedItems
     
+    # Remove production workflows
+    $removedItems = Remove-ItemsByTemplate -PathTemplate ".github/workflows/prod-stage-test-{language}.yml" -Language $SystemTestLanguage -RemovedItems $removedItems
+    
     # Update README badges
     $readmeUpdated = Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
     

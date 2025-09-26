@@ -89,6 +89,10 @@ class ScriptTest {
         gitHub.verifyPathExists(RepositoryPaths.QA_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.QA_STAGE_TEST_JAVA);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.QA_STAGE_TEST_DOTNET);
+
+        gitHub.verifyPathExists(RepositoryPaths.PRODUCTION_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_DOTNET);
     }
 
     @Test
