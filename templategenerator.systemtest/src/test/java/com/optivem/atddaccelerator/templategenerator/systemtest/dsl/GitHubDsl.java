@@ -29,7 +29,7 @@ public class GitHubDsl {
 
     public void verifyRepositoryExists() {
         var result = client.viewRepository();
-        assertSuccess(result);
+        assertSuccess(result, "Repository '" + client.getRepositoryPath() + "' should exist.");
     }
 
     public void verifyPathExists(String path) {
@@ -44,7 +44,7 @@ public class GitHubDsl {
 
     public void deleteRepository() {
         var result = client.deleteRepository();
-        assertSuccess(result);
+        assertSuccess(result, "Failed to delete repository '" + client.getRepositoryPath() + "'.");
     }
 
     public void verifyReadmeContainsBadge(String badge) {

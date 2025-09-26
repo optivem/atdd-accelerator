@@ -12,4 +12,8 @@ public class RepositoryPaths {
     public static final String SYSTEM_TEST_JAVA = "system-test-java";
     public static final String SYSTEM_TEST_DOTNET = "system-test-dotnet";
     public static final String SYSTEM_TEST_TYPESCRIPT = "system-test-typescript";
+
+    public static final String SYSTEM_TEST_JAVA_DOCKER_COMPOSE = "system-test-java/docker-compose.yml";
+    public static final String SYSTEM_TEST_DOTNET_DOCKER_COMPOSE = "system-test-dotnet/docker-compose.yml";
+    public static final String SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE = "system-test-typescript/docker-compose.yml";
 }
