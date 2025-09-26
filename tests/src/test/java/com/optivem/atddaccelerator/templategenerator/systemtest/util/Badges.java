@@ -9,4 +9,8 @@ public class Badges {
     public static String LOCAL_ACCEPTANCE_STAGE_TEST_JAVA = "local-acceptance-stage-test-java";
     public static String LOCAL_ACCEPTANCE_STAGE_TEST_DOTNET = "local-acceptance-stage-test-dotnet";
     public static String LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT = "local-acceptance-stage-test-typescript";
+
+    public static String ACCEPTANCE_STAGE_TEST_JAVA = "acceptance-stage-test-java";
+    public static String ACCEPTANCE_STAGE_TEST_DOTNET = "acceptance-stage-test-dotnet";
+    public static String ACCEPTANCE_STAGE_TEST_TYPESCRIPT = "acceptance-stage-test-typescript";
 }

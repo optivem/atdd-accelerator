@@ -90,15 +90,21 @@ class ScriptTest {
         gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_JAVA);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_DOTNET);
 
-        // Badges
+        // Pipeline Badges - System
 
         gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
+        // Pipeline Badges - Release & System Test
+
         gitHub.verifyReadmeContainsBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_JAVA);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_DOTNET);
+
+        gitHub.verifyReadmeContainsBadge(Badges.ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.ACCEPTANCE_STAGE_TEST_JAVA);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.ACCEPTANCE_STAGE_TEST_DOTNET);
     }
 
     @Test
