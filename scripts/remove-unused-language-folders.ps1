@@ -1,3 +1,24 @@
+function Get-LanguageItems {
+    param(
+        [string]$PathTemplate,
+        [array]$Languages = @("java", "dotnet", "typescript")
+    )
+    
+    $allItems = @()
+    $languageToItemMapping = @{}
+    
+    foreach ($language in $Languages) {
+        $item = $PathTemplate -replace '\{language\}', $language
+        $allItems += $item
+        $languageToItemMapping[$language] = $item
+    }
+    
+    return @{
+        AllItems = $allItems
+        LanguageToItemMapping = $languageToItemMapping
+    }
+}
+
 function Remove-LanguageSpecificItems {
     param(
         [string]$ItemType,
@@ -36,14 +57,8 @@ function Remove-MonolithFolders {
         [array]$RemovedItems
     )
     
-    $allFolders = @("monolith-java", "monolith-dotnet", "monolith-typescript")
-    $languageToFolder = @{
-        "java" = "monolith-java"
-        "dotnet" = "monolith-dotnet" 
-        "typescript" = "monolith-typescript"
-    }
-    
-    return Remove-LanguageSpecificItems -ItemType "folder" -Language $SystemLanguage -AllItems $allFolders -LanguageToItemMapping $languageToFolder -RemovedItems $RemovedItems -IsFolder
+    $items = Get-LanguageItems -PathTemplate "monolith-{language}"
+    return Remove-LanguageSpecificItems -ItemType "folder" -Language $SystemLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems -IsFolder
 }
 
 function Remove-SystemTestFolders {
@@ -52,14 +67,8 @@ function Remove-SystemTestFolders {
         [array]$RemovedItems
     )
     
-    $allSystemTests = @("system-test-java", "system-test-dotnet", "system-test-typescript")
-    $languageToSystemTest = @{
-        "java" = "system-test-java"
-        "dotnet" = "system-test-dotnet"
-        "typescript" = "system-test-typescript"
-    }
-    
-    return Remove-LanguageSpecificItems -ItemType "system test" -Language $SystemTestLanguage -AllItems $allSystemTests -LanguageToItemMapping $languageToSystemTest -RemovedItems $RemovedItems -IsFolder
+    $items = Get-LanguageItems -PathTemplate "system-test-{language}"
+    return Remove-LanguageSpecificItems -ItemType "system test" -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems -IsFolder
 }
 
 function Remove-CommitWorkflows {
@@ -68,18 +77,8 @@ function Remove-CommitWorkflows {
         [array]$RemovedItems
     )
     
-    $allWorkflows = @(
-        ".github/workflows/commit-stage-monolith-java.yml",
-        ".github/workflows/commit-stage-monolith-dotnet.yml", 
-        ".github/workflows/commit-stage-monolith-typescript.yml"
-    )
-    $languageToWorkflow = @{
-        "java" = ".github/workflows/commit-stage-monolith-java.yml"
-        "dotnet" = ".github/workflows/commit-stage-monolith-dotnet.yml"
-        "typescript" = ".github/workflows/commit-stage-monolith-typescript.yml"
-    }
-    
-    return Remove-LanguageSpecificItems -ItemType "commit workflow" -Language $SystemLanguage -AllItems $allWorkflows -LanguageToItemMapping $languageToWorkflow -RemovedItems $RemovedItems
+    $items = Get-LanguageItems -PathTemplate ".github/workflows/commit-stage-monolith-{language}.yml"
+    return Remove-LanguageSpecificItems -ItemType "commit workflow" -Language $SystemLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
 }
 
 function Remove-LocalAcceptanceWorkflows {
@@ -88,18 +87,8 @@ function Remove-LocalAcceptanceWorkflows {
         [array]$RemovedItems
     )
     
-    $allLocalAcceptanceWorkflows = @(
-        ".github/workflows/local-acceptance-stage-test-java.yml",
-        ".github/workflows/local-acceptance-stage-test-dotnet.yml",
-        ".github/workflows/local-acceptance-stage-test-typescript.yml"
-    )
-    $languageToLocalAcceptanceWorkflow = @{
-        "java" = ".github/workflows/local-acceptance-stage-test-java.yml"
-        "dotnet" = ".github/workflows/local-acceptance-stage-test-dotnet.yml"
-        "typescript" = ".github/workflows/local-acceptance-stage-test-typescript.yml"
-    }
-    
-    return Remove-LanguageSpecificItems -ItemType "local acceptance workflow" -Language $SystemTestLanguage -AllItems $allLocalAcceptanceWorkflows -LanguageToItemMapping $languageToLocalAcceptanceWorkflow -RemovedItems $RemovedItems
+    $items = Get-LanguageItems -PathTemplate ".github/workflows/local-acceptance-stage-test-{language}.yml"
+    return Remove-LanguageSpecificItems -ItemType "local acceptance workflow" -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
 }
 
 function Remove-AcceptanceWorkflows {
@@ -108,18 +97,8 @@ function Remove-AcceptanceWorkflows {
         [array]$RemovedItems
     )
     
-    $allAcceptanceWorkflows = @(
-        ".github/workflows/acceptance-stage-test-java.yml",
-        ".github/workflows/acceptance-stage-test-dotnet.yml",
-        ".github/workflows/acceptance-stage-test-typescript.yml"
-    )
-    $languageToAcceptanceWorkflow = @{
-        "java" = ".github/workflows/acceptance-stage-test-java.yml"
-        "dotnet" = ".github/workflows/acceptance-stage-test-dotnet.yml"
-        "typescript" = ".github/workflows/acceptance-stage-test-typescript.yml"
-    }
-    
-    return Remove-LanguageSpecificItems -ItemType "acceptance workflow" -Language $SystemTestLanguage -AllItems $allAcceptanceWorkflows -LanguageToItemMapping $languageToAcceptanceWorkflow -RemovedItems $RemovedItems
+    $items = Get-LanguageItems -PathTemplate ".github/workflows/acceptance-stage-test-{language}.yml"
+    return Remove-LanguageSpecificItems -ItemType "acceptance workflow" -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
 }
 
 function Remove-QAWorkflows {
@@ -128,18 +107,8 @@ function Remove-QAWorkflows {
         [array]$RemovedItems
     )
     
-    $allQAWorkflows = @(
-        ".github/workflows/qa-stage-test-java.yml",
-        ".github/workflows/qa-stage-test-dotnet.yml",
-        ".github/workflows/qa-stage-test-typescript.yml"
-    )
-    $languageToQAWorkflow = @{
-        "java" = ".github/workflows/qa-stage-test-java.yml"
-        "dotnet" = ".github/workflows/qa-stage-test-dotnet.yml"
-        "typescript" = ".github/workflows/qa-stage-test-typescript.yml"
-    }
-    
-    return Remove-LanguageSpecificItems -ItemType "QA workflow" -Language $SystemTestLanguage -AllItems $allQAWorkflows -LanguageToItemMapping $languageToQAWorkflow -RemovedItems $RemovedItems
+    $items = Get-LanguageItems -PathTemplate ".github/workflows/qa-stage-test-{language}.yml"
+    return Remove-LanguageSpecificItems -ItemType "QA workflow" -Language $SystemTestLanguage -AllItems $items.AllItems -LanguageToItemMapping $items.LanguageToItemMapping -RemovedItems $RemovedItems
 }
 
 function Remove-UnusedLanguageFolders {
