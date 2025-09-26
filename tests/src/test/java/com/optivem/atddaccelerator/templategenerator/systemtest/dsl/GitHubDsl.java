@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.Badges;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.WorkflowRunResult;
 import dev.failsafe.Failsafe;
 import dev.failsafe.RetryPolicy;
@@ -147,6 +148,17 @@ public class GitHubDsl {
                     .isEqualTo("/docs");
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to parse GitHub Pages JSON", e);
+        }
+    }
+
+    public void verifyReadmeProdStageBadge(String workflowName) {
+        verifyReadmeContainsBadge(workflowName);
+
+        String[] prodStage = Badges.PROD_STAGE;
+        for(String w : prodStage) {
+            if (!w.equals(workflowName)) {
+                verifyReadmeDoesNotContainBadge(w);
+            }
         }
     }
 }
