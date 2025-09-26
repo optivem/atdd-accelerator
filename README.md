@@ -176,12 +176,14 @@ _Note for Step 3: We have only one commit Stage because we're using a Monolith, 
 _Note: This step is critical that you get the path right! Otherwise, your System Tests & Release will fail!_
 
 
-TODO: VJ: Continue here
+
 
 6. Keep the Local Acceptance Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
    - `.github\workflows\local-acceptance-stage-dotnet.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-java.yml` --> DELETE
    - `.github\workflows\local-acceptance-stage-typescript.yml` --> KEEP
+
+TODO: VJ: Continue here
 
 7. Keep the Release Stage only for that language, and delete all the rest, e.g. since I've chosen TypeScript, then:
    - `.github\workflows\release-stage-dotnet.yml` --> DELETE

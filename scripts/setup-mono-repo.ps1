@@ -246,6 +246,13 @@ function Remove-UnusedLanguageFolders {
         ".github/workflows/local-acceptance-stage-test-typescript.yml"
     )
     
+    # Define all acceptance stage test workflows
+    $allAcceptanceWorkflows = @(
+        ".github/workflows/acceptance-stage-test-java.yml",
+        ".github/workflows/acceptance-stage-test-dotnet.yml",
+        ".github/workflows/acceptance-stage-test-typescript.yml"
+    )
+    
     # Map languages to items to keep
     $languageToFolder = @{
         "java" = "monolith-java"
@@ -271,16 +278,24 @@ function Remove-UnusedLanguageFolders {
         "typescript" = ".github/workflows/local-acceptance-stage-test-typescript.yml"
     }
     
+    $languageToAcceptanceWorkflow = @{
+        "java" = ".github/workflows/acceptance-stage-test-java.yml"
+        "dotnet" = ".github/workflows/acceptance-stage-test-dotnet.yml"
+        "typescript" = ".github/workflows/acceptance-stage-test-typescript.yml"
+    }
+    
     # Get the values directly
     $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
     $keepSystemTest = $languageToSystemTest[$SystemTestLanguage.ToLower()]
     $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
     $keepLocalAcceptanceWorkflow = $languageToLocalAcceptanceWorkflow[$SystemTestLanguage.ToLower()]
+    $keepAcceptanceWorkflow = $languageToAcceptanceWorkflow[$SystemTestLanguage.ToLower()]
     
     Write-Output "Keeping folder: $keepFolder"
     Write-Output "Keeping system test: $keepSystemTest"
     Write-Output "Keeping workflow: $keepWorkflow"
     Write-Output "Keeping local acceptance workflow: $keepLocalAcceptanceWorkflow"
+    Write-Output "Keeping acceptance workflow: $keepAcceptanceWorkflow"
     
     # Remove unused items
     $removedItems = @()
@@ -325,6 +340,16 @@ function Remove-UnusedLanguageFolders {
         }
     }
     
+    # Remove acceptance stage test workflow files
+    foreach ($acceptanceWorkflow in $allAcceptanceWorkflows) {
+        if ($acceptanceWorkflow -ne $keepAcceptanceWorkflow -and (Test-Path $acceptanceWorkflow)) {
+            Write-Output "Removing acceptance workflow: $acceptanceWorkflow"
+            Remove-Item -Force $acceptanceWorkflow
+            git rm $acceptanceWorkflow
+            $removedItems += $acceptanceWorkflow
+        }
+    }
+    
     # Update README badges
     $readmeUpdated = Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
     
@@ -346,7 +371,6 @@ function Remove-UnusedLanguageFolders {
     
     return $false
 }
-
 
 function Push-RepositoryChanges {
     Write-Output "Pushing changes to remote repository..."
