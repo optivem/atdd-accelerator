@@ -138,4 +138,11 @@ public class GithubClient {
             throw new RuntimeException(e);
         }
     }
+
+    public void verifyDockerComposeContainsImage(String dockerComposePath, String image) {
+        var result = executeProcessExpectSuccess("gh", "api", "/repos/" + repositoryPath + "/" + dockerComposePath, "--jq", ".content");
+    }
+
+    public void verifyDockerComposeDoesNotContainImage(String dockerComposePath, String image) {
+    }
 }

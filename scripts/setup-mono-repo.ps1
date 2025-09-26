@@ -130,6 +130,9 @@ function Remove-UnusedLanguageFolders {
     # Define all language folders
     $allFolders = @("monolith-java", "monolith-dotnet", "monolith-typescript")
     
+    # Define all system test folders
+    $allSystemTests = @("system-test-java", "system-test-dotnet", "system-test-typescript")
+    
     # Define all workflow files
     $allWorkflows = @(
         ".github/workflows/commit-stage-monolith-java.yml",
@@ -137,11 +140,17 @@ function Remove-UnusedLanguageFolders {
         ".github/workflows/commit-stage-monolith-typescript.yml"
     )
     
-    # Map language to folder and workflow to keep
+    # Map language to items to keep
     $languageToFolder = @{
         "java" = "monolith-java"
         "dotnet" = "monolith-dotnet" 
         "typescript" = "monolith-typescript"
+    }
+    
+    $languageToSystemTest = @{
+        "java" = "system-test-java"
+        "dotnet" = "system-test-dotnet"
+        "typescript" = "system-test-typescript"
     }
     
     $languageToWorkflow = @{
@@ -152,21 +161,33 @@ function Remove-UnusedLanguageFolders {
     
     # Get the values directly
     $keepFolder = $languageToFolder[$SystemLanguage.ToLower()]
+    $keepSystemTest = $languageToSystemTest[$SystemLanguage.ToLower()]
     $keepWorkflow = $languageToWorkflow[$SystemLanguage.ToLower()]
     
     Write-Output "Keeping folder: $keepFolder"
+    Write-Output "Keeping system test: $keepSystemTest"
     Write-Output "Keeping workflow: $keepWorkflow"
     
-    # Remove unused folders and workflows
+    # Remove unused items
     $removedItems = @()
     
-    # Remove folders
+    # Remove monolith folders
     foreach ($folder in $allFolders) {
         if ($folder -ne $keepFolder -and (Test-Path $folder)) {
             Write-Output "Removing folder: $folder"
             Remove-Item -Recurse -Force $folder
             git rm -r $folder
             $removedItems += $folder
+        }
+    }
+    
+    # Remove system test folders
+    foreach ($systemTest in $allSystemTests) {
+        if ($systemTest -ne $keepSystemTest -and (Test-Path $systemTest)) {
+            Write-Output "Removing system test: $systemTest"
+            Remove-Item -Recurse -Force $systemTest
+            git rm -r $systemTest
+            $removedItems += $systemTest
         }
     }
     
@@ -188,10 +209,10 @@ function Remove-UnusedLanguageFolders {
     if ($hasChanges) {
         if ($removedItems.Count -gt 0 -and $readmeUpdated) {
             $removedList = $removedItems -join ", "
-            $commitMessage = "Remove unused language folders/workflows and update README: $removedList"
+            $commitMessage = "Remove unused language folders/system tests/workflows and update README: $removedList"
         } elseif ($removedItems.Count -gt 0) {
             $removedList = $removedItems -join ", "
-            $commitMessage = "Remove unused language folders and workflows: $removedList"
+            $commitMessage = "Remove unused language folders, system tests and workflows: $removedList"
         } else {
             $commitMessage = "Update README badges"
         }
@@ -201,6 +222,7 @@ function Remove-UnusedLanguageFolders {
     
     return $false
 }
+
 
 function Push-RepositoryChanges {
     Write-Output "Pushing changes to remote repository..."

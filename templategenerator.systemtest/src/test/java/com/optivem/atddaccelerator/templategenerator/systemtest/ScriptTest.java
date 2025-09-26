@@ -36,7 +36,10 @@ class ScriptTest {
     }
 
     @Test
-    void shouldCreateJavaRepository() {
+    void shouldCreateJavaRepositoryShort() {
+
+        // System
+
         templateGeneratorClient.generateNewRepository(repoName, Language.JAVA);
 
         githubClient.verifyRepositoryExists();
@@ -55,12 +58,53 @@ class ScriptTest {
         githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
         githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
-        githubClient.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+        // System Test
+
+        githubClient.verifyPathExists(RepositoryPaths.SYSTEM_TEST_JAVA);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_DOTNET);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT);
+
+        // var javaImageName = String.format("ghcr.io/%s/%s/monolith-java:latest", REPO_OWNER, repoName);
+        // var dotnetImageName = String.format("ghcr.io/%s/%s/monolith-dotnet:latest", REPO_OWNER, repoName);
+        // var typescriptImageName = String.format("ghcr.io/%s/%s/monolith-typescript:latest", REPO_OWNER, repoName);
+
+        // var dockerCompose = "system-test-java/docker-compose.yml";
+
+        // githubClient.verifyDockerComposeContainsImage(dockerCompose, javaImageName);
+        // githubClient.verifyDockerComposeDoesNotContainImage(dockerCompose, dotnetImageName);
+        // githubClient.verifyDockerComposeDoesNotContainImage(dockerCompose, typescriptImageName);
 
     }
 
     @Test
-    void shouldCreateDotNetRepository() {
+    void shouldCreateJavaRepositoryFull() {
+        templateGeneratorClient.generateNewRepository(repoName, Language.JAVA);
+
+        githubClient.verifyRepositoryExists();
+
+        githubClient.verifyPathExists(RepositoryPaths.MONOLITH_JAVA);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
+
+        githubClient.verifyPathExists(RepositoryPaths.COMMIT_STAGE_JAVA);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
+        githubClient.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
+
+        var badgeSvg = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml/badge.svg", REPO_OWNER, repoName);
+        var badgeWorkflow = String.format("https://github.com/%s/%s/actions/workflows/commit-stage-monolith-java.yml", REPO_OWNER, repoName);
+        githubClient.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA, badgeSvg, badgeWorkflow);
+        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
+        githubClient.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+
+        // Slow running
+        githubClient.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+
+        // TODO: Verify only one package remains, that rest are deleted
+
+    }
+
+    @Test
+    void shouldCreateDotNetRepositoryFull() {
         templateGeneratorClient.generateNewRepository(repoName, Language.DOTNET);
 
         githubClient.verifyRepositoryExists();
@@ -83,7 +127,7 @@ class ScriptTest {
     }
     
     @Test
-    void shouldCreateTypeScriptRepository() {
+    void shouldCreateTypeScriptRepositoryFull() {
         templateGeneratorClient.generateNewRepository(repoName, Language.TYPESCRIPT);
 
         githubClient.verifyRepositoryExists();
