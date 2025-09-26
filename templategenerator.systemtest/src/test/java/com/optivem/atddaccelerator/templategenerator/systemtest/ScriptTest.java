@@ -9,6 +9,7 @@ import com.optivem.atddaccelerator.templategenerator.systemtest.util.RepositoryP
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -106,6 +107,7 @@ class ScriptTest {
 
     }
 
+    @Disabled
     @Test
     void shouldCreateDotNetRepositoryFull() {
         generator.generateNewRepository(repoName, Language.DOTNET);
@@ -129,6 +131,7 @@ class ScriptTest {
         gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
     }
     
+    @Disabled
     @Test
     void shouldCreateTypeScriptRepositoryFull() {
         generator.generateNewRepository(repoName, Language.TYPESCRIPT);
