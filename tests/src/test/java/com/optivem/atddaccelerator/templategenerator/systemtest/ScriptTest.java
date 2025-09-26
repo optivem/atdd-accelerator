@@ -96,9 +96,9 @@ class ScriptTest {
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
         gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
-        gitHub.verifyReadmeContainsBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TYPESCRIPT);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_JAVA);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_DOTNET);
+        gitHub.verifyReadmeContainsBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_JAVA);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_DOTNET);
     }
 
     @Test

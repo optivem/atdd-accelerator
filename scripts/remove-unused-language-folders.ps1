@@ -104,7 +104,7 @@ function Remove-UnusedLanguageFolders {
     $removedItems = Remove-ItemsByTemplate -PathTemplate ".github/workflows/prod-stage-test-{language}.yml" -Language $SystemTestLanguage -RemovedItems $removedItems
     
     # Update README badges
-    $readmeUpdated = Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
+    $readmeUpdated = Update-ReadmeBadges -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
     
     # Update Docker Compose files
     $dockerComposeUpdated = Update-DockerComposeFiles -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName

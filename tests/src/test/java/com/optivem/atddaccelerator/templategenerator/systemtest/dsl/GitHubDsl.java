@@ -53,22 +53,15 @@ public class GitHubDsl {
         var badgeSvg = String.format("https://github.com/%s/actions/workflows/commit-stage-monolith-java.yml/badge.svg", repositoryPath);
         var badgeWorkflow = String.format("https://github.com/%s/actions/workflows/commit-stage-monolith-java.yml", repositoryPath);
 
-        assertThat(readmeContent).contains(badge).as("README should contain badge: " + badge);
-        assertThat(readmeContent).contains(badgeSvg).as("README should contain badge SVG: " + badgeSvg);
-        assertThat(readmeContent).contains(badgeWorkflow).as("README should contain badge workflow link: " + badgeWorkflow);
+        assertThat(readmeContent).as("README should contain badge: " + badge).contains(badge);
+        assertThat(readmeContent).as("README should contain badge SVG: " + badgeSvg).contains(badgeSvg);
+        assertThat(readmeContent).as("README should contain badge workflow link: " + badgeWorkflow).contains(badgeWorkflow);
     }
 
     public void verifyReadmeDoesNotContainBadge(String badge) {
         var readmeContent = getReadmeContent();
-        assertThat(readmeContent).doesNotContain(badge).as("README should not contain badge: " + badge);
+        assertThat(readmeContent).as("README should not contain badge: " + badge).doesNotContain(badge);
     }
-
-//    public void verifyReadmeContainsBadge(String badge, String badgeSvg, String badgeWorkflow) {
-//        var readmeContent = getReadmeContent();
-//        assertThat(readmeContent).contains(badge).as("README should contain badge: " + badge);
-//        assertThat(readmeContent).contains(badgeSvg).as("README should contain badge SVG: " + badgeSvg);
-//        assertThat(readmeContent).contains(badgeWorkflow).as("README should contain badge workflow link: " + badgeWorkflow);
-//    }
 
     private String getReadmeContent() {
         return client.getFileContent(README_PATH);
@@ -76,12 +69,12 @@ public class GitHubDsl {
 
     public void verifyDockerComposeContainsImage(String dockerComposePath, String image) {
         var dockerComposeContent = client.getFileContent(dockerComposePath);
-        assertThat(dockerComposeContent).contains(image).as("Docker Compose should contain image: " + image);
+        assertThat(dockerComposeContent).as("Docker Compose should contain image: " + image).contains(image);
     }
 
     public void verifyDockerComposeDoesNotContainImage(String dockerComposePath, String image) {
         var dockerComposeContent = client.getFileContent(dockerComposePath);
-        assertThat(dockerComposeContent).doesNotContain(image).as("Docker Compose should not contain image: " + image);
+        assertThat(dockerComposeContent).as("Docker Compose should not contain image: " + image).doesNotContain(image);
     }
 
     public void verifyWorkflowPasses(String workflowFileName) {
