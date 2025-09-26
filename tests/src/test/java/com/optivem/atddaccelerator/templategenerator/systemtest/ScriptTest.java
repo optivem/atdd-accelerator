@@ -56,9 +56,7 @@ class ScriptTest {
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
 
-        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+
 
         // System Test
 
@@ -91,6 +89,16 @@ class ScriptTest {
         gitHub.verifyPathExists(RepositoryPaths.PRODUCTION_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_JAVA);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_DOTNET);
+
+        // Badges
+
+        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+
+        gitHub.verifyReadmeContainsBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TYPESCRIPT);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_JAVA);
+        gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_DOTNET);
     }
 
     @Test

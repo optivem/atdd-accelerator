@@ -73,7 +73,7 @@ function Update-ReadmeBadges {
         [string]$RepositoryName
     )
     
-    Write-Output "Updating README badges..."
+    Write-Host "Updating README badges..."
     
     if (-not (Test-Path "README.md")) {
         Write-Warning "README.md not found, skipping badge update"
@@ -81,47 +81,63 @@ function Update-ReadmeBadges {
     }
     
     $readmeContent = Get-Content "README.md" -Raw
+    $originalContent = $readmeContent
     
-    # Define badge patterns to remove based on language
+    # Define all badge patterns to remove based on what should be kept
     $badgesToRemove = @()
-    $badgesToUpdate = @()
     
     switch ($SystemLanguage.ToLower()) {
         "java" {
-            $badgesToRemove = @("commit-stage-monolith-dotnet", "commit-stage-monolith-typescript")
-            $badgesToUpdate = @("commit-stage-monolith-java")
+            # Keep Java commit stage, remove .NET and TypeScript commit stage
+            $badgesToRemove += "commit-stage-monolith-dotnet"
+            $badgesToRemove += "commit-stage-monolith-typescript"
         }
         "dotnet" {
-            $badgesToRemove = @("commit-stage-monolith-java", "commit-stage-monolith-typescript") 
-            $badgesToUpdate = @("commit-stage-monolith-dotnet")
+            # Keep .NET commit stage, remove Java and TypeScript commit stage
+            $badgesToRemove += "commit-stage-monolith-java"
+            $badgesToRemove += "commit-stage-monolith-typescript"
         }
         "typescript" {
-            $badgesToRemove = @("commit-stage-monolith-java", "commit-stage-monolith-dotnet")
-            $badgesToUpdate = @("commit-stage-monolith-typescript")
+            # Keep TypeScript commit stage, remove Java and .NET commit stage
+            $badgesToRemove += "commit-stage-monolith-java"
+            $badgesToRemove += "commit-stage-monolith-dotnet"
         }
     }
     
-    $originalContent = $readmeContent
+    # Remove unwanted local acceptance stage badges (keep only SystemTestLanguage)
+    $allTestLanguages = @("java", "dotnet", "typescript")
+    foreach ($lang in $allTestLanguages) {
+        if ($lang -ne $SystemTestLanguage.ToLower()) {
+            $badgesToRemove += "local-acceptance-stage-$lang"
+            $badgesToRemove += "acceptance-stage-$lang"
+            $badgesToRemove += "qa-stage-$lang"
+            $badgesToRemove += "prod-stage-$lang"
+        }
+    }
+    
+    Write-Host "Badges to remove: $($badgesToRemove -join ', ')"
     
     # Remove unwanted badges (entire lines)
     foreach ($badge in $badgesToRemove) {
-        $pattern = ".*\[!\[$badge\].*\n"
+        # Pattern to match the entire line containing the badge
+        $pattern = ".*\[!\[$badge\].*\r?\n"
         $readmeContent = $readmeContent -replace $pattern, ""
+        Write-Host "Removed badge pattern: $badge"
     }
     
     # Update repository paths in remaining badges
-    foreach ($badge in $badgesToUpdate) {
-        $readmeContent = $readmeContent -replace "optivem/atdd-accelerator-template-mono-repo", "$RepositoryOwner/$RepositoryName"
-    }
+    $readmeContent = $readmeContent -replace "optivem/atdd-accelerator-template-mono-repo", "$RepositoryOwner/$RepositoryName"
+    Write-Host "Updated repository paths to: $RepositoryOwner/$RepositoryName"
     
     # Check if content changed
     if ($readmeContent -ne $originalContent) {
         Set-Content "README.md" -Value $readmeContent -NoNewline
-        git add "README.md"
-        Write-Output "README badges updated"
+        git add "README.md" | Out-Null
+        Write-Host "README badges updated successfully"
         return $true
     }
     
+    Write-Host "No changes needed to README badges"
     return $false
 }
 
