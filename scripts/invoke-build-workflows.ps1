@@ -43,7 +43,7 @@ function Wait-ForCommitStageWorkflow {
         [int]$TimeoutMinutes = 10
     )
     
-    $workflowName = "commit-stage-$($SystemLanguage.ToLower())"
+    $workflowName = "commit-stage-monolith-$($SystemLanguage.ToLower())"
     Write-Output "Waiting for workflow '$workflowName' to complete..."
     
     $startTime = Get-Date
