@@ -4,9 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.Badges;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.StageLanguageFormats;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.WorkflowRunResult;
 import dev.failsafe.Failsafe;
 import dev.failsafe.RetryPolicy;
@@ -198,13 +197,13 @@ public class GitHubDsl {
 
     public void verifyPathsExist(String systemLanguage, String systemTestLanguage) {
         verifyPathLanguageExists("monolith-%s", systemLanguage);
-        verifyPathLanguageExists( getWorkflowPath(StageLanguageFormats.COMMIT_STAGE_MONOLITH_FORMAT), systemLanguage);
+        verifyPathLanguageExists( getWorkflowPath(Constants.COMMIT_STAGE_MONOLITH_FORMAT), systemLanguage);
 
         verifyPathLanguageExists("system-test-%s/docker-compose.yml", systemTestLanguage);
-        verifyPathLanguageExists( getWorkflowPath(StageLanguageFormats.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT), systemTestLanguage);
-        verifyPathLanguageExists( getWorkflowPath(StageLanguageFormats.ACCEPTANCE_STAGE_TEST_FORMAT), systemTestLanguage);
-        verifyPathLanguageExists( getWorkflowPath(StageLanguageFormats.QA_STAGE_TEST_FORMAT), systemTestLanguage);
-        verifyPathLanguageExists( getWorkflowPath(StageLanguageFormats.PROD_STAGE_TEST_FORMAT), systemTestLanguage);
+        verifyPathLanguageExists( getWorkflowPath(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT), systemTestLanguage);
+        verifyPathLanguageExists( getWorkflowPath(Constants.ACCEPTANCE_STAGE_TEST_FORMAT), systemTestLanguage);
+        verifyPathLanguageExists( getWorkflowPath(Constants.QA_STAGE_TEST_FORMAT), systemTestLanguage);
+        verifyPathLanguageExists( getWorkflowPath(Constants.PROD_STAGE_TEST_FORMAT), systemTestLanguage);
     }
 
     private String getWorkflowPath(String stageFormat) {
@@ -212,20 +211,20 @@ public class GitHubDsl {
     }
 
     public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
-        verifyReadmeContainsBadge(Badges.PAGES_BUILD_DEPLOYMENT);
-        verifyReadmeStageLanguageBadge(StageLanguageFormats.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
-        verifyReadmeStageLanguageBadge(StageLanguageFormats.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyReadmeStageLanguageBadge(StageLanguageFormats.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyReadmeStageLanguageBadge(StageLanguageFormats.QA_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyReadmeStageLanguageBadge(StageLanguageFormats.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyReadmeContainsBadge(Constants.PAGES_BUILD_DEPLOYMENT);
+        verifyReadmeStageLanguageBadge(Constants.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
+        verifyReadmeStageLanguageBadge(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyReadmeStageLanguageBadge(Constants.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyReadmeStageLanguageBadge(Constants.QA_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyReadmeStageLanguageBadge(Constants.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
     }
 
     public void verifyWorkflowsPass(String systemLanguage, String systemTestLanguage) {
-        verifyWorkflowPasses(Badges.PAGES_BUILD_DEPLOYMENT);
-        verifyWorkflowPasses(StageLanguageFormats.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
-        verifyWorkflowPasses(StageLanguageFormats.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyWorkflowPasses(StageLanguageFormats.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyWorkflowPasses(StageLanguageFormats.QA_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyWorkflowPasses(StageLanguageFormats.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyWorkflowPasses(Constants.PAGES_BUILD_DEPLOYMENT);
+        verifyWorkflowPasses(Constants.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
+        verifyWorkflowPasses(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyWorkflowPasses(Constants.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyWorkflowPasses(Constants.QA_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyWorkflowPasses(Constants.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
     }
 }

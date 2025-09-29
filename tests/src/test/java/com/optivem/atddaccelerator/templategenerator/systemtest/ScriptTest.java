@@ -4,12 +4,10 @@ import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubCl
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GeneratorClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.GeneratorDsl;
 import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.GitHubDsl;
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.Badges;
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.RepositoryPaths;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,9 +52,9 @@ class ScriptTest {
         var dotnetImageName = String.format("ghcr.io/%s/%s/monolith-dotnet:latest", REPO_OWNER, repoName);
         var typescriptImageName = String.format("ghcr.io/%s/%s/monolith-typescript:latest", REPO_OWNER, repoName);
 
-        gitHub.verifyDockerComposeContainsImage(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, javaImageName);
-        gitHub.verifyDockerComposeDoesNotContainImage(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, dotnetImageName);
-        gitHub.verifyDockerComposeDoesNotContainImage(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, typescriptImageName);
+        gitHub.verifyDockerComposeContainsImage(Constants.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, javaImageName);
+        gitHub.verifyDockerComposeDoesNotContainImage(Constants.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, dotnetImageName);
+        gitHub.verifyDockerComposeDoesNotContainImage(Constants.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, typescriptImageName);
 
         // Documentation
 
