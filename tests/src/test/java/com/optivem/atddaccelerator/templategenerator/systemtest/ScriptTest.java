@@ -8,7 +8,13 @@ import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,8 +43,25 @@ class ScriptTest {
         }
     }
 
+    static Stream<Arguments> languageProvider() {
+        return Stream.of(
+                Arguments.of(Language.DOTNET, Language.DOTNET),
+                Arguments.of(Language.DOTNET, Language.JAVA),
+                Arguments.of(Language.DOTNET, Language.TYPESCRIPT),
+
+                Arguments.of(Language.JAVA, Language.DOTNET),
+                Arguments.of(Language.JAVA, Language.JAVA),
+                Arguments.of(Language.JAVA, Language.TYPESCRIPT),
+
+                Arguments.of(Language.TYPESCRIPT, Language.DOTNET),
+                Arguments.of(Language.TYPESCRIPT, Language.JAVA),
+                Arguments.of(Language.TYPESCRIPT, Language.TYPESCRIPT)
+        );
+    }
+
+    @Disabled
     @Test
-    void shouldCreateJavaRepositoryShort() {
+    void shouldCreateRepositoryWithJava() {
         // Act
         generator.generateNewRepository(repoName, Language.JAVA, Language.TYPESCRIPT);
 
@@ -52,59 +75,24 @@ class ScriptTest {
         gitHub.verifyWorkflowsPass(Language.JAVA, Language.TYPESCRIPT);
     }
 
+    @ParameterizedTest
+    @MethodSource("languageProvider")
+    void shouldCreateRepositoryWithLanguages(String systemLanguage, String systemTestLanguage) {
+        generator.generateNewRepository(repoName, systemLanguage, systemTestLanguage);
+
+        gitHub.verifyRepositoryExists();
+        gitHub.verifyPathsExist(systemLanguage, systemTestLanguage);
+        gitHub.verifyDockerComposeImage(systemLanguage, systemTestLanguage);
+        gitHub.verifyReadmeHasBadges(systemLanguage, systemTestLanguage);
+        gitHub.verifyPagesEnabled();
+
+        gitHub.verifyWorkflowsPass(systemLanguage, systemTestLanguage);
+    }
+
     @Test
     void shouldReturnErrorForInvalidLanguage() {
         generator.generateNewRepositoryExpectError(repoName, "invalidLang", Language.TYPESCRIPT);
     }
-
-
-
-//    @Disabled
-//    @Test
-//    void shouldCreateDotNetRepositoryFull() {
-//        generator.generateNewRepository(repoName, Language.DOTNET, Language.TYPESCRIPT);
-//
-//        gitHub.verifyRepositoryExists();
-//
-//        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_DOTNET);
-//        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
-//        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
-//
-//        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_DOTNET);
-//        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
-//        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
-//
-//        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-//        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-//        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
-//
-//        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-//    }
-//
-//    @Disabled
-//    @Test
-//    void shouldCreateTypeScriptRepositoryFull() {
-//        generator.generateNewRepository(repoName, Language.TYPESCRIPT, Language.TYPESCRIPT);
-//
-//        gitHub.verifyRepositoryExists();
-//
-//        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_TYPESCRIPT);
-//        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
-//        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
-//
-//        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
-//        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
-//        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
-//
-//        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
-//        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-//        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-//
-//        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
-//    }
-
-
-
 
     private static String newName() {
         var repoName = "repo-" + System.currentTimeMillis();
