@@ -122,8 +122,10 @@ try {
     Write-Output "ATDD Accelerator Setup Script"
     Write-Output "Repository Name: $RepositoryName"
     Write-Output "System Language: $SystemLanguage"
+    Write-Output "System Test Language: $SystemTestLanguage"
     
     Test-SystemLanguage -SystemLanguage $SystemLanguage
+    Test-SystemLanguage -SystemLanguage $SystemTestLanguage
 
     $GitHubUsername = Get-GitHubUsername -ProvidedUsername $GitHubUsername
     Write-Output "GitHub Username: $GitHubUsername"
@@ -132,23 +134,35 @@ try {
     
     # Change to the repository directory
     Set-Location $RepositoryName
-
-    # Enable GitHub Pages
+    
+    # First, complete all repository setup and content changes
+    $hasChanges = Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
+    
+    # Clean up temp folder before pushing
+    Remove-TempFolder
+    
+    # Push all changes to remote
+    if ($hasChanges) {
+        Push-RepositoryChanges
+    } else {
+        Write-Output "No changes to push"
+    }
+    
+    # Wait a moment for the push to complete
+    Start-Sleep -Seconds 2
+    
+    # NOW enable GitHub Pages (after all content is ready)
+    Write-Output ""
+    Write-Output "Enabling GitHub Pages..."
     $pagesEnabled = Enable-GitHubPages -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
     
     if ($pagesEnabled) {
-        Write-Output "GitHub Pages enabled successfully"
+        Write-Output "✅ GitHub Pages enabled successfully"
     } else {
-        Write-Warning "GitHub Pages setup failed, but continuing..."
+        Write-Warning "⚠️ GitHub Pages setup failed, but continuing..."
     }
 
-    $hasChanges = Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
-    Push-RepositoryChanges -HasChanges $hasChanges
-
-    # Clean up temp folder before completing
-    Remove-TempFolder
-
-    # Trigger system test workflows before completing
+    # Trigger system test workflows
     Write-Output ""
     Write-Output "Triggering system test workflows..."
     $workflowsTriggered = Invoke-SystemTestWorkflows -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
@@ -157,7 +171,7 @@ try {
         Write-Output "✅ System test workflows have been triggered"
         Write-Output "   You can monitor their progress at: https://github.com/$GitHubUsername/$RepositoryName/actions"
     } else {
-        Write-Warning "⚠️  No workflows were triggered - you may need to trigger them manually"
+        Write-Warning "⚠️ No workflows were triggered - you may need to trigger them manually"
     }
 
     Write-Output ""
@@ -166,9 +180,6 @@ try {
     
     Remove-LocalRepository -RepositoryName $RepositoryName
     
-
-
-
     exit 0
     
 } catch {
