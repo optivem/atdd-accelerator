@@ -5,88 +5,82 @@ function Update-DockerComposeFiles {
         [string]$RepositoryName
     )
     
-    Write-Output "Updating Docker Compose files..."
+    Write-Output "Updating Docker Compose files using templates..."
     
-    # Find all docker-compose files in system-test folders
-    $dockerComposeFiles = Get-ChildItem -Path "system-test-*" -Include "docker-compose.yml" -Recurse -ErrorAction SilentlyContinue
+    # Find the single system-test folder
+    $systemTestFolders = Get-ChildItem -Path "system-test-*" -Directory -ErrorAction SilentlyContinue
     
-    $filesUpdated = $false
-    
-    foreach ($file in $dockerComposeFiles) {
-        Write-Output "Updating Docker Compose file: $($file.FullName)"
-        
-        $content = Get-Content $file.FullName -Raw
-        $originalContent = $content
-        
-        # First, update repository references
-        $content = $content -replace "ghcr\.io/optivem/atdd-accelerator-template-mono-repo/", "ghcr.io/$RepositoryOwner/$RepositoryName/"
-        
-        # Define the target language service
-        $targetService = "monolith-$($SystemLanguage.ToLower())"
-        
-        # Split content into lines for processing
-        $lines = $content -split "`n"
-        $newLines = @()
-        
-        $i = 0
-        while ($i -lt $lines.Length) {
-            $line = $lines[$i]
-            
-            # Check if this line starts a monolith service block
-            if ($line -match "^\s*#?\s*monolith:\s*$") {
-                # Look ahead to find the image line to determine the language
-                $serviceLanguage = ""
-                $serviceLines = @()
-                $serviceLines += $line
-                
-                $j = $i + 1
-                while ($j -lt $lines.Length -and $lines[$j] -match "^\s+(#\s*)?[^a-zA-Z]") {
-                    $serviceLines += $lines[$j]
-                    if ($lines[$j] -match "image:.*/(monolith-(java|dotnet|typescript)):latest") {
-                        $serviceLanguage = $matches[2]
-                    }
-                    $j++
-                }
-                
-                # If this is the target language, keep and uncomment the service
-                if ($serviceLanguage -eq $SystemLanguage.ToLower()) {
-                    foreach ($serviceLine in $serviceLines) {
-                        # Uncomment and add to new lines
-                        $cleanLine = $serviceLine -replace "^\s*#\s*", ""
-                        if ($cleanLine -match "^monolith:\s*$") {
-                            $newLines += "monolith:"
-                        } elseif ($cleanLine -match "^\s*image:") {
-                            $newLines += "  image: " + ($cleanLine -replace "^\s*image:\s*", "")
-                        } elseif ($cleanLine -match "^\s*ports:") {
-                            $newLines += "  ports:"
-                        } elseif ($cleanLine -match "^\s*-\s*") {
-                            $newLines += "    " + ($cleanLine -replace "^\s*-\s*", "- ")
-                        } else {
-                            $newLines += $cleanLine
-                        }
-                    }
-                }
-                # If not target language, skip this entire service block
-                
-                # Move index past this service block
-                $i = $j - 1
-            } else {
-                # Not a monolith service line, keep as-is
-                $newLines += $line
-            }
-            $i++
-        }
-        
-        # Join lines back together
-        $newContent = $newLines -join "`n"
-        
-        if ($newContent -ne $originalContent) {
-            Set-Content -Path $file.FullName -Value $newContent -NoNewline
-            git add $file.FullName
-            $filesUpdated = $true
-            Write-Output "Updated: $($file.FullName)"
-        }
+    if ($systemTestFolders.Count -eq 0) {
+        Write-Error "No system-test folder found"
+        return $false
     }
     
-    return $filesUpdated
+    if ($systemTestFolders.Count -gt 1) {
+        Write-Error "Multiple system-test folders found: $($systemTestFolders.Name -join ', ')"
+        Write-Error "Expected exactly one system-test folder"
+        return $false
+    }
+    
+    $systemTestFolder = $systemTestFolders[0]
+    Write-Output "Found system-test folder: $($systemTestFolder.Name)"
+    
+    # Extract the language from the folder name (e.g., "system-test-typescript" -> "typescript")
+    if ($systemTestFolder.Name -match "^system-test-(.+)$") {
+        $systemTestLanguage = $matches[1].ToLower()
+        Write-Output "Detected system-test language: $systemTestLanguage"
+    } else {
+        Write-Error "Could not extract language from folder name: $($systemTestFolder.Name)"
+        return $false
+    }
+    
+    # Define template path based on detected language
+    $templatePath = "temp\$systemTestLanguage\docker-compose.yml"
+    
+    # Check if template exists
+    if (-not (Test-Path $templatePath)) {
+        Write-Error "Template Docker Compose file not found: $templatePath"
+        Write-Error "Available templates:"
+        Get-ChildItem "temp" -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+            $dockerComposeFile = Join-Path $_.FullName "docker-compose.yml"
+            if (Test-Path $dockerComposeFile) {
+                Write-Error "  - $($_.Name): $dockerComposeFile"
+            }
+        }
+        throw "Docker Compose template missing for language: $systemTestLanguage"
+    }
+    
+    Write-Output "Using template: $templatePath"
+    
+    # Check if docker-compose.yml exists in the system-test folder
+    $targetDockerCompose = Join-Path $systemTestFolder.FullName "docker-compose.yml"
+    
+    if (-not (Test-Path $targetDockerCompose)) {
+        Write-Error "Docker Compose file not found in system-test folder: $targetDockerCompose"
+        return $false
+    }
+    
+    # Read template content
+    $templateContent = Get-Content $templatePath -Raw
+    
+    # Update repository references in template content
+    $updatedContent = $templateContent -replace "ghcr\.io/optivem/atdd-accelerator-template-mono-repo/", "ghcr.io/$RepositoryOwner/$RepositoryName/"
+    
+    # Check if target file would actually change
+    $currentContent = Get-Content $targetDockerCompose -Raw
+    if ($currentContent -eq $updatedContent) {
+        Write-Output "No changes needed for: $targetDockerCompose"
+        return $false
+    }
+    
+    # Copy template and update it
+    Set-Content -Path $targetDockerCompose -Value $updatedContent -NoNewline
+    
+    # Add to git
+    git add $targetDockerCompose
+    
+    Write-Output "✅ Updated Docker Compose file: $targetDockerCompose"
+    Write-Output "   Applied template for: $systemTestLanguage"
+    Write-Output "   Updated repository references to: ghcr.io/$RepositoryOwner/$RepositoryName/"
+    
+    return $true
 }
