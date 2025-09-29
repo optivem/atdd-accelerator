@@ -131,10 +131,7 @@ try {
     
     # Change to the repository directory
     Set-Location $RepositoryName
-    
-    $hasChanges = Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
-    Push-RepositoryChanges -HasChanges $hasChanges
-    
+
     # Enable GitHub Pages
     $pagesEnabled = Enable-GitHubPages -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
     
@@ -143,6 +140,9 @@ try {
     } else {
         Write-Warning "GitHub Pages setup failed, but continuing..."
     }
+
+    $hasChanges = Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
+    Push-RepositoryChanges -HasChanges $hasChanges
 
     # Clean up temp folder before completing
     Remove-TempFolder
