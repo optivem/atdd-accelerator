@@ -30,7 +30,5 @@ public class RepositoryPaths {
     public static final String QA_STAGE_TEST_DOTNET = ".github/workflows/qa-stage-test-dotnet.yml";
     public static final String QA_STAGE_TEST_TYPESCRIPT = ".github/workflows/qa-stage-test-typescript.yml";
 
-    public static final String PRODUCTION_STAGE_TEST_JAVA = ".github/workflows/prod-stage-test-java.yml";
-    public static final String PRODUCTION_STAGE_TEST_DOTNET = ".github/workflows/prod-stage-test-dotnet.yml";
-    public static final String PRODUCTION_STAGE_TEST_TYPESCRIPT = ".github/workflows/prod-stage-test-typescript.yml";
+
 }

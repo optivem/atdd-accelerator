@@ -34,15 +34,27 @@ public class GitHubDsl {
         assertSuccess(result, "Repository '" + client.getRepositoryPath() + "' should exist.");
     }
 
-    public void verifyPathExists(String path) {
+    private void verifyPathExists(String path) {
         var result = client.viewPath(path);
         assertSuccess(result, "Path '" + path + "' should exist.");
     }
 
-    public void verifyPathDoesNotExist(String path) {
+    private void verifyPathDoesNotExist(String path) {
         var result = client.viewPath(path);
         assertFailure(result, "Path '" + path + "' should not exist.");
     }
+
+    public void verifyPathLanguageExists(String pathFormat, String language) {
+        for(String l : Language.ALL) {
+            var path = String.format(pathFormat, l);
+            if(l.equals(language)) {
+                verifyPathExists(path);
+            } else {
+                verifyPathDoesNotExist(path);
+            }
+        }
+    }
+
 
     public void deleteRepository() {
         var result = client.deleteRepository();
@@ -182,6 +194,30 @@ public class GitHubDsl {
             }
         }
     }
+
+    public void verifyPathsExist(String systemLanguage, String systemTestLanguage) {
+        verifyPathLanguageExists("monolith-%s", systemLanguage);
+        verifyPathLanguageExists(".github/workflows/commit-stage-monolith-%s.yml", systemLanguage);
+
+        verifyPathLanguageExists("system-test-%s/docker-compose.yml", systemTestLanguage);
+        verifyPathLanguageExists(".github/workflows/local-acceptance-stage-test-%s.yml", systemTestLanguage);
+        verifyPathLanguageExists(".github/workflows/acceptance-stage-test-%s.yml", systemTestLanguage);
+        verifyPathLanguageExists(".github/workflows/qa-stage-test-%s.yml", systemTestLanguage);
+        verifyPathLanguageExists(".github/workflows/prod-stage-test-%s.yml", systemTestLanguage);
+    }
+
+    /*
+
+        public static final String PRODUCTION_STAGE_TEST_JAVA = ".github/workflows/prod-stage-test-java.yml";
+    public static final String PRODUCTION_STAGE_TEST_DOTNET = ".github/workflows/prod-stage-test-dotnet.yml";
+    public static final String PRODUCTION_STAGE_TEST_TYPESCRIPT = ".github/workflows/prod-stage-test-typescript.yml";
+
+
+        gitHub.verifyPathExists(RepositoryPaths.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.LOCAL_ACCEPTANCE_STAGE_TEST_JAVA);
+        gitHub.verifyPathDoesNotExist(RepositoryPaths.LOCAL_ACCEPTANCE_STAGE_TEST_DOTNET);
+
+     */
 
     public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
         verifyReadmeContainsBadge(Badges.PAGES_BUILD_DEPLOYMENT);

@@ -41,30 +41,14 @@ class ScriptTest {
 
     @Test
     void shouldCreateJavaRepositoryShort() {
-
-        // System
-
+        // Act
         generator.generateNewRepository(repoName, Language.JAVA, Language.TYPESCRIPT);
 
+        // Assert
         gitHub.verifyRepositoryExists();
-
-        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
-
-        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
-
-
+        gitHub.verifyPathsExist(Language.JAVA, Language.TYPESCRIPT);
 
         // System Test
-
-        gitHub.verifyPathExists(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.SYSTEM_TEST_DOTNET);
-
-        gitHub.verifyPathExists(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE);
 
         var javaImageName = String.format("ghcr.io/%s/%s/monolith-java:latest", REPO_OWNER, repoName);
         var dotnetImageName = String.format("ghcr.io/%s/%s/monolith-dotnet:latest", REPO_OWNER, repoName);
@@ -73,23 +57,6 @@ class ScriptTest {
         gitHub.verifyDockerComposeContainsImage(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, javaImageName);
         gitHub.verifyDockerComposeDoesNotContainImage(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, dotnetImageName);
         gitHub.verifyDockerComposeDoesNotContainImage(RepositoryPaths.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, typescriptImageName);
-
-        gitHub.verifyPathExists(RepositoryPaths.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.LOCAL_ACCEPTANCE_STAGE_TEST_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.LOCAL_ACCEPTANCE_STAGE_TEST_DOTNET);
-
-        gitHub.verifyPathExists(RepositoryPaths.ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.ACCEPTANCE_STAGE_TEST_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.ACCEPTANCE_STAGE_TEST_DOTNET);
-
-        gitHub.verifyPathExists(RepositoryPaths.QA_STAGE_TEST_TYPESCRIPT);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.QA_STAGE_TEST_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.QA_STAGE_TEST_DOTNET);
-
-        gitHub.verifyPathExists(RepositoryPaths.PRODUCTION_STAGE_TEST_TYPESCRIPT);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_DOTNET);
-
 
         // Documentation
 
