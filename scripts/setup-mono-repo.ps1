@@ -17,6 +17,7 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 . "$scriptDir\remove-unused-language-folders.ps1"
 . "$scriptDir\update-readme-badges.ps1"
 . "$scriptDir\setup-github-pages.ps1"
+. "$scriptDir\update-docker-compose.ps1"
 
 function Test-SystemLanguage {
     param([string]$SystemLanguage)
