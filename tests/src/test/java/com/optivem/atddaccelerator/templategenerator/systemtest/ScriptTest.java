@@ -126,8 +126,11 @@ class ScriptTest {
 
         gitHub.verifyReadmeProdStageBadge(Badges.PROD_STAGE_TEST_TYPESCRIPT);
 
+        // Verify Pipeline passes
 
-
+        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+        // gitHub.verifyWorkflowPasses(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
+        // gitHub.verifyWorkflowPasses(Badges.ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
 
     }
 
