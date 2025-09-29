@@ -93,12 +93,17 @@ public class GitHubDsl {
                 .doesNotContain(image);
     }
 
-    public void verifyWorkflowPasses(String workflowFileName) {
+    private void verifyWorkflowPasses(String workflowFileName) {
         var workflowRun = waitUntilCompleted(workflowFileName);
 
         assertThat(workflowRun.getConclusion())
                 .as("Workflow '" + workflowFileName + "' should pass, but concluded with: " + workflowRun.getConclusion())
                 .isEqualTo("success");
+    }
+
+    private void verifyWorkflowPasses(String workflowFileNameFormat, String language) {
+        var workflowFileName = String.format(workflowFileNameFormat, language);
+        verifyWorkflowPasses(workflowFileName);
     }
 
     private WorkflowRunResult waitUntilCompleted(String workflowFileName) {
@@ -178,36 +183,21 @@ public class GitHubDsl {
         }
     }
 
-    private void verifyReadmeHasPagesBuildDeploymentBadge() {
+    public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
         verifyReadmeContainsBadge(Badges.PAGES_BUILD_DEPLOYMENT);
-    }
-
-    private void verifyReadmeHasCommitStageBadgeWithSystemLanguage(String systemLanguage) {
         verifyReadmeStageLanguageBadge(Badges.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
-    }
-
-    private void verifyReadmeHasLocalAcceptanceStageBadgeWithSystemTestLanguage(String systemTestLanguage) {
         verifyReadmeStageLanguageBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-    }
-
-    private void verifyReadmeHasAcceptanceStageBadgeWithSystemTestLanguage(String systemTestLanguage) {
         verifyReadmeStageLanguageBadge(Badges.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-    }
-
-    private void verifyReadmeHasQaStageBadgeWithSystemTestLanguage(String systemTestLanguage) {
         verifyReadmeStageLanguageBadge(Badges.QA_STAGE_TEST_FORMAT, systemTestLanguage);
-    }
-
-    private void verifyReadmeHasProdStageBadgeWithSystemTestLanguage(String systemTestLanguage) {
         verifyReadmeStageLanguageBadge(Badges.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
     }
 
-    public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
-        verifyReadmeHasPagesBuildDeploymentBadge();
-        verifyReadmeHasCommitStageBadgeWithSystemLanguage(systemLanguage);
-        verifyReadmeHasLocalAcceptanceStageBadgeWithSystemTestLanguage(systemTestLanguage);
-        verifyReadmeHasAcceptanceStageBadgeWithSystemTestLanguage(systemTestLanguage);
-        verifyReadmeHasQaStageBadgeWithSystemTestLanguage(systemTestLanguage);
-        verifyReadmeHasProdStageBadgeWithSystemTestLanguage(systemTestLanguage);
+    public void verifyWorkflowsPass(String systemLanguage, String systemTestLanguage) {
+        verifyWorkflowPasses(Badges.PAGES_BUILD_DEPLOYMENT);
+        verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
+        verifyWorkflowPasses(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyWorkflowPasses(Badges.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyWorkflowPasses(Badges.QA_STAGE_TEST_FORMAT, systemTestLanguage);
+        verifyWorkflowPasses(Badges.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
     }
 }
