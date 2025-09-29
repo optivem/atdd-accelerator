@@ -19,6 +19,7 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 . "$scriptDir\setup-github-pages.ps1"
 . "$scriptDir\update-docker-compose.ps1"
 . "$scriptDir\invoke-system-test-release-workflows.ps1"
+. "$scriptDir\invoke-build-workflows.ps1"
 
 function Test-SystemLanguage {
     param([string]$SystemLanguage)
@@ -149,7 +150,19 @@ try {
     }
     
     # Wait a moment for the push to complete
-    Start-Sleep -Seconds 2
+    Start-Sleep -Seconds 3
+    
+    # Trigger BUILD workflows first to create Docker images
+    Write-Output ""
+    
+    # Wait for build workflows to complete (this may take several minutes)
+    $buildCompleted = Wait-ForBuildWorkflows -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
+    
+    if ($buildCompleted) {
+        Write-Output "✅ Build workflows completed - Docker images are now available"
+    } else {
+        Write-Warning "⚠️ Build workflows may still be running - test workflows might fail initially"
+    }
     
     # NOW enable GitHub Pages (after all content is ready)
     Write-Output ""
@@ -162,7 +175,7 @@ try {
         Write-Warning "⚠️ GitHub Pages setup failed, but continuing..."
     }
 
-    # Trigger system test workflows
+    # Trigger system test workflows (after builds complete)
     Write-Output ""
     Write-Output "Triggering system test workflows..."
     $workflowsTriggered = Invoke-SystemTestWorkflows -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
