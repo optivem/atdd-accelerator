@@ -61,23 +61,23 @@ public class GitHubDsl {
         assertSuccess(result, "Failed to delete repository '" + client.getRepositoryPath() + "'.");
     }
 
-    private void verifyReadmeContainsBadge(String badge) {
+    private void verifyReadmeContainsBadge(String workflowName) {
         var readmeContent = getReadmeContent();
 
-        var badgeSvg = String.format("https://github.com/%s/actions/workflows/commit-stage-monolith-java.yml/badge.svg", repositoryPath);
-        var badgeWorkflow = String.format("https://github.com/%s/actions/workflows/commit-stage-monolith-java.yml", repositoryPath);
+        var badgeWorkflow = String.format(Constants.BADGE_WORKFLOW_STAGE_FORMAT, repositoryPath, workflowName);
+        var badgeSvg = String.format(Constants.BADGE_SVG_STAGE_FORMAT, repositoryPath, workflowName);
 
         assertThat(readmeContent)
-                .as("README should contain badge: " + badge)
-                .contains(badge);
-
-        assertThat(readmeContent)
-                .as("README should contain badge SVG: " + badgeSvg)
-                .contains(badgeSvg);
+                .as("README should contain badge: " + workflowName)
+                .contains(workflowName);
 
         assertThat(readmeContent)
                 .as("README should contain badge workflow link: " + badgeWorkflow)
                 .contains(badgeWorkflow);
+
+        assertThat(readmeContent)
+                .as("README should contain badge SVG: " + badgeSvg)
+                .contains(badgeSvg);
     }
 
     private void verifyReadmeDoesNotContainBadge(String badge) {
