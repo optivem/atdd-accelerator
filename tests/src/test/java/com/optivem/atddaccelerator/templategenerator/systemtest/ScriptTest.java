@@ -45,26 +45,10 @@ class ScriptTest {
         // Assert
         gitHub.verifyRepositoryExists();
         gitHub.verifyPathsExist(Language.JAVA, Language.TYPESCRIPT);
-
-        // System Test
-
-        var javaImageName = String.format("ghcr.io/%s/%s/monolith-java:latest", REPO_OWNER, repoName);
-        var dotnetImageName = String.format("ghcr.io/%s/%s/monolith-dotnet:latest", REPO_OWNER, repoName);
-        var typescriptImageName = String.format("ghcr.io/%s/%s/monolith-typescript:latest", REPO_OWNER, repoName);
-
-        gitHub.verifyDockerComposeContainsImage(Constants.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, javaImageName);
-        gitHub.verifyDockerComposeDoesNotContainImage(Constants.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, dotnetImageName);
-        gitHub.verifyDockerComposeDoesNotContainImage(Constants.SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE, typescriptImageName);
-
-        // Documentation
-
-        gitHub.verifyPagesEnabled();
-        gitHub.verifyPagesSourceIsMainDocs();
-
-        // Verify readme has badges
+        gitHub.verifyDockerComposeImage(Language.JAVA, Language.TYPESCRIPT);
         gitHub.verifyReadmeHasBadges(Language.JAVA, Language.TYPESCRIPT);
+        gitHub.verifyPagesEnabled();
 
-        // Verify Pipeline passes
         gitHub.verifyWorkflowsPass(Language.JAVA, Language.TYPESCRIPT);
     }
 

@@ -159,9 +159,10 @@ public class GitHubDsl {
     public void verifyPagesEnabled() {
         var result = client.viewPages();
         assertSuccess(result, "GitHub Pages should be enabled.");
+        verifyPagesSourceIsMainDocs();
     }
 
-    public void verifyPagesSourceIsMainDocs() {
+    private void verifyPagesSourceIsMainDocs() {
         var result = client.viewPages();
         assertSuccess(result, "Failed to get GitHub Pages info.");
 
@@ -226,5 +227,18 @@ public class GitHubDsl {
         verifyWorkflowPasses(Constants.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
         verifyWorkflowPasses(Constants.QA_STAGE_TEST_FORMAT, systemTestLanguage);
         verifyWorkflowPasses(Constants.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
+    }
+
+    public void verifyDockerComposeImage(String systemLanguage, String systemTestLanguage) {
+        var dockerComposePath = String.format("system-test-%s/docker-compose.yml", systemTestLanguage);
+
+        for(String l : Language.ALL) {
+            var monolithDockerImageName = String.format(Constants.MONOLITH_DOCKER_IMAGE_NAME_FORMAT, repositoryPath, l);
+            if(l.equals(systemLanguage)) {
+                verifyDockerComposeContainsImage(dockerComposePath, monolithDockerImageName);
+            } else {
+                verifyDockerComposeDoesNotContainImage(dockerComposePath, monolithDockerImageName);
+            }
+        }
     }
 }

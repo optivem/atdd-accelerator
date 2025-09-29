@@ -10,4 +10,6 @@ public class Constants {
     public static String PROD_STAGE_TEST_FORMAT = "prod-stage-test-%s";
 
     public static final String SYSTEM_TEST_TYPESCRIPT_DOCKER_COMPOSE = "system-test-typescript/docker-compose.yml";
+
+    public static String MONOLITH_DOCKER_IMAGE_NAME_FORMAT = "ghcr.io/%s/monolith-%s:latest";
 }
