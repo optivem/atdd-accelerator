@@ -31,7 +31,7 @@ function Wait-ForBuildWorkflows {
         }
     }
     
-    Write-Warning "⚠️ Timeout waiting for build workflows to complete"
+    Write-Error "⚠️ Timeout waiting for build workflows to complete"
     return $false
 }
 
