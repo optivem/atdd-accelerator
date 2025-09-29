@@ -90,53 +90,23 @@ class ScriptTest {
         gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_JAVA);
         gitHub.verifyPathDoesNotExist(RepositoryPaths.PRODUCTION_STAGE_TEST_DOTNET);
 
-        // Pipeline Badges - System
-
-        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
 
         // Documentation
 
         gitHub.verifyPagesEnabled();
         gitHub.verifyPagesSourceIsMainDocs();
 
-        // Pipeline Badge - GitHub Pages
-        gitHub.verifyReadmeContainsBadge(Badges.PAGES_BUILD_DEPLOYMENT);
-
-        // Pipeline Badge - Local Acceptance Stage
-        gitHub.verifyReadmeContainsBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_JAVA);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_DOTNET);
-
-        // Pipeline Badge - Acceptance Stage
-        gitHub.verifyReadmeContainsBadge(Badges.ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.ACCEPTANCE_STAGE_TEST_JAVA);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.ACCEPTANCE_STAGE_TEST_DOTNET);
-
-        // Pipeline Badge - QA Stage
-        gitHub.verifyReadmeContainsBadge(Badges.QA_STAGE_TEST_TYPESCRIPT);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.QA_STAGE_TEST_JAVA);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.QA_STAGE_TEST_DOTNET);
-
-        // Pipeline Badge - PROD Stage
-        gitHub.verifyReadmeContainsBadge(Badges.PROD_STAGE_TEST_TYPESCRIPT);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.PROD_STAGE_TEST_JAVA);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.PROD_STAGE_TEST_DOTNET);
-
-        gitHub.verifyReadmeProdStageBadge(Badges.PROD_STAGE_TEST_TYPESCRIPT);
+        // Verify readme has badges
+        gitHub.verifyReadmeHasBadges(Language.JAVA, Language.TYPESCRIPT);
 
         // Verify Pipeline passes
 
         gitHub.verifyWorkflowPasses(Badges.PAGES_BUILD_DEPLOYMENT);
-
         gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-
         gitHub.verifyWorkflowPasses(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyWorkflowPasses(Badges.ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyWorkflowPasses(Badges.QA_STAGE_TEST_TYPESCRIPT);
         gitHub.verifyWorkflowPasses(Badges.PROD_STAGE_TEST_TYPESCRIPT);
-
     }
 
     @Test
@@ -145,75 +115,50 @@ class ScriptTest {
     }
 
 
-    @Disabled
-    @Test
-    void shouldCreateJavaRepositoryFull() {
-        generator.generateNewRepository(repoName, Language.JAVA, Language.TYPESCRIPT);
 
-        gitHub.verifyRepositoryExists();
-
-        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
-
-        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
-
-        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
-
-        // Slow running
-        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-
-        // TODO: Verify only one package remains, that rest are deleted
-
-    }
-
-    @Disabled
-    @Test
-    void shouldCreateDotNetRepositoryFull() {
-        generator.generateNewRepository(repoName, Language.DOTNET, Language.TYPESCRIPT);
-
-        gitHub.verifyRepositoryExists();
-
-        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_DOTNET);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
-
-        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_DOTNET);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
-
-        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
-
-        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-    }
-    
-    @Disabled
-    @Test
-    void shouldCreateTypeScriptRepositoryFull() {
-        generator.generateNewRepository(repoName, Language.TYPESCRIPT, Language.TYPESCRIPT);
-
-        gitHub.verifyRepositoryExists();
-
-        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_TYPESCRIPT);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
-
-        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
-        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
-        
-        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
-        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
-
-        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
-    }
+//    @Disabled
+//    @Test
+//    void shouldCreateDotNetRepositoryFull() {
+//        generator.generateNewRepository(repoName, Language.DOTNET, Language.TYPESCRIPT);
+//
+//        gitHub.verifyRepositoryExists();
+//
+//        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_DOTNET);
+//        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
+//        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_TYPESCRIPT);
+//
+//        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_DOTNET);
+//        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
+//        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
+//
+//        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
+//        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+//        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+//
+//        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
+//    }
+//
+//    @Disabled
+//    @Test
+//    void shouldCreateTypeScriptRepositoryFull() {
+//        generator.generateNewRepository(repoName, Language.TYPESCRIPT, Language.TYPESCRIPT);
+//
+//        gitHub.verifyRepositoryExists();
+//
+//        gitHub.verifyPathExists(RepositoryPaths.MONOLITH_TYPESCRIPT);
+//        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_DOTNET);
+//        gitHub.verifyPathDoesNotExist(RepositoryPaths.MONOLITH_JAVA);
+//
+//        gitHub.verifyPathExists(RepositoryPaths.COMMIT_STAGE_TYPESCRIPT);
+//        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_DOTNET);
+//        gitHub.verifyPathDoesNotExist(RepositoryPaths.COMMIT_STAGE_JAVA);
+//
+//        gitHub.verifyReadmeContainsBadge(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+//        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_DOTNET);
+//        gitHub.verifyReadmeDoesNotContainBadge(Badges.COMMIT_STAGE_MONOLITH_JAVA);
+//
+//        gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_TYPESCRIPT);
+//    }
 
 
 

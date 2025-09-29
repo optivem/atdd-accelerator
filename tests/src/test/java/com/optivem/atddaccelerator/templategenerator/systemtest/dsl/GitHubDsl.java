@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Badges;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.WorkflowRunResult;
 import dev.failsafe.Failsafe;
 import dev.failsafe.RetryPolicy;
@@ -48,7 +49,7 @@ public class GitHubDsl {
         assertSuccess(result, "Failed to delete repository '" + client.getRepositoryPath() + "'.");
     }
 
-    public void verifyReadmeContainsBadge(String badge) {
+    private void verifyReadmeContainsBadge(String badge) {
         var readmeContent = getReadmeContent();
 
         var badgeSvg = String.format("https://github.com/%s/actions/workflows/commit-stage-monolith-java.yml/badge.svg", repositoryPath);
@@ -67,7 +68,7 @@ public class GitHubDsl {
                 .contains(badgeWorkflow);
     }
 
-    public void verifyReadmeDoesNotContainBadge(String badge) {
+    private void verifyReadmeDoesNotContainBadge(String badge) {
         var readmeContent = getReadmeContent();
         assertThat(readmeContent)
                 .as("README should not contain badge: " + badge)
@@ -166,14 +167,47 @@ public class GitHubDsl {
         }
     }
 
-    public void verifyReadmeProdStageBadge(String workflowName) {
-        verifyReadmeContainsBadge(workflowName);
-
-        String[] prodStage = Badges.PROD_STAGE;
-        for(String w : prodStage) {
-            if (!w.equals(workflowName)) {
-                verifyReadmeDoesNotContainBadge(w);
+    private void verifyReadmeStageLanguageBadge(String workflowNameFormat, String language){
+        for(String l : Language.ALL) {
+            var workflowName = String.format(workflowNameFormat, l);
+            if(l.equals(language)) {
+                verifyReadmeContainsBadge(workflowName);
+            } else {
+                verifyReadmeDoesNotContainBadge(workflowName);
             }
         }
+    }
+
+    private void verifyReadmeHasPagesBuildDeploymentBadge() {
+        verifyReadmeContainsBadge(Badges.PAGES_BUILD_DEPLOYMENT);
+    }
+
+    private void verifyReadmeHasCommitStageBadgeWithSystemLanguage(String systemLanguage) {
+        verifyReadmeStageLanguageBadge(Badges.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
+    }
+
+    private void verifyReadmeHasLocalAcceptanceStageBadgeWithSystemTestLanguage(String systemTestLanguage) {
+        verifyReadmeStageLanguageBadge(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
+    }
+
+    private void verifyReadmeHasAcceptanceStageBadgeWithSystemTestLanguage(String systemTestLanguage) {
+        verifyReadmeStageLanguageBadge(Badges.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
+    }
+
+    private void verifyReadmeHasQaStageBadgeWithSystemTestLanguage(String systemTestLanguage) {
+        verifyReadmeStageLanguageBadge(Badges.QA_STAGE_TEST_FORMAT, systemTestLanguage);
+    }
+
+    private void verifyReadmeHasProdStageBadgeWithSystemTestLanguage(String systemTestLanguage) {
+        verifyReadmeStageLanguageBadge(Badges.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
+    }
+
+    public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
+        verifyReadmeHasPagesBuildDeploymentBadge();
+        verifyReadmeHasCommitStageBadgeWithSystemLanguage(systemLanguage);
+        verifyReadmeHasLocalAcceptanceStageBadgeWithSystemTestLanguage(systemTestLanguage);
+        verifyReadmeHasAcceptanceStageBadgeWithSystemTestLanguage(systemTestLanguage);
+        verifyReadmeHasQaStageBadgeWithSystemTestLanguage(systemTestLanguage);
+        verifyReadmeHasProdStageBadgeWithSystemTestLanguage(systemTestLanguage);
     }
 }

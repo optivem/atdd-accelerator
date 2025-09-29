@@ -25,4 +25,10 @@ public class Badges {
     public static String PROD_STAGE_TEST_TYPESCRIPT = "prod-stage-test-typescript";
 
     public static String[] PROD_STAGE = new String[] { PROD_STAGE_TEST_JAVA, PROD_STAGE_TEST_DOTNET, PROD_STAGE_TEST_TYPESCRIPT };
+
+    public static String COMMIT_STAGE_MONOLITH_FORMAT = "commit-stage-monolith-%s";
+    public static String LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT = "local-acceptance-stage-test-%s";
+    public static String ACCEPTANCE_STAGE_TEST_FORMAT = "acceptance-stage-test-%s";
+    public static String QA_STAGE_TEST_FORMAT = "qa-stage-test-%s";
+    public static String PROD_STAGE_TEST_FORMAT = "prod-stage-test-%s";
 }
