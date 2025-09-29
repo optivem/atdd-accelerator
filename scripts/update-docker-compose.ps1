@@ -34,7 +34,7 @@ function Update-DockerComposeFiles {
     }
     
     # Use the system-test language to find the correct template
-    $templatePath = "temp\$systemTestLanguage\docker-compose.yml"
+    $templatePath = "temp\$SystemLanguage\docker-compose.yml"
     
     # Check if template exists
     if (-not (Test-Path $templatePath)) {
