@@ -147,11 +147,27 @@ try {
     # Clean up temp folder before completing
     Remove-TempFolder
 
+    # Trigger system test workflows before completing
+    Write-Output ""
+    Write-Output "Triggering system test workflows..."
+    $workflowsTriggered = Invoke-SystemTestWorkflows -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
+    
+    if ($workflowsTriggered) {
+        Write-Output "✅ System test workflows have been triggered"
+        Write-Output "   You can monitor their progress at: https://github.com/$GitHubUsername/$RepositoryName/actions"
+    } else {
+        Write-Warning "⚠️  No workflows were triggered - you may need to trigger them manually"
+    }
+
+    Write-Output ""
     Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"
     Write-Output "Setup completed successfully"
     
     Remove-LocalRepository -RepositoryName $RepositoryName
     
+
+
+
     exit 0
     
 } catch {
