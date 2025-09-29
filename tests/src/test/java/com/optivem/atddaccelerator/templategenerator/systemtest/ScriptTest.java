@@ -132,10 +132,10 @@ class ScriptTest {
 
         gitHub.verifyWorkflowPasses(Badges.COMMIT_STAGE_MONOLITH_JAVA);
 
-//        gitHub.verifyWorkflowPasses(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
-//        gitHub.verifyWorkflowPasses(Badges.ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
-//        gitHub.verifyWorkflowPasses(Badges.QA_STAGE_TEST_TYPESCRIPT);
-//        gitHub.verifyWorkflowPasses(Badges.PROD_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyWorkflowPasses(Badges.LOCAL_ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyWorkflowPasses(Badges.ACCEPTANCE_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyWorkflowPasses(Badges.QA_STAGE_TEST_TYPESCRIPT);
+        gitHub.verifyWorkflowPasses(Badges.PROD_STAGE_TEST_TYPESCRIPT);
 
     }
 
