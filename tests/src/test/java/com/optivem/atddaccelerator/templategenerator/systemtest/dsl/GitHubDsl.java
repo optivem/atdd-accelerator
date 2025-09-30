@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.github.helpers.FileClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.github.helpers.ReadmeClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
@@ -24,39 +25,19 @@ public class GitHubDsl {
     private final String repositoryPath;
 
     private final ReadmeClient readmeClient;
+    private final FileClient fileClient;
 
     public GitHubDsl(GithubClient client) {
         this.client = client;
         this.repositoryPath = client.getRepositoryPath();
         this.readmeClient = new ReadmeClient(client);
+        this.fileClient = new FileClient(client);
     }
 
     public void verifyRepositoryExists() {
         var result = client.viewRepository();
         assertSuccess(result, "Repository '" + client.getRepositoryPath() + "' should exist.");
     }
-
-    private void verifyPathExists(String path) {
-        var result = client.viewPath(path);
-        assertSuccess(result, "Path '" + path + "' should exist.");
-    }
-
-    private void verifyPathDoesNotExist(String path) {
-        var result = client.viewPath(path);
-        assertFailure(result, "Path '" + path + "' should not exist.");
-    }
-
-    public void verifyPathLanguageExists(String pathFormat, String language) {
-        for(String l : Language.ALL) {
-            var path = String.format(pathFormat, l);
-            if(l.equals(language)) {
-                verifyPathExists(path);
-            } else {
-                verifyPathDoesNotExist(path);
-            }
-        }
-    }
-
 
     public void deleteRepository() {
         var result = client.deleteRepository();
@@ -159,23 +140,6 @@ public class GitHubDsl {
         }
     }
 
-
-
-    public void verifyPathsExist(String systemLanguage, String systemTestLanguage) {
-        verifyPathLanguageExists("monolith-%s", systemLanguage);
-        verifyPathLanguageExists( getWorkflowPath(Constants.COMMIT_STAGE_MONOLITH_FORMAT), systemLanguage);
-
-        verifyPathLanguageExists("system-test-%s/docker-compose.yml", systemTestLanguage);
-        verifyPathLanguageExists( getWorkflowPath(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT), systemTestLanguage);
-        verifyPathLanguageExists( getWorkflowPath(Constants.ACCEPTANCE_STAGE_TEST_FORMAT), systemTestLanguage);
-        verifyPathLanguageExists( getWorkflowPath(Constants.QA_STAGE_TEST_FORMAT), systemTestLanguage);
-        verifyPathLanguageExists( getWorkflowPath(Constants.PROD_STAGE_TEST_FORMAT), systemTestLanguage);
-    }
-
-    private String getWorkflowPath(String stageFormat) {
-        return ".github/workflows/" + stageFormat + ".yml";
-    }
-
     public void verifyWorkflowsPass(String systemLanguage, String systemTestLanguage) {
         verifyWorkflowPasses(Constants.PAGES_BUILD_DEPLOYMENT);
         verifyWorkflowPasses(Constants.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
@@ -200,5 +164,9 @@ public class GitHubDsl {
 
     public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
         readmeClient.verifyReadmeHasBadges(systemLanguage, systemTestLanguage);
+    }
+
+    public void verifyPathsExist(String systemLanguage, String systemTestLanguage) {
+        fileClient.verifyPathsExist(systemLanguage, systemTestLanguage);
     }
 }
