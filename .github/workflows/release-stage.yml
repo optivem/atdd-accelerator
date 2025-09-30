@@ -12,7 +12,6 @@ env:
   DOTNET_VERSION: '8.0.x'
   PROJECT_PATH: 'cli/Optivem.AtddAccelerator.TemplateGenerator.csproj'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
-  NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
 jobs:
   build:
@@ -43,31 +42,6 @@ jobs:
         name: nuget-packages
         path: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg
 
-  publish-nuget:
-    name: 'Publish to NuGet.org'
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'release'
-    
-    steps:
-    - name: 'Download package artifacts'
-      uses: actions/download-artifact@v4
-      with:
-        name: nuget-packages
-        path: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
-
-    - name: 'Setup .NET'
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: 'Publish to NuGet.org'
-      run: |
-        dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg \
-          --api-key ${{ secrets.NUGET_API_KEY }} \
-          --source ${{ env.NUGET_SOURCE_URL }} \
-          --skip-duplicate
-
   publish-github-packages:
     name: 'Publish to GitHub Packages'
     runs-on: ubuntu-latest
@@ -94,9 +68,10 @@ jobs:
           --skip-duplicate
 
   test-tool-installation:
-    name: 'Test Tool Installation'
+    name: 'Test Tool Installation from GitHub Packages'
     runs-on: ubuntu-latest
-    needs: build
+    needs: publish-github-packages
+    if: github.ref == 'refs/heads/main' || github.event_name == 'release'
     
     steps:
     - name: 'Setup .NET'
@@ -104,24 +79,21 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: 'Download package artifacts'
-      uses: actions/download-artifact@v4
-      with:
-        name: nuget-packages
-        path: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
-
-    - name: 'Install tool locally'
+    - name: 'Install tool from GitHub Packages'
       run: |
-        dotnet tool install --global --add-source ${{ env.PACKAGE_OUTPUT_DIRECTORY }} Optivem.AtddAccelerator.TemplateGenerator
+        # Add GitHub Packages source
+        dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github
+        
+        # Wait a moment for package to be available
+        sleep 30
+        
+        # Install the tool
+        dotnet tool install --global --add-source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json Optivem.AtddAccelerator.TemplateGenerator
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: 'Test tool default command'
+    - name: 'Test tool commands'
       run: |
         atdd
-
-    - name: 'Test tool help command'
-      run: |
         atdd --help
-
-    - name: 'Test tool version command'
-      run: |
         atdd --version
