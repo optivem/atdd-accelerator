@@ -10,11 +10,9 @@ import static com.optivem.atddaccelerator.templategenerator.systemtest.util.Proc
 public class FileClient {
 
     private final GithubClient client;
-    private final String repositoryPath;
 
     public FileClient (GithubClient client) {
         this.client = client;
-        this.repositoryPath = client.getRepositoryPath();
     }
 
     public void verifyPathsExist(String systemLanguage, String systemTestLanguage) {

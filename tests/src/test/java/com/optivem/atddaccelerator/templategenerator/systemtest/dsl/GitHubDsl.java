@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.github.helpers.FileClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.github.helpers.ReadmeClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.github.helpers.WorkflowClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.WorkflowRunResult;
@@ -26,12 +27,14 @@ public class GitHubDsl {
 
     private final ReadmeClient readmeClient;
     private final FileClient fileClient;
+    private final WorkflowClient workflowClient;
 
     public GitHubDsl(GithubClient client) {
         this.client = client;
         this.repositoryPath = client.getRepositoryPath();
         this.readmeClient = new ReadmeClient(client);
         this.fileClient = new FileClient(client);
+        this.workflowClient = new WorkflowClient(client);
     }
 
     public void verifyRepositoryExists() {
@@ -43,8 +46,6 @@ public class GitHubDsl {
         var result = client.deleteRepository();
         assertSuccess(result, "Failed to delete repository '" + client.getRepositoryPath() + "'.");
     }
-
-
 
     public void verifyDockerComposeContainsImage(String dockerComposePath, String image) {
         var dockerComposeContent = client.getFileContent(dockerComposePath);
@@ -58,57 +59,6 @@ public class GitHubDsl {
         assertThat(dockerComposeContent)
                 .as("Docker Compose should not contain image: " + image)
                 .doesNotContain(image);
-    }
-
-    private void verifyWorkflowPasses(String workflowFileName) {
-        var workflowRun = waitUntilCompleted(workflowFileName);
-
-        assertThat(workflowRun.getConclusion())
-                .as("Workflow '" + workflowFileName + "' should pass, but concluded with: " + workflowRun.getConclusion())
-                .isEqualTo("success");
-    }
-
-    private void verifyWorkflowPasses(String workflowFileNameFormat, String language) {
-        var workflowFileName = String.format(workflowFileNameFormat, language);
-        verifyWorkflowPasses(workflowFileName);
-    }
-
-    private WorkflowRunResult waitUntilCompleted(String workflowFileName) {
-        RetryPolicy<WorkflowRunResult> retryPolicy = RetryPolicy.<WorkflowRunResult>builder()
-                .handleResultIf(result -> !"completed".equals(result.getStatus()))
-                .withBackoff(Duration.ofSeconds(1), Duration.ofMinutes(5))  // 1s to 10s
-                .withMaxRetries(10)
-                .onFailedAttempt(event ->
-                        System.out.println("Attempt " + event.getAttemptCount() +
-                                ": Workflow status is '" + event.getLastResult().getStatus() +
-                                "', retrying in " + event.getElapsedTime() + "..."))
-                .build();
-
-        return Failsafe.with(retryPolicy).get(() -> {
-            var workflowRun = getWorklowRunResult(workflowFileName);
-            if (!"completed".equals(workflowRun.getStatus())) {
-                System.out.println("Status: " + workflowRun.getStatus() + ", will retry...");
-            }
-            return workflowRun;
-        });
-    }
-
-    private WorkflowRunResult getWorklowRunResult(String workflowFileName) {
-        var result = client.viewWorkflowRuns(workflowFileName);
-        assertSuccess(result, "Failed to get workflow runs for '" + workflowFileName + "'.");
-
-        var jsonOutput = result.getOutput();
-        var workflowRunes = parseWorkflowRuns(jsonOutput);
-        return workflowRunes.get(0);
-    }
-
-    private List<WorkflowRunResult> parseWorkflowRuns(String jsonOutput) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(jsonOutput, new TypeReference<>() {});
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void verifyPagesEnabled() {
@@ -140,15 +90,6 @@ public class GitHubDsl {
         }
     }
 
-    public void verifyWorkflowsPass(String systemLanguage, String systemTestLanguage) {
-        verifyWorkflowPasses(Constants.PAGES_BUILD_DEPLOYMENT);
-        verifyWorkflowPasses(Constants.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
-        verifyWorkflowPasses(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyWorkflowPasses(Constants.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyWorkflowPasses(Constants.QA_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyWorkflowPasses(Constants.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
-    }
-
     public void verifyDockerComposeImage(String systemLanguage, String systemTestLanguage) {
         var dockerComposePath = String.format("system-test-%s/docker-compose.yml", systemTestLanguage);
 
@@ -168,5 +109,9 @@ public class GitHubDsl {
 
     public void verifyPathsExist(String systemLanguage, String systemTestLanguage) {
         fileClient.verifyPathsExist(systemLanguage, systemTestLanguage);
+    }
+
+    public void verifyWorkflowsPass(String systemLanguage, String systemTestLanguage) {
+        workflowClient.verifyWorkflowsPass(systemLanguage, systemTestLanguage);
     }
 }
