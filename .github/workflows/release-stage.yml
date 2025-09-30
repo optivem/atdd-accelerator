@@ -66,6 +66,8 @@ jobs:
           --api-key ${{ secrets.GITHUB_TOKEN }} \
           --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json \
           --skip-duplicate
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Add this line
 
   test-tool-installation:
     name: 'Test Tool Installation from GitHub Packages'
@@ -79,18 +81,31 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
+    - name: 'Configure GitHub Packages authentication'
+      run: |
+        # Create a temporary nuget.config with authentication
+        cat > nuget.config << EOF
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <packageSources>
+            <add key="github" value="https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" />
+          </packageSources>
+          <packageSourceCredentials>
+            <github>
+              <add key="Username" value="${{ github.actor }}" />
+              <add key="ClearTextPassword" value="${{ secrets.GITHUB_TOKEN }}" />
+            </github>
+          </packageSourceCredentials>
+        </configuration>
+        EOF
+
     - name: 'Install tool from GitHub Packages'
       run: |
-        # Add GitHub Packages source
-        dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github
+        # Wait for package to be available
+        sleep 60
         
-        # Wait a moment for package to be available
-        sleep 30
-        
-        # Install the tool
-        dotnet tool install --global --add-source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json Optivem.AtddAccelerator.TemplateGenerator
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Install the tool using the configured authentication
+        dotnet tool install --global --configfile nuget.config Optivem.AtddAccelerator.TemplateGenerator
 
     - name: 'Test tool commands'
       run: |
