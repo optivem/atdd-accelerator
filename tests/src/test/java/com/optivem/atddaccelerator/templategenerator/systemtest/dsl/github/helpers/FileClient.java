@@ -38,7 +38,7 @@ public class FileClient {
 
     private void verifyPathLanguageExists(String pathFormat, Language language) {
         for(var l : Language.getAll()) {
-            var path = String.format(pathFormat, l);
+            var path = String.format(pathFormat, l.getValue());
             if(l.equals(language)) {
                 verifyPathExists(path);
             } else {

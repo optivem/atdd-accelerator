@@ -44,7 +44,7 @@ public class WorkflowClient {
     }
 
     private void verifyWorkflowPasses(String workflowFileNameFormat, Language language) {
-        var workflowFileName = String.format(workflowFileNameFormat, language);
+        var workflowFileName = String.format(workflowFileNameFormat, language.getValue());
         verifyWorkflowPasses(workflowFileName);
     }
 

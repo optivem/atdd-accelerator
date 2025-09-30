@@ -35,7 +35,7 @@ public class ReadmeClient {
 
     private void verifyReadmeStageLanguageBadge(String workflowNameFormat, Language language){
         for(var l : Language.getAll()) {
-            var workflowName = String.format(workflowNameFormat, l);
+            var workflowName = String.format(workflowNameFormat, l.getValue());
             if(l.equals(language)) {
                 verifyReadmeContainsBadge(workflowName);
             } else {

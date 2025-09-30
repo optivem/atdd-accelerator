@@ -16,10 +16,10 @@ public class DockerComposeClient {
     }
 
     public void verifyDockerComposeImage(Language systemLanguage, Language systemTestLanguage) {
-        var dockerComposePath = String.format("system-test-%s/docker-compose.yml", systemTestLanguage);
+        var dockerComposePath = String.format("system-test-%s/docker-compose.yml", systemTestLanguage.getValue());
 
         for(var l : Language.getAll()) {
-            var monolithDockerImageName = String.format(Constants.MONOLITH_DOCKER_IMAGE_NAME_FORMAT, repositoryPath, l);
+            var monolithDockerImageName = String.format(Constants.MONOLITH_DOCKER_IMAGE_NAME_FORMAT, repositoryPath, l.getValue());
             if(l.equals(systemLanguage)) {
                 verifyDockerComposeContainsImage(dockerComposePath, monolithDockerImageName);
             } else {
