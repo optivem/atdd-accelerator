@@ -12,7 +12,7 @@ import dev.failsafe.RetryPolicy;
 import java.time.Duration;
 import java.util.List;
 
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertSuccess;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResultAssertions.assertSuccess;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WorkflowClient {

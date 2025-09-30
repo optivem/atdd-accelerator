@@ -5,9 +5,9 @@ import com.optivem.atddaccelerator.templategenerator.systemtest.clients.Generato
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.waitTime;
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertFailure;
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertSuccess;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessExecutor.waitTime;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResultAssertions.assertFailure;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResultAssertions.assertSuccess;
 
 public class GeneratorDsl {
     private static final int MILLIS = 3000;

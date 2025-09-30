@@ -1,8 +1,8 @@
 package com.optivem.atddaccelerator.templategenerator.systemtest.clients;
 
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResult;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResult;
 
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.*;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessExecutor.*;
 
 public class GeneratorClient {
     private static final String SCRIPT_PATH = "../scripts/setup-mono-repo.ps1";

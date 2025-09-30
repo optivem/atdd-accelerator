@@ -1,19 +1,10 @@
 package com.optivem.atddaccelerator.templategenerator.systemtest.clients;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResult;
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.WorkflowRunResult;
-import dev.failsafe.Failsafe;
-import dev.failsafe.RetryPolicy;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResult;
 
-import java.time.Duration;
-import java.util.List;
-
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessExecutor.*;
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertFailure;
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertSuccess;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessExecutor.*;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResultAssertions.assertFailure;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResultAssertions.assertSuccess;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

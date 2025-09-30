@@ -1,4 +1,4 @@
-package com.optivem.atddaccelerator.templategenerator.systemtest.util;
+package com.optivem.atddaccelerator.templategenerator.systemtest.util.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

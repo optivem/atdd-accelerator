@@ -1,4 +1,4 @@
-package com.optivem.atddaccelerator.templategenerator.systemtest.util;
+package com.optivem.atddaccelerator.templategenerator.systemtest.util.process;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

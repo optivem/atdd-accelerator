@@ -4,8 +4,8 @@ import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubCl
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertFailure;
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertSuccess;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResultAssertions.assertFailure;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResultAssertions.assertSuccess;
 
 public class FileClient {
 

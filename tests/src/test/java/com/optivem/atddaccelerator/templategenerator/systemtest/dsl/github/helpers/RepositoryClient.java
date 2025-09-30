@@ -2,7 +2,7 @@ package com.optivem.atddaccelerator.templategenerator.systemtest.dsl.github.help
 
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
 
-import static com.optivem.atddaccelerator.templategenerator.systemtest.util.ProcessResultAssertions.assertSuccess;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResultAssertions.assertSuccess;
 
 public class RepositoryClient {
     private final GithubClient client;
