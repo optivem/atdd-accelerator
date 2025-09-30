@@ -62,14 +62,18 @@ public class GitHubDsl {
     }
 
     private void verifyReadmeContainsBadge(String workflowName) {
-        var readmeContent = getReadmeContent();
-
         var badgeWorkflow = String.format(Constants.BADGE_WORKFLOW_STAGE_FORMAT, repositoryPath, workflowName);
         var badgeSvg = String.format(Constants.BADGE_SVG_STAGE_FORMAT, repositoryPath, workflowName);
 
+        verifyReadmeContainsBadge(workflowName, badgeWorkflow, badgeSvg);
+    }
+
+    private void verifyReadmeContainsBadge(String badgeName, String badgeWorkflow, String badgeSvg) {
+        var readmeContent = getReadmeContent();
+
         assertThat(readmeContent)
-                .as("README should contain badge: " + workflowName)
-                .contains(workflowName);
+                .as("README should contain badge: " + badgeName)
+                .contains(badgeName);
 
         assertThat(readmeContent)
                 .as("README should contain badge workflow link: " + badgeWorkflow)
@@ -211,7 +215,14 @@ public class GitHubDsl {
         return ".github/workflows/" + stageFormat + ".yml";
     }
 
+    private void verifyReadmePagesBadge() {
+        var badgeWorkflow = String.format(Constants.PAGES_BUILD_DEPLOYMENT_URL, repositoryPath);
+        var badgeSvg = String.format(Constants.PAGES_BUILD_DEPLOYMENT_SVG_URL, repositoryPath);
+        verifyReadmeContainsBadge(Constants.PAGES_BUILD_DEPLOYMENT, badgeWorkflow, badgeSvg);
+    }
+
     public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
+        verifyReadmePagesBadge();
         verifyReadmeContainsBadge(Constants.PAGES_BUILD_DEPLOYMENT);
         verifyReadmeStageLanguageBadge(Constants.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
         verifyReadmeStageLanguageBadge(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);

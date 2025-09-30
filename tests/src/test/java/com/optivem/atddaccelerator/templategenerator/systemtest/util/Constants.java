@@ -2,6 +2,8 @@ package com.optivem.atddaccelerator.templategenerator.systemtest.util;
 
 public class Constants {
     public static final String PAGES_BUILD_DEPLOYMENT = "pages-build-deployment";
+    public static final String PAGES_BUILD_DEPLOYMENT_URL = "https://github.com/%s/actions/workflows/pages/pages-build-deployment";
+    public static final String PAGES_BUILD_DEPLOYMENT_SVG_URL = "https://github.com/%s/actions/workflows/pages/pages-build-deployment/badge.svg";
 
     public static final String COMMIT_STAGE_MONOLITH_FORMAT = "commit-stage-monolith-%s";
     public static final String LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT = "local-acceptance-stage-test-%s";
