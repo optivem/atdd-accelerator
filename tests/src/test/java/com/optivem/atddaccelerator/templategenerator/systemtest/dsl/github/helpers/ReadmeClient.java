@@ -28,8 +28,8 @@ public class ReadmeClient {
     }
 
     private void verifyReadmePagesBadge() {
-        var badgeWorkflow = String.format(Constants.PAGES_BUILD_DEPLOYMENT_URL, repositoryPath);
-        var badgeSvg = String.format(Constants.PAGES_BUILD_DEPLOYMENT_SVG_URL, repositoryPath);
+        var badgeWorkflow = String.format(Constants.PAGES_BUILD_DEPLOYMENT_WORKFLOW_FORMAT, repositoryPath);
+        var badgeSvg = String.format(Constants.PAGES_BUILD_DEPLOYMENT_WORKFLOW_IMAGE_FORMAT, repositoryPath);
         verifyReadmeContainsBadge(Constants.PAGES_BUILD_DEPLOYMENT, badgeWorkflow, badgeSvg);
     }
 
@@ -45,8 +45,8 @@ public class ReadmeClient {
     }
 
     private void verifyReadmeContainsBadge(String workflowName) {
-        var badgeWorkflow = String.format(Constants.BADGE_WORKFLOW_STAGE_FORMAT, repositoryPath, workflowName);
-        var badgeSvg = String.format(Constants.BADGE_SVG_STAGE_FORMAT, repositoryPath, workflowName);
+        var badgeWorkflow = String.format(Constants.STAGE_WORKFLOW_FORMAT, repositoryPath, workflowName);
+        var badgeSvg = String.format(Constants.STAGE_WORKFLOW_IMAGE_FORMAT, repositoryPath, workflowName);
 
         verifyReadmeContainsBadge(workflowName, badgeWorkflow, badgeSvg);
     }
