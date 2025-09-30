@@ -10,7 +10,7 @@
     <!-- Version management -->
     <VersionPrefix>1.0.1</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)' == 'Debug'">dev</VersionSuffix>
-    <VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)' != ''">preview.$(GITHUB_RUN_NUMBER)</VersionSuffix>
+    <VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)' != '' AND '$(GITHUB_EVENT_NAME)' != 'release'">preview.$(GITHUB_RUN_NUMBER)</VersionSuffix>
     
     <!-- Package metadata -->
     <Authors>Optivem</Authors>
