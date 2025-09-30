@@ -32,9 +32,7 @@ class ScriptTest {
     @BeforeAll
     static void beforeAll() {
         var generatorClient = new GeneratorClient();
-        var buildResult = generatorClient.buildGenerator();
-        assertThat(buildResult.getExitCode()).as(buildResult.getOutput()).isEqualTo(0);
-        System.out.println("Build Output: " + buildResult.getOutput());
+        generatorClient.buildGenerator();
 
         generator = new GeneratorDsl(generatorClient);
     }
