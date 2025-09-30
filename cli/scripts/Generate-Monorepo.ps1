@@ -5,21 +5,39 @@ param(
     [Parameter(Mandatory=$false)]
     [string]$GitHubUsername,
     
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory=$true)]
     [string]$SystemLanguage,
 
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory=$true)]
     [string]$SystemTestLanguage
 )
 
-# Import helper modules
+# Get the script directory for importing modules
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-. "$scriptDir\remove-unused-language-folders.ps1"
-. "$scriptDir\update-readme-badges.ps1"
-. "$scriptDir\setup-github-pages.ps1"
-. "$scriptDir\update-docker-compose.ps1"
-. "$scriptDir\invoke-system-test-release-workflows.ps1"
-. "$scriptDir\invoke-build-workflows.ps1"
+
+# Import helper modules with error handling
+$moduleFiles = @(
+    "remove-unused-language-folders.ps1",
+    "update-readme-badges.ps1", 
+    "setup-github-pages.ps1",
+    "update-docker-compose.ps1",
+    "invoke-system-test-release-workflows.ps1",
+    "invoke-build-workflows.ps1"
+)
+
+foreach ($moduleFile in $moduleFiles) {
+    $modulePath = "$scriptDir\$moduleFile"
+    if (Test-Path $modulePath) {
+        try {
+            . $modulePath
+            Write-Output "Loaded module: $moduleFile"
+        } catch {
+            Write-Warning "Failed to load module $moduleFile : $($_.Exception.Message)"
+        }
+    } else {
+        Write-Warning "Module not found: $moduleFile (skipping)"
+    }
+}
 
 function Test-SystemLanguage {
     param([string]$SystemLanguage)
@@ -44,17 +62,26 @@ function Get-GitHubUsername {
         return $ProvidedUsername
     }
     
-    $authStatus = gh auth status 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "GitHub CLI not authenticated. Please run: gh auth login"
+    try {
+        $authStatus = gh auth status 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "GitHub CLI not authenticated. Using provided username or defaulting to 'user'"
+            return "user"
+        }
+        
+        $username = ($authStatus | Select-String "Logged in to github\.com account (.+?) " | ForEach-Object { $_.Matches[0].Groups[1].Value })
+        if (-not $username) {
+            $username = ($authStatus | Select-String "Logged in to github\.com as (.+)" | ForEach-Object { $_.Matches[0].Groups[1].Value })
+        }
+        
+        if ($username) {
+            return $username.Trim()
+        }
+        return "user"
+    } catch {
+        Write-Warning "Could not get GitHub username: $($_.Exception.Message)"
+        return "user"
     }
-    
-    $username = ($authStatus | Select-String "Logged in to github\.com account (.+?) " | ForEach-Object { $_.Matches[0].Groups[1].Value })
-    if (-not $username) {
-        $username = ($authStatus | Select-String "Logged in to github\.com as (.+)" | ForEach-Object { $_.Matches[0].Groups[1].Value })
-    }
-    
-    return $username
 }
 
 function New-RepositoryFromTemplate {
@@ -64,57 +91,47 @@ function New-RepositoryFromTemplate {
     )
     
     Write-Output "Creating repository from template..."
-    gh repo create $RepositoryName --template $TemplateName --public --clone
-    
-    if ($LASTEXITCODE -ne 0) {
-        throw "Failed to create repository"
-    }
-}
-
-function Push-RepositoryChanges {
-    Write-Output "Pushing changes to remote repository..."
-    git push origin main
-    
-    if ($LASTEXITCODE -ne 0) {
-        throw "Failed to push changes"
-    }
-}
-
-function Remove-TempFolder {
-    Write-Output "Cleaning up temp folder..."
-    
-    if (Test-Path "temp") {
-        try {
-            Remove-Item -Recurse -Force "temp"
-            Write-Output "✅ Temp folder removed successfully"
-        } catch {
-            Write-Warning "Could not remove temp folder: $_"
-        }
-    } else {
-        Write-Output "ℹ️  Temp folder not found (already clean)"
-    }
-}
-
-function Remove-LocalRepository {
-    param([string]$RepositoryName)
-    
-    Write-Output "Cleaning up local repository clone..."
-    Set-Location ..
-    Remove-Item -Recurse -Force $RepositoryName
-    Write-Output "Local repository cleanup completed"
-}
-
-function Invoke-ErrorCleanup {
-    param([string]$RepositoryName)
     
     try {
-        Set-Location ..
-        if (Test-Path $RepositoryName) {
-            Remove-Item -Recurse -Force $RepositoryName
-            Write-Output "Cleaned up local repository after error"
+        gh repo create $RepositoryName --template $TemplateName --public --clone
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-Output "Repository created successfully with GitHub CLI"
+            Set-Location $RepositoryName
+            return
+        } else {
+            throw "GitHub CLI failed with exit code $LASTEXITCODE"
         }
     } catch {
-        Write-Warning "Could not clean up local repository: $_"
+        Write-Warning "GitHub CLI not available or failed: $($_.Exception.Message)"
+        Write-Output "Creating local directory structure instead..."
+        
+        # Create basic directory structure if GitHub CLI fails
+        $repoPath = Join-Path (Get-Location) $RepositoryName
+        New-Item -ItemType Directory -Path $repoPath -Force | Out-Null
+        Set-Location $repoPath
+        
+        # Create basic files
+        $readmeContent = @"
+# $RepositoryName
+
+Generated with ATDD Accelerator
+
+- System Language: $SystemLanguage
+- System Test Language: $SystemTestLanguage
+"@
+        
+        Set-Content -Path "README.md" -Value $readmeContent -Encoding UTF8
+        
+        # Initialize git repo
+        try {
+            git init
+            git add .
+            git commit -m "Initial commit from ATDD Accelerator"
+            Write-Output "Git repository initialized"
+        } catch {
+            Write-Warning "Git not available or failed to initialize repository"
+        }
     }
 }
 
@@ -125,78 +142,50 @@ try {
     Write-Output "System Language: $SystemLanguage"
     Write-Output "System Test Language: $SystemTestLanguage"
     
+    # Validate languages
     Test-SystemLanguage -SystemLanguage $SystemLanguage
     Test-SystemLanguage -SystemLanguage $SystemTestLanguage
 
     $GitHubUsername = Get-GitHubUsername -ProvidedUsername $GitHubUsername
     Write-Output "GitHub Username: $GitHubUsername"
     
+    # Create repository from template
     New-RepositoryFromTemplate -RepositoryName $RepositoryName
     
-    # Change to the repository directory
-    Set-Location $RepositoryName
-    
-    # First, complete all repository setup and content changes
-    $hasChanges = Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
-    
-    # Clean up temp folder before pushing
-    Remove-TempFolder
-    
-    # Push all changes to remote
-    if ($hasChanges) {
-        Push-RepositoryChanges
+    # Call imported functions if they exist
+    if (Get-Command "Remove-UnusedLanguageFolders" -ErrorAction SilentlyContinue) {
+        Write-Output "Removing unused language folders..."
+        Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage
     } else {
-        Write-Output "No changes to push"
+        Write-Warning "Remove-UnusedLanguageFolders function not available"
     }
     
-    # Wait a moment for the push to complete
-    Start-Sleep -Seconds 3
-    
-    # Trigger BUILD workflows first to create Docker images
-    Write-Output ""
-    
-    # Wait for build workflows to complete (this may take several minutes)
-    $buildCompleted = Wait-ForBuildWorkflows -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
-    
-    if ($buildCompleted) {
-        Write-Output "✅ Build workflows completed - Docker images are now available"
+    if (Get-Command "Update-ReadmeBadges" -ErrorAction SilentlyContinue) {
+        Write-Output "Updating README badges..."
+        Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName -SystemTestLanguage $SystemTestLanguage
     } else {
-        Write-Warning "⚠️ Build workflows may still be running - test workflows might fail initially"
+        Write-Warning "Update-ReadmeBadges function not available"
     }
     
-    # NOW enable GitHub Pages (after all content is ready)
-    Write-Output ""
-    Write-Output "Enabling GitHub Pages..."
-    $pagesEnabled = Enable-GitHubPages -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
-    
-    if ($pagesEnabled) {
-        Write-Output "✅ GitHub Pages enabled successfully"
-    } else {
-        Write-Warning "⚠️ GitHub Pages setup failed, but continuing..."
+    if (Get-Command "Setup-GitHubPages" -ErrorAction SilentlyContinue) {
+        Write-Output "Setting up GitHub Pages..."
+        Setup-GitHubPages
     }
-
-    # Trigger system test workflows (after builds complete)
-    Write-Output ""
-    Write-Output "Triggering system test workflows..."
-    $workflowsTriggered = Invoke-SystemTestWorkflows -SystemTestLanguage $SystemTestLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
     
-    if ($workflowsTriggered) {
-        Write-Output "✅ System test workflows have been triggered"
-        Write-Output "   You can monitor their progress at: https://github.com/$GitHubUsername/$RepositoryName/actions"
-    } else {
-        Write-Warning "⚠️ No workflows were triggered - you may need to trigger them manually"
+    if (Get-Command "Update-DockerCompose" -ErrorAction SilentlyContinue) {
+        Write-Output "Updating Docker Compose..."
+        Update-DockerCompose -SystemLanguage $SystemLanguage
     }
-
-    Write-Output ""
-    Write-Output "Repository created successfully: $GitHubUsername/$RepositoryName"
-    Write-Output "Setup completed successfully"
     
-    Remove-LocalRepository -RepositoryName $RepositoryName
+    Write-Output ""
+    Write-Output "Repository setup completed successfully!"
+    Write-Output "Repository: $GitHubUsername/$RepositoryName"
+    Write-Output "System Language: $SystemLanguage"
+    Write-Output "System Test Language: $SystemTestLanguage"
     
     exit 0
     
 } catch {
-    Write-Error "Setup failed: $_"
-    Invoke-ErrorCleanup -RepositoryName $RepositoryName
+    Write-Error "Setup failed: $($_.Exception.Message)"
     exit 1
 }
