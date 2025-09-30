@@ -8,8 +8,7 @@
     <PackageId>Optivem.AtddAccelerator.TemplateGenerator</PackageId>
     
     <!-- Version management -->
-    <Version>1.0.0</Version>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.0.1</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)' == 'Debug'">dev</VersionSuffix>
     <VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)' != ''">preview.$(GITHUB_RUN_NUMBER)</VersionSuffix>
     
