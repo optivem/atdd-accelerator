@@ -1,9 +1,22 @@
 package com.optivem.atddaccelerator.templategenerator.systemtest.util;
 
-public class Language {
-    public final static String JAVA = "java";
-    public final static String DOTNET = "dotnet";
-    public final static String TYPESCRIPT = "typescript";
+public enum Language {
+    NONE("none"),
+    JAVA("java"),
+    DOTNET("dotnet"),
+    TYPESCRIPT("typescript");
 
-    public static String[] ALL = new String[] { JAVA, DOTNET, TYPESCRIPT };
+    private final String value;
+
+    Language(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public static Language[] getAll() {
+        return new Language[] { JAVA, DOTNET, TYPESCRIPT };
+    }
 }

@@ -1,6 +1,7 @@
 package com.optivem.atddaccelerator.templategenerator.systemtest.dsl;
 
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GeneratorClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +26,7 @@ public class GeneratorDsl {
         return created.contains(repoName);
     }
 
-    public void generateNewRepository(String repoName, String systemLanguage, String systemTestLanguage) {
+    public void generateNewRepository(String repoName, Language systemLanguage, Language systemTestLanguage) {
         var result = client.generateRepository(repoName, systemLanguage, systemTestLanguage);
         assertSuccess(result);
 
@@ -33,7 +34,7 @@ public class GeneratorDsl {
         created.add(repoName);
     }
 
-    public void generateNewRepositoryExpectError(String repoName, String systemLanguage, String systemTestLanguage) {
+    public void generateNewRepositoryExpectError(String repoName, Language systemLanguage, Language systemTestLanguage) {
         var result = client.generateRepository(repoName, systemLanguage, systemTestLanguage);
         assertFailure(result);
     }

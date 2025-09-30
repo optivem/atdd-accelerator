@@ -15,7 +15,7 @@ public class FileClient {
         this.client = client;
     }
 
-    public void verifyPathsExist(String systemLanguage, String systemTestLanguage) {
+    public void verifyPathsExist(Language systemLanguage, Language systemTestLanguage) {
         verifyPathLanguageExists("monolith-%s", systemLanguage);
         verifyPathLanguageExists( getWorkflowPath(Constants.COMMIT_STAGE_MONOLITH_FORMAT), systemLanguage);
 
@@ -36,8 +36,8 @@ public class FileClient {
         assertFailure(result, "Path '" + path + "' should not exist.");
     }
 
-    private void verifyPathLanguageExists(String pathFormat, String language) {
-        for(String l : Language.ALL) {
+    private void verifyPathLanguageExists(String pathFormat, Language language) {
+        for(var l : Language.getAll()) {
             var path = String.format(pathFormat, l);
             if(l.equals(language)) {
                 verifyPathExists(path);

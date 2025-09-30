@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.WorkflowRunResult;
 import dev.failsafe.Failsafe;
 import dev.failsafe.RetryPolicy;
@@ -25,7 +26,7 @@ public class WorkflowClient {
         this.repositoryPath = client.getRepositoryPath();
     }
 
-    public void verifyWorkflowsPass(String systemLanguage, String systemTestLanguage) {
+    public void verifyWorkflowsPass(Language systemLanguage, Language systemTestLanguage) {
         verifyWorkflowPasses(Constants.PAGES_BUILD_DEPLOYMENT);
         verifyWorkflowPasses(Constants.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
         verifyWorkflowPasses(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
@@ -42,7 +43,7 @@ public class WorkflowClient {
                 .isEqualTo("success");
     }
 
-    private void verifyWorkflowPasses(String workflowFileNameFormat, String language) {
+    private void verifyWorkflowPasses(String workflowFileNameFormat, Language language) {
         var workflowFileName = String.format(workflowFileNameFormat, language);
         verifyWorkflowPasses(workflowFileName);
     }

@@ -18,7 +18,7 @@ public class ReadmeClient {
         this.repositoryPath = client.getRepositoryPath();
     }
 
-    public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
+    public void verifyReadmeHasBadges(Language systemLanguage, Language systemTestLanguage) {
         verifyReadmePagesBadge();
         verifyReadmeStageLanguageBadge(Constants.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
         verifyReadmeStageLanguageBadge(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
@@ -33,8 +33,8 @@ public class ReadmeClient {
         verifyReadmeContainsBadge(Constants.PAGES_BUILD_DEPLOYMENT, badgeWorkflow, badgeSvg);
     }
 
-    private void verifyReadmeStageLanguageBadge(String workflowNameFormat, String language){
-        for(String l : Language.ALL) {
+    private void verifyReadmeStageLanguageBadge(String workflowNameFormat, Language language){
+        for(var l : Language.getAll()) {
             var workflowName = String.format(workflowNameFormat, l);
             if(l.equals(language)) {
                 verifyReadmeContainsBadge(workflowName);

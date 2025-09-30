@@ -77,7 +77,7 @@ class ScriptTest {
 
     @ParameterizedTest
     @MethodSource("languageProvider")
-    void shouldCreateRepositoryWithLanguages(String systemLanguage, String systemTestLanguage) {
+    void shouldCreateRepositoryWithLanguages(Language systemLanguage, Language systemTestLanguage) {
         generator.generateNewRepository(repoName, systemLanguage, systemTestLanguage);
 
         gitHub.verifyRepositoryExists();
@@ -91,7 +91,7 @@ class ScriptTest {
 
     @Test
     void shouldReturnErrorForInvalidLanguage() {
-        generator.generateNewRepositoryExpectError(repoName, "invalidLang", Language.TYPESCRIPT);
+        generator.generateNewRepositoryExpectError(repoName, Language.NONE, Language.TYPESCRIPT);
     }
 
     private static String newName() {

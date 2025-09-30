@@ -2,6 +2,7 @@ package com.optivem.atddaccelerator.templategenerator.systemtest.dsl;
 
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.github.helpers.*;
+import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 
 public class GitHubDsl {
     private final ReadmeClient readmeClient;
@@ -20,15 +21,15 @@ public class GitHubDsl {
         this.repositoryClient = new RepositoryClient(client);
     }
 
-    public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
+    public void verifyReadmeHasBadges(Language systemLanguage, Language systemTestLanguage) {
         readmeClient.verifyReadmeHasBadges(systemLanguage, systemTestLanguage);
     }
 
-    public void verifyPathsExist(String systemLanguage, String systemTestLanguage) {
+    public void verifyPathsExist(Language systemLanguage, Language systemTestLanguage) {
         fileClient.verifyPathsExist(systemLanguage, systemTestLanguage);
     }
 
-    public void verifyWorkflowsPass(String systemLanguage, String systemTestLanguage) {
+    public void verifyWorkflowsPass(Language systemLanguage, Language systemTestLanguage) {
         workflowClient.verifyWorkflowsPass(systemLanguage, systemTestLanguage);
     }
 
@@ -36,7 +37,7 @@ public class GitHubDsl {
         pagesClient.verifyPagesEnabled();
     }
 
-    public void verifyDockerComposeImage(String systemLanguage, String systemTestLanguage) {
+    public void verifyDockerComposeImage(Language systemLanguage, Language systemTestLanguage) {
         dockerComposeClient.verifyDockerComposeImage(systemLanguage, systemTestLanguage);
     }
 
