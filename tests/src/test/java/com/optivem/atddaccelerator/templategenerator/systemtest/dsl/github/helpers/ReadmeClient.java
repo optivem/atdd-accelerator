@@ -20,7 +20,6 @@ public class ReadmeClient {
 
     public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
         verifyReadmePagesBadge();
-        verifyReadmeContainsBadge(Constants.PAGES_BUILD_DEPLOYMENT);
         verifyReadmeStageLanguageBadge(Constants.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
         verifyReadmeStageLanguageBadge(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
         verifyReadmeStageLanguageBadge(Constants.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
