@@ -9,7 +9,10 @@ param(
     [string]$SystemLanguage,
 
     [Parameter(Mandatory=$true)]
-    [string]$SystemTestLanguage
+    [string]$SystemTestLanguage,
+    
+    [Parameter(Mandatory=$false)]
+    [string]$OutputPath
 )
 
 # Get the script directory for importing modules
@@ -39,6 +42,33 @@ foreach ($moduleFile in $moduleFiles) {
     }
 }
 
+function Get-OutputDirectory {
+    param(
+        [string]$RepositoryName,
+        [string]$OutputPath
+    )
+    
+    # If OutputPath is specified, use it
+    if (-not [string]::IsNullOrWhiteSpace($OutputPath)) {
+        $targetDir = Join-Path $OutputPath $RepositoryName
+        Write-Output "Using specified output path: $targetDir"
+        return $targetDir
+    }
+    
+    # Otherwise, use temp directory
+    $tempDir = [System.IO.Path]::GetTempPath()
+    $atddTempDir = Join-Path $tempDir "ATDD-Accelerator"
+    $targetDir = Join-Path $atddTempDir $RepositoryName
+    
+    # Ensure the ATDD temp directory exists
+    if (-not (Test-Path $atddTempDir)) {
+        New-Item -ItemType Directory -Path $atddTempDir -Force | Out-Null
+    }
+    
+    Write-Output "Using temp directory: $targetDir"
+    return $targetDir
+}
+
 function Test-SystemLanguage {
     param([string]$SystemLanguage)
     
@@ -65,7 +95,7 @@ function Get-GitHubUsername {
     try {
         $authStatus = gh auth status 2>&1
         if ($LASTEXITCODE -ne 0) {
-            Write-Warning "GitHub CLI not authenticated. Using provided username or defaulting to 'user'"
+            Write-Warning "GitHub CLI not authenticated. Using default username 'user'"
             return "user"
         }
         
@@ -87,17 +117,42 @@ function Get-GitHubUsername {
 function New-RepositoryFromTemplate {
     param(
         [string]$RepositoryName,
+        [string]$TargetDirectory,
         [string]$TemplateName = "optivem/atdd-accelerator-template-mono-repo"
     )
     
     Write-Output "Creating repository from template..."
+    Write-Output "Target directory: $TargetDirectory"
+    
+    # Ensure parent directory exists
+    $parentDir = Split-Path $TargetDirectory -Parent
+    if (-not (Test-Path $parentDir)) {
+        New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
+    }
+    
+    # Remove existing directory if it exists
+    if (Test-Path $TargetDirectory) {
+        Write-Output "Removing existing directory: $TargetDirectory"
+        Remove-Item -Path $TargetDirectory -Recurse -Force
+    }
+    
+    # Change to parent directory for cloning
+    $originalLocation = Get-Location
+    Set-Location $parentDir
     
     try {
         gh repo create $RepositoryName --template $TemplateName --public --clone
         
         if ($LASTEXITCODE -eq 0) {
             Write-Output "Repository created successfully with GitHub CLI"
-            Set-Location $RepositoryName
+            
+            # Rename the cloned directory if needed
+            $clonedDir = Join-Path $parentDir $RepositoryName
+            if ($clonedDir -ne $TargetDirectory) {
+                Move-Item $clonedDir $TargetDirectory
+            }
+            
+            Set-Location $TargetDirectory
             return
         } else {
             throw "GitHub CLI failed with exit code $LASTEXITCODE"
@@ -106,10 +161,9 @@ function New-RepositoryFromTemplate {
         Write-Warning "GitHub CLI not available or failed: $($_.Exception.Message)"
         Write-Output "Creating local directory structure instead..."
         
-        # Create basic directory structure if GitHub CLI fails
-        $repoPath = Join-Path (Get-Location) $RepositoryName
-        New-Item -ItemType Directory -Path $repoPath -Force | Out-Null
-        Set-Location $repoPath
+        # Create directory structure
+        New-Item -ItemType Directory -Path $TargetDirectory -Force | Out-Null
+        Set-Location $TargetDirectory
         
         # Create basic files
         $readmeContent = @"
@@ -132,6 +186,11 @@ Generated with ATDD Accelerator
         } catch {
             Write-Warning "Git not available or failed to initialize repository"
         }
+    } finally {
+        # Always restore original location if something goes wrong
+        if ((Get-Location).Path -eq $parentDir) {
+            Set-Location $originalLocation
+        }
     }
 }
 
@@ -149,8 +208,11 @@ try {
     $GitHubUsername = Get-GitHubUsername -ProvidedUsername $GitHubUsername
     Write-Output "GitHub Username: $GitHubUsername"
     
+    # Get target directory (temp or specified)
+    $targetDirectory = Get-OutputDirectory -RepositoryName $RepositoryName -OutputPath $OutputPath
+    
     # Create repository from template
-    New-RepositoryFromTemplate -RepositoryName $RepositoryName
+    New-RepositoryFromTemplate -RepositoryName $RepositoryName -TargetDirectory $targetDirectory
     
     # Call imported functions if they exist
     if (Get-Command "Remove-UnusedLanguageFolders" -ErrorAction SilentlyContinue) {
@@ -180,6 +242,7 @@ try {
     Write-Output ""
     Write-Output "Repository setup completed successfully!"
     Write-Output "Repository: $GitHubUsername/$RepositoryName"
+    Write-Output "Local path: $targetDirectory"
     Write-Output "System Language: $SystemLanguage"
     Write-Output "System Test Language: $SystemTestLanguage"
     
