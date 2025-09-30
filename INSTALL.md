@@ -14,6 +14,16 @@ atdd --version
 atdd --help
 ```
 
+Update:
+
+```bash
+# Update the tool to the latest version
+dotnet tool update --global Optivem.AtddAccelerator.TemplateGenerator
+
+# Verify the updated version
+atdd --version
+```
+
 ### Install from GitHub Packages (For Development/CI)
 
 ```bash

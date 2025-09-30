@@ -8,27 +8,28 @@
     <PackageId>Optivem.AtddAccelerator.TemplateGenerator</PackageId>
     
     <!-- Version management -->
-    <VersionPrefix>1.0.2</VersionPrefix>
+    <VersionPrefix>1.0.3</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)' == 'Debug'">dev</VersionSuffix>
     <VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)' != '' AND '$(GITHUB_EVENT_NAME)' != 'release'">preview.$(GITHUB_RUN_NUMBER)</VersionSuffix>
     
     <!-- Package metadata -->
     <Authors>Optivem</Authors>
-    <Description>ATDD Accelerator CLI tool for generating project templates</Description>
+    <Description>ATDD Accelerator CLI tool for generating project templates using PowerShell scripts</Description>
     <PackageProjectUrl>https://github.com/optivem/atdd-accelerator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/optivem/atdd-accelerator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>atdd;testing;template;cli;dotnet-tool</PackageTags>
+    <PackageTags>atdd;testing;template;cli;dotnet-tool;powershell</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>See https://github.com/optivem/atdd-accelerator/releases for release notes</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Fixed: README.md is in the parent directory relative to cli/ -->
+    <!-- Include README -->
     <None Include="..\README.md" Pack="true" PackagePath="\" />
-    <!-- Fixed: scripts folder is in the parent directory relative to cli/ -->
-    <Content Include="..\scripts\**\*" Pack="true" PackagePath="scripts\" />
+    
+    <!-- Include PowerShell scripts in the package -->
+    <Content Include="..\scripts\**\*.ps1" Pack="true" PackagePath="scripts\" />
   </ItemGroup>
 
 </Project>

@@ -1,41 +1,57 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task<int> Main(string[] args)
     {
-        // Check for version argument
-        if (args.Length > 0 && (args[0] == "--version" || args[0] == "-v"))
+        try
         {
-            ShowVersion();
-            return;
-        }
+            // Handle version command
+            if (args.Length > 0 && (args[0] == "--version" || args[0] == "-v"))
+            {
+                ShowVersion();
+                return 0;
+            }
 
-        // Check for help argument
-        if (args.Length > 0 && (args[0] == "--help" || args[0] == "-h"))
+            // Handle help command
+            if (args.Length == 0 || args[0] == "--help" || args[0] == "-h")
+            {
+                ShowHelp();
+                return 0;
+            }
+
+            // Handle generate command
+            if (args[0] == "generate")
+            {
+                var templateService = new TemplateService();
+                var generateCommand = new GenerateCommand(templateService);
+                return await generateCommand.ExecuteAsync(args.Skip(1).ToArray());
+            }
+
+            // Unknown command
+            Console.WriteLine($"Unknown command: {args[0]}");
+            Console.WriteLine("Use 'atdd --help' for usage information.");
+            return 1;
+        }
+        catch (Exception ex)
         {
-            ShowHelp();
-            return;
+            Console.WriteLine($"Error: {ex.Message}");
+            return 1;
         }
-
-        // Default Hello World behavior
-        Console.WriteLine("Hello, World! This is v1.0.2 of the ATDD Accelerator Template Generator.");
-        Console.WriteLine("ATDD Accelerator Template Generator");
-        Console.WriteLine("Use --help for usage information or --version for version info");
     }
 
     static void ShowVersion()
     {
         var assembly = Assembly.GetExecutingAssembly();
-        var version = assembly.GetName().Version?.ToString() ?? "Unknown";
-        var informationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? version;
+        var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
         
         Console.WriteLine($"ATDD Accelerator Template Generator");
-        Console.WriteLine($"Version: {informationalVersion}");
-        Console.WriteLine($"Assembly Version: {version}");
+        Console.WriteLine($"Version: {version}");
         Console.WriteLine();
         Console.WriteLine("Copyright (c) Optivem");
         Console.WriteLine("Licensed under MIT License");
@@ -47,15 +63,28 @@ class Program
         Console.WriteLine("ATDD Accelerator Template Generator");
         Console.WriteLine();
         Console.WriteLine("Usage:");
-        Console.WriteLine("  atdd [options]");
+        Console.WriteLine("  atdd generate <template> [options]");
+        Console.WriteLine("  atdd --version");
+        Console.WriteLine("  atdd --help");
+        Console.WriteLine();
+        Console.WriteLine("Commands:");
+        Console.WriteLine("  generate <template>     Generate a new project from template");
+        Console.WriteLine();
+        Console.WriteLine("Templates:");
+        Console.WriteLine("  webapi                  ASP.NET Core Web API with ATDD structure");
+        Console.WriteLine("  console                 Console application with ATDD structure");
+        Console.WriteLine("  classlib                Class library with ATDD structure");
         Console.WriteLine();
         Console.WriteLine("Options:");
-        Console.WriteLine("  --version, -v    Show version information");
-        Console.WriteLine("  --help, -h       Show help information");
+        Console.WriteLine("  --name <name>           Project name (default: current directory)");
+        Console.WriteLine("  --output <path>         Output directory (default: current directory)");
+        Console.WriteLine("  --namespace <ns>        Root namespace (default: project name)");
+        Console.WriteLine("  --version, -v           Show version information");
+        Console.WriteLine("  --help, -h              Show help information");
         Console.WriteLine();
         Console.WriteLine("Examples:");
-        Console.WriteLine("  atdd --version   Display version");
-        Console.WriteLine("  atdd --help      Show this help");
+        Console.WriteLine("  atdd generate webapi --name MyApi --output ./src");
+        Console.WriteLine("  atdd generate console --name MyApp --namespace MyCompany.MyApp");
         Console.WriteLine();
         Console.WriteLine("For more information, visit:");
         Console.WriteLine("https://github.com/optivem/atdd-accelerator");
