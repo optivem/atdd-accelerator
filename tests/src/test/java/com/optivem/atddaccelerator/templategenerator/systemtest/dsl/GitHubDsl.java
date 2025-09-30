@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
+import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.github.helpers.ReadmeClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.WorkflowRunResult;
@@ -19,14 +20,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitHubDsl {
 
-    private static final String README_PATH = "README.md";
-
     private final GithubClient client;
     private final String repositoryPath;
+
+    private final ReadmeClient readmeClient;
 
     public GitHubDsl(GithubClient client) {
         this.client = client;
         this.repositoryPath = client.getRepositoryPath();
+        this.readmeClient = new ReadmeClient(client);
     }
 
     public void verifyRepositoryExists() {
@@ -61,39 +63,7 @@ public class GitHubDsl {
         assertSuccess(result, "Failed to delete repository '" + client.getRepositoryPath() + "'.");
     }
 
-    private void verifyReadmeContainsBadge(String workflowName) {
-        var badgeWorkflow = String.format(Constants.BADGE_WORKFLOW_STAGE_FORMAT, repositoryPath, workflowName);
-        var badgeSvg = String.format(Constants.BADGE_SVG_STAGE_FORMAT, repositoryPath, workflowName);
 
-        verifyReadmeContainsBadge(workflowName, badgeWorkflow, badgeSvg);
-    }
-
-    private void verifyReadmeContainsBadge(String badgeName, String badgeWorkflow, String badgeSvg) {
-        var readmeContent = getReadmeContent();
-
-        assertThat(readmeContent)
-                .as("README should contain badge: " + badgeName)
-                .contains(badgeName);
-
-        assertThat(readmeContent)
-                .as("README should contain badge workflow link: " + badgeWorkflow)
-                .contains(badgeWorkflow);
-
-        assertThat(readmeContent)
-                .as("README should contain badge SVG: " + badgeSvg)
-                .contains(badgeSvg);
-    }
-
-    private void verifyReadmeDoesNotContainBadge(String badge) {
-        var readmeContent = getReadmeContent();
-        assertThat(readmeContent)
-                .as("README should not contain badge: " + badge)
-                .doesNotContain(badge);
-    }
-
-    private String getReadmeContent() {
-        return client.getFileContent(README_PATH);
-    }
 
     public void verifyDockerComposeContainsImage(String dockerComposePath, String image) {
         var dockerComposeContent = client.getFileContent(dockerComposePath);
@@ -189,16 +159,7 @@ public class GitHubDsl {
         }
     }
 
-    private void verifyReadmeStageLanguageBadge(String workflowNameFormat, String language){
-        for(String l : Language.ALL) {
-            var workflowName = String.format(workflowNameFormat, l);
-            if(l.equals(language)) {
-                verifyReadmeContainsBadge(workflowName);
-            } else {
-                verifyReadmeDoesNotContainBadge(workflowName);
-            }
-        }
-    }
+
 
     public void verifyPathsExist(String systemLanguage, String systemTestLanguage) {
         verifyPathLanguageExists("monolith-%s", systemLanguage);
@@ -213,22 +174,6 @@ public class GitHubDsl {
 
     private String getWorkflowPath(String stageFormat) {
         return ".github/workflows/" + stageFormat + ".yml";
-    }
-
-    private void verifyReadmePagesBadge() {
-        var badgeWorkflow = String.format(Constants.PAGES_BUILD_DEPLOYMENT_URL, repositoryPath);
-        var badgeSvg = String.format(Constants.PAGES_BUILD_DEPLOYMENT_SVG_URL, repositoryPath);
-        verifyReadmeContainsBadge(Constants.PAGES_BUILD_DEPLOYMENT, badgeWorkflow, badgeSvg);
-    }
-
-    public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
-        verifyReadmePagesBadge();
-        verifyReadmeContainsBadge(Constants.PAGES_BUILD_DEPLOYMENT);
-        verifyReadmeStageLanguageBadge(Constants.COMMIT_STAGE_MONOLITH_FORMAT, systemLanguage);
-        verifyReadmeStageLanguageBadge(Constants.LOCAL_ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyReadmeStageLanguageBadge(Constants.ACCEPTANCE_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyReadmeStageLanguageBadge(Constants.QA_STAGE_TEST_FORMAT, systemTestLanguage);
-        verifyReadmeStageLanguageBadge(Constants.PROD_STAGE_TEST_FORMAT, systemTestLanguage);
     }
 
     public void verifyWorkflowsPass(String systemLanguage, String systemTestLanguage) {
@@ -251,5 +196,9 @@ public class GitHubDsl {
                 verifyDockerComposeDoesNotContainImage(dockerComposePath, monolithDockerImageName);
             }
         }
+    }
+
+    public void verifyReadmeHasBadges(String systemLanguage, String systemTestLanguage) {
+        readmeClient.verifyReadmeHasBadges(systemLanguage, systemTestLanguage);
     }
 }
