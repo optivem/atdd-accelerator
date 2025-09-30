@@ -18,23 +18,49 @@ public class GenerateCommand
         if (args.Length == 0)
         {
             Console.WriteLine("Error: Please specify a template name.");
-            Console.WriteLine("Usage: atdd generate <template> [options]");
-            Console.WriteLine("Available templates: webapi, console, classlib");
+            Console.WriteLine("Usage: atdd generate monorepo [options]");
             return 1;
         }
 
         var templateName = args[0];
-        var options = ParseOptions(args);
+        
+        if (!templateName.Equals("monorepo", StringComparison.OrdinalIgnoreCase))
+        {
+            Console.WriteLine($"Error: Unknown template '{templateName}'");
+            Console.WriteLine("Available templates: monorepo");
+            return 1;
+        }
+
+        var options = ParseMonorepoOptions(args);
+
+        if (string.IsNullOrEmpty(options.RepositoryName))  // Fixed: Changed from ProjectName to RepositoryName
+        {
+            Console.WriteLine("Error: --repository-name is required.");
+            Console.WriteLine("Usage: atdd generate monorepo --repository-name <name> [options]");
+            return 1;
+        }
+
+        if (string.IsNullOrEmpty(options.SystemLanguage))
+        {
+            Console.WriteLine("Error: --system-language is required.");
+            return 1;
+        }
+
+        if (string.IsNullOrEmpty(options.SystemTestLanguage))
+        {
+            Console.WriteLine("Error: --system-test-language is required.");
+            return 1;
+        }
 
         try
         {
-            Console.WriteLine($"🚀 Generating {templateName} template...");
+            Console.WriteLine($"🚀 Generating monorepo template...");
             
-            await _templateService.GenerateTemplateAsync(templateName, options);
+            await _templateService.GenerateMonorepoAsync(options);
             
-            Console.WriteLine($"✅ {templateName} template generated successfully!");
+            Console.WriteLine($"✅ Monorepo template generated successfully!");
             Console.WriteLine($"📁 Output directory: {options.OutputPath}");
-            Console.WriteLine($"📦 Project name: {options.ProjectName}");
+            Console.WriteLine($"📦 Repository name: {options.RepositoryName}");  // Fixed: Changed from ProjectName to RepositoryName
             
             return 0;
         }
@@ -45,11 +71,10 @@ public class GenerateCommand
         }
     }
 
-    private TemplateOptions ParseOptions(string[] args)
+    private MonorepoOptions ParseMonorepoOptions(string[] args)
     {
-        var options = new TemplateOptions
+        var options = new MonorepoOptions
         {
-            ProjectName = Path.GetFileName(Directory.GetCurrentDirectory()),
             OutputPath = Directory.GetCurrentDirectory()
         };
 
@@ -59,28 +84,29 @@ public class GenerateCommand
 
             switch (args[i])
             {
-                case "--name":
-                    options.ProjectName = args[i + 1];
+                case "--repository-name":
+                    options.RepositoryName = args[i + 1];
                     break;
-                case "--output":
+                case "--system-language":
+                    options.SystemLanguage = args[i + 1];
+                    break;
+                case "--system-test-language":
+                    options.SystemTestLanguage = args[i + 1];
+                    break;
+                case "--output-path":
                     options.OutputPath = Path.GetFullPath(args[i + 1]);
-                    break;
-                case "--namespace":
-                    options.RootNamespace = args[i + 1];
                     break;
             }
         }
-
-        // Set default namespace to project name if not specified
-        options.RootNamespace ??= options.ProjectName;
 
         return options;
     }
 }
 
-public class TemplateOptions
+public class MonorepoOptions
 {
-    public string ProjectName { get; set; } = "";
+    public string RepositoryName { get; set; } = "";
+    public string SystemLanguage { get; set; } = "";
+    public string SystemTestLanguage { get; set; } = "";
     public string OutputPath { get; set; } = "";
-    public string? RootNamespace { get; set; }
 }

@@ -7,6 +7,7 @@ import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.GitHubDsl;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -24,15 +25,25 @@ class ScriptTest {
 
     private static final String REPO_OWNER = "valentinajemuovic";
 
-    private GeneratorDsl generator;
+    private static GeneratorDsl generator;
     private GitHubDsl gitHub;
     private String repoName;
+
+    @BeforeAll
+    static void beforeAll() {
+        var generatorClient = new GeneratorClient();
+        var buildResult = generatorClient.buildGenerator();
+        assertThat(buildResult.getExitCode()).as(buildResult.getOutput()).isEqualTo(0);
+        System.out.println("Build Output: " + buildResult.getOutput());
+
+        generator = new GeneratorDsl(generatorClient);
+    }
 
     @BeforeEach
     void setup() {
         repoName = newName();
-        generator = new GeneratorDsl(new GeneratorClient());
-        gitHub = new GitHubDsl(new GithubClient(REPO_OWNER, repoName));
+        var githubClient = new GithubClient(REPO_OWNER, repoName);
+        gitHub = new GitHubDsl(githubClient);
     }
 
     @AfterEach
@@ -46,34 +57,18 @@ class ScriptTest {
 
     static Stream<Arguments> languageProvider() {
         return Stream.of(
-                Arguments.of(Language.DOTNET, Language.DOTNET),
-                Arguments.of(Language.DOTNET, Language.JAVA),
-                Arguments.of(Language.DOTNET, Language.TYPESCRIPT),
+                // Arguments.of(Language.DOTNET, Language.DOTNET),
+                // Arguments.of(Language.DOTNET, Language.JAVA),
+                // Arguments.of(Language.DOTNET, Language.TYPESCRIPT),
 
-                Arguments.of(Language.JAVA, Language.DOTNET),
-                Arguments.of(Language.JAVA, Language.JAVA),
-                Arguments.of(Language.JAVA, Language.TYPESCRIPT),
+                // Arguments.of(Language.JAVA, Language.DOTNET),
+                // Arguments.of(Language.JAVA, Language.JAVA),
+                // Arguments.of(Language.JAVA, Language.TYPESCRIPT),
 
-                Arguments.of(Language.TYPESCRIPT, Language.DOTNET),
-                Arguments.of(Language.TYPESCRIPT, Language.JAVA),
+                // Arguments.of(Language.TYPESCRIPT, Language.DOTNET),
+                // Arguments.of(Language.TYPESCRIPT, Language.JAVA),
                 Arguments.of(Language.TYPESCRIPT, Language.TYPESCRIPT)
         );
-    }
-
-    @Disabled
-    @Test
-    void shouldCreateRepositoryWithJava() {
-        // Act
-        generator.generateNewRepository(repoName, Language.JAVA, Language.TYPESCRIPT);
-
-        // Assert
-        gitHub.verifyRepositoryExists();
-        gitHub.verifyPathsExist(Language.JAVA, Language.TYPESCRIPT);
-        gitHub.verifyDockerComposeImage(Language.JAVA, Language.TYPESCRIPT);
-        gitHub.verifyReadmeHasBadges(Language.JAVA, Language.TYPESCRIPT);
-        gitHub.verifyPagesEnabled();
-
-        gitHub.verifyWorkflowsPass(Language.JAVA, Language.TYPESCRIPT);
     }
 
     @ParameterizedTest

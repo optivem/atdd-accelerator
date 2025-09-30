@@ -49,7 +49,7 @@ class Program
     {
         var assembly = Assembly.GetExecutingAssembly();
         var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
-        
+
         Console.WriteLine($"ATDD Accelerator Template Generator");
         Console.WriteLine($"Version: {version}");
         Console.WriteLine();
@@ -63,28 +63,23 @@ class Program
         Console.WriteLine("ATDD Accelerator Template Generator");
         Console.WriteLine();
         Console.WriteLine("Usage:");
-        Console.WriteLine("  atdd generate <template> [options]");
+        Console.WriteLine("  atdd generate monorepo [options]");
         Console.WriteLine("  atdd --version");
         Console.WriteLine("  atdd --help");
         Console.WriteLine();
         Console.WriteLine("Commands:");
-        Console.WriteLine("  generate <template>     Generate a new project from template");
-        Console.WriteLine();
-        Console.WriteLine("Templates:");
-        Console.WriteLine("  webapi                  ASP.NET Core Web API with ATDD structure");
-        Console.WriteLine("  console                 Console application with ATDD structure");
-        Console.WriteLine("  classlib                Class library with ATDD structure");
+        Console.WriteLine("  generate monorepo       Generate a monorepo with ATDD structure");
         Console.WriteLine();
         Console.WriteLine("Options:");
-        Console.WriteLine("  --name <name>           Project name (default: current directory)");
-        Console.WriteLine("  --output <path>         Output directory (default: current directory)");
-        Console.WriteLine("  --namespace <ns>        Root namespace (default: project name)");
-        Console.WriteLine("  --version, -v           Show version information");
-        Console.WriteLine("  --help, -h              Show help information");
+        Console.WriteLine("  --repository-name <name>        Repository name (required)");
+        Console.WriteLine("  --system-language <language>    System language (required)");
+        Console.WriteLine("  --system-test-language <lang>   System test language (required)");
+        Console.WriteLine("  --output-path <path>            Output directory (default: current directory)");
+        Console.WriteLine("  --version, -v                   Show version information");
+        Console.WriteLine("  --help, -h                      Show help information");
         Console.WriteLine();
         Console.WriteLine("Examples:");
-        Console.WriteLine("  atdd generate webapi --name MyApi --output ./src");
-        Console.WriteLine("  atdd generate console --name MyApp --namespace MyCompany.MyApp");
+        Console.WriteLine("  atdd generate monorepo --repository-name MyRepo --system-language CSharp --system-test-language Java");
         Console.WriteLine();
         Console.WriteLine("For more information, visit:");
         Console.WriteLine("https://github.com/optivem/atdd-accelerator");
