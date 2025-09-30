@@ -16,11 +16,6 @@ public class GithubClient {
         this.repositoryPath = owner + "/" + repoName;
     }
 
-    public static GithubClient createRandom(String owner) {
-        var repoName = "repo-" + System.currentTimeMillis();
-        return new GithubClient(owner, repoName);
-    }
-
     public String getRepositoryPath() {
         return repositoryPath;
     }

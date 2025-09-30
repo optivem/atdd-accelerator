@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,7 +96,7 @@ class ScriptTest {
     }
 
     private static String newName() {
-        var repoName = "repo-" + System.currentTimeMillis();
+        var repoName = "repo-" + UUID.randomUUID().toString();
         return repoName;
     }
 
