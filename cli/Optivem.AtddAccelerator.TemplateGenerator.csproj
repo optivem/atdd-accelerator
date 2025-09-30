@@ -3,8 +3,38 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>atdd</ToolCommandName>
+    <PackageId>Optivem.AtddAccelerator.TemplateGenerator</PackageId>
+    
+    <!-- Version management -->
+    <Version>1.0.0</Version>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionSuffix Condition="'$(Configuration)' == 'Debug'">dev</VersionSuffix>
+    <VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)' != ''">preview.$(GITHUB_RUN_NUMBER)</VersionSuffix>
+    
+    <!-- Package metadata -->
+    <Authors>Optivem</Authors>
+    <Description>ATDD Accelerator CLI tool for generating project templates</Description>
+    <PackageProjectUrl>https://github.com/optivem/atdd-accelerator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/optivem/atdd-accelerator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>atdd;testing;template;cli;dotnet-tool</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>See https://github.com/optivem/atdd-accelerator/releases for release notes</PackageReleaseNotes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <Content Include="..\..\scripts\**\*" Pack="true" PackagePath="scripts\" />
+  </ItemGroup>
 
 </Project>

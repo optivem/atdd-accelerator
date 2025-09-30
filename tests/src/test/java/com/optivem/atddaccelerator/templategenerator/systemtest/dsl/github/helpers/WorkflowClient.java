@@ -54,7 +54,7 @@ public class WorkflowClient {
                 .withBackoff(Duration.ofSeconds(1), Duration.ofMinutes(5))  // 1s to 10s
                 .withMaxRetries(10)
                 .onFailedAttempt(event ->
-                        System.out.println("Attempt " + event.getAttemptCount() +
+                        System.out.println("Workflow: " + workflowFileName + " Attempt " + event.getAttemptCount() +
                                 ": Workflow status is '" + event.getLastResult().getStatus() +
                                 "', retrying in " + event.getElapsedTime() + "..."))
                 .build();
