@@ -22,7 +22,7 @@ class Program
         }
 
         // Default Hello World behavior
-        Console.WriteLine("Hello, World! This is v1.0.1 of the ATDD Accelerator Template Generator.");
+        Console.WriteLine("Hello, World! This is v1.0.2 of the ATDD Accelerator Template Generator.");
         Console.WriteLine("ATDD Accelerator Template Generator");
         Console.WriteLine("Use --help for usage information or --version for version info");
     }
