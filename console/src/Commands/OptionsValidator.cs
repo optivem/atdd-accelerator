@@ -12,50 +12,75 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
 
         internal static int Validate(MonorepoOptions options)
         {
-            var success = ValidateRepositoryName(options) == 1
-                && ValidateSystemLanguage(options) == 1
-                && ValidateSystemTestLanguage(options) == 1;
+            var isValidRepositoryName = ValidateRepositoryName(options);
+            var isValidSystemLanguage = ValidateSystemLanguage(options);
+            var isValidSystemTestLanguage = ValidateSystemTestLanguage(options);
+            var isValidGitHubUsername = ValidateGitHubUsername(options);
+
+            var success = isValidRepositoryName && isValidSystemLanguage && isValidSystemTestLanguage && isValidGitHubUsername;
 
             return success ? 0 : 1;
         }
 
-        private static int ValidateRepositoryName(MonorepoOptions options)
+        private static bool ValidateRepositoryName(MonorepoOptions options)
         {
             if (string.IsNullOrWhiteSpace(options.RepositoryName))
             {
-                Console.WriteLine("Error: --repository-name is required.");
-                return 1;
+                Console.Error.WriteLine("Error: --repository-name is required.");
+                return false;
             }
-            return 0;
+            return true;
         }
 
-        private static int ValidateSystemLanguage(MonorepoOptions options)
+        private static bool ValidateSystemLanguage(MonorepoOptions options)
         {
             if (string.IsNullOrWhiteSpace(options.SystemLanguage))
             {
-                Console.WriteLine("Error: --system-language is required.");
-                return 1;
+                Console.Error.WriteLine("Error: --system-language is required.");
+                return false;
             }
 
             if(!ValidLanguages.Contains(options.SystemLanguage))
             {
-                Console.WriteLine($"Invalid --system-language: '{options.SystemLanguage}'. Valid options: {string.Join(", ", ValidLanguages)}");
-                return 1;
+                Console.Error.WriteLine($"Invalid --system-language: '{options.SystemLanguage}'. Valid options: {string.Join(", ", ValidLanguages)}");
+                return false;
             }
 
-            return 0;
+            return true;
         }
 
 
-        private static int ValidateSystemTestLanguage(MonorepoOptions options)
+        private static bool ValidateSystemTestLanguage(MonorepoOptions options)
         {
             if (string.IsNullOrEmpty(options.SystemTestLanguage))
             {
-                Console.WriteLine("Error: --system-test-language is required.");
-                return 1;
+                Console.Error.WriteLine("Error: --system-test-language is required.");
+                return false;
             }
 
-            return 0;
+            return true;
+        }
+
+        private static bool ValidateGitHubUsername(MonorepoOptions options)
+        {
+            var username = options.GitHubUsername;
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                Console.Error.WriteLine("Error: --github-username is required.");
+                return false;
+            }
+
+            // Basic GitHub username format check
+            if (username.Length < 1 || username.Length > 39 ||
+                username.StartsWith("-") || username.EndsWith("-") ||
+                username.Contains("--") ||
+                !username.All(c => char.IsLetterOrDigit(c) || c == '-'))
+            {
+                Console.Error.WriteLine("Error: --github-username is invalid. It must be 1-39 characters, alphanumeric or hyphens, cannot start/end with hyphen, and no consecutive hyphens.");
+                return false;
+            }
+
+            return true;
         }
     }
 }

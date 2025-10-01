@@ -62,14 +62,11 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             bool isFolder)
         {
             var keepItem = languageToItemMapping[language.ToString()];
-            Console.WriteLine($"Keeping: {keepItem}");
 
             foreach (var item in allItems)
             {
                 if (!string.Equals(item, keepItem, StringComparison.OrdinalIgnoreCase) && (File.Exists(item) || Directory.Exists(item)))
                 {
-                    Console.WriteLine($"Removing: {item}");
-
                     if (isFolder && Directory.Exists(item))
                     {
                         Directory.Delete(item, true);

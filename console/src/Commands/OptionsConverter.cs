@@ -21,7 +21,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
 
         private static Language ParseLanguage(string language)
         {
-            return (Language)Enum.Parse(typeof(Language), language);
+            return (Language)Enum.Parse(typeof(Language), language, ignoreCase: true);
         }
 
         private static string GetOutputDirectory(string repositoryName)
@@ -31,7 +31,6 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
             var atddTempDir = Path.Combine(tempDir, $"ATDD-Accelerator-{uniqueId}");
             var targetDirectory = Path.Combine(atddTempDir, repositoryName);
             Directory.CreateDirectory(atddTempDir);
-            Console.WriteLine($"Using temp directory: {targetDirectory}");
             return targetDirectory;
         }
     }
