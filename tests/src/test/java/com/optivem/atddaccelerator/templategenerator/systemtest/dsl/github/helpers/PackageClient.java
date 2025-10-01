@@ -3,6 +3,9 @@ package com.optivem.atddaccelerator.templategenerator.systemtest.dsl.github.help
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class PackageClient {
     private final GithubClient client;
     private final String repositoryPath;
@@ -14,7 +17,7 @@ public class PackageClient {
 
     public void verifyPackagesExist(Language systemLanguage) {
         for(var l : Language.getAll()) {
-            var path = String.format("%s/monolith-%s", repositoryPath, l.getValue());
+            var path = String.format("monolith-%s", l.getValue());
             if(l.equals(systemLanguage)) {
                 verifyPackageExists(path);
             } else {
@@ -23,10 +26,13 @@ public class PackageClient {
         }
     }
 
-    private void verifyPackageDoesNotExist(String path) {
+    private void verifyPackageExists(String packageName) {
+        var exists = client.packageExists(packageName);
+        assertTrue(exists, "Package '" + packageName + "' should exist.");
     }
 
-    private void verifyPackageExists(String path) {
-        
+    private void verifyPackageDoesNotExist(String packageName) {
+        var exists = client.packageExists(packageName);
+        assertFalse(exists, "Package '" + packageName + "' should not exist.");
     }
 }
