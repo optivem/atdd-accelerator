@@ -139,12 +139,12 @@ public class GenerateMonorepo
 
     private string GetOutputDirectory(string repositoryName, string outputPath)
     {
-        if (!string.IsNullOrWhiteSpace(outputPath))
-        {
-            var targetDir = Path.Combine(outputPath, repositoryName);
-            Console.WriteLine($"Using specified output path: {targetDir}");
-            return targetDir;
-        }
+        //if (!string.IsNullOrWhiteSpace(outputPath))
+        //{
+        //    var targetDir = Path.Combine(outputPath, repositoryName);
+        //    Console.WriteLine($"Using specified output path: {targetDir}");
+        //    return targetDir;
+        //}
         var tempDir = Path.GetTempPath();
         var uniqueId = Guid.NewGuid().ToString("N").Substring(0, 8);
         var atddTempDir = Path.Combine(tempDir, $"ATDD-Accelerator-{uniqueId}");
@@ -210,39 +210,6 @@ public class GenerateMonorepo
         catch (Exception ex)
         {
             Console.WriteLine($"GitHub CLI not available or failed: {ex.Message}");
-            Console.WriteLine("This will create a local directory structure only (not a GitHub repository).");
-            Console.Write("Do you want to continue with local setup only? (y/N): ");
-            var response = Console.ReadLine();
-            if (!response.Equals("y", StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine("Operation cancelled by user.");
-                Directory.SetCurrentDirectory(originalLocation);
-                Environment.Exit(1);
-            }
-
-            Directory.CreateDirectory(targetDirectory);
-            Directory.SetCurrentDirectory(targetDirectory);
-
-            var readmeContent = $@"# {repositoryName}
-
-Generated with ATDD Accelerator
-
-- System Language: {systemLanguage}
-- System Test Language: {systemTestLanguage}
-";
-            File.WriteAllText("README.md", readmeContent);
-
-            try
-            {
-                RunProcess("git", "init");
-                RunProcess("git", "add .");
-                RunProcess("git", "commit -m \"Initial commit from ATDD Accelerator\"");
-                Console.WriteLine("Git repository initialized");
-            }
-            catch
-            {
-                Console.WriteLine("Git not available or failed to initialize repository");
-            }
         }
         finally
         {
