@@ -31,7 +31,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
             int exitCode = 0;
             try
             {
-                await Generator.Main(args); // If Main returns int, use exitCode = Program.Main(args);
+                var result = await Generator.Main(args); // If Main returns int, use exitCode = Program.Main(args);
+
+                if(result != 0)
+                {
+                    throw new Exception("Generator existed with error code: " + result);
+                }
             }
             catch (Exception ex)
             {
