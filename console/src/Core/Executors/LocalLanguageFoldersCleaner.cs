@@ -18,16 +18,20 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
         public override void Execute()
         {
+            var workingDirectory = Directory.GetCurrentDirectory();
+            Console.WriteLine("Current working directory: " + Directory.GetCurrentDirectory());
+
+
             // System
             RemoveItemsByTemplate("monolith-{language}", _context.SystemLanguage, true);
-            RemoveItemsByTemplate(".github/workflows/commit-stage-monolith-{language}.yml", _context.SystemLanguage, false);
+            //RemoveItemsByTemplate(".github/workflows/commit-stage-monolith-{language}.yml", _context.SystemLanguage, false);
 
             // System Language
-            RemoveItemsByTemplate("system-test-{language}", _context.SystemTestLanguage, true);
-            RemoveItemsByTemplate(".github/workflows/local-acceptance-stage-test-{language}.yml", _context.SystemTestLanguage, false);
-            RemoveItemsByTemplate(".github/workflows/acceptance-stage-test-{language}.yml", _context.SystemTestLanguage, false);
-            RemoveItemsByTemplate(".github/workflows/qa-stage-test-{language}.yml", _context.SystemTestLanguage, false);
-            RemoveItemsByTemplate(".github/workflows/prod-stage-test-{language}.yml", _context.SystemTestLanguage, false);
+            //RemoveItemsByTemplate("system-test-{language}", _context.SystemTestLanguage, true);
+            //RemoveItemsByTemplate(".github/workflows/local-acceptance-stage-test-{language}.yml", _context.SystemTestLanguage, false);
+            //RemoveItemsByTemplate(".github/workflows/acceptance-stage-test-{language}.yml", _context.SystemTestLanguage, false);
+            //RemoveItemsByTemplate(".github/workflows/qa-stage-test-{language}.yml", _context.SystemTestLanguage, false);
+            //RemoveItemsByTemplate(".github/workflows/prod-stage-test-{language}.yml", _context.SystemTestLanguage, false);
         }
 
         private class LanguageItems
@@ -55,7 +59,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             };
         }
 
-        private static void RemoveLanguageSpecificItems(
+        private void RemoveLanguageSpecificItems(
             Language language,
             List<string> allItems,
             Dictionary<string, string> languageToItemMapping,
@@ -65,8 +69,9 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
             foreach (var item in allItems)
             {
-                if (!string.Equals(item, keepItem, StringComparison.OrdinalIgnoreCase) && (File.Exists(item) || Directory.Exists(item)))
+                if (!string.Equals(item, keepItem))
                 {
+
                     if (isFolder && Directory.Exists(item))
                     {
                         Directory.Delete(item, true);
@@ -81,7 +86,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             }
         }
 
-        private static void RemoveItemsByTemplate(string pathTemplate, Language language, bool isFolder)
+        private void RemoveItemsByTemplate(string pathTemplate, Language language, bool isFolder)
         {
             var items = GetLanguageItems(pathTemplate);
 

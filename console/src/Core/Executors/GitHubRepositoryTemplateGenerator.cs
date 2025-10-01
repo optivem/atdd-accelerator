@@ -51,7 +51,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
                 return;
 
             }
-            finally
+            catch(Exception ex)
             {
                 Directory.SetCurrentDirectory(originalLocation);
             }
