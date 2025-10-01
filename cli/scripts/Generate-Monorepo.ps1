@@ -262,10 +262,10 @@ try {
     Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName -SystemTestLanguage $SystemTestLanguage
     
     Write-Host "Setting up GitHub Pages..."
-    Setup-GitHubPages
+    Enable-GitHubPages -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
     
     Write-Host "Updating Docker Compose..."
-    Update-DockerCompose -SystemLanguage $SystemLanguage
+    Update-DockerComposeFiles -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName
     
     # Push all changes to remote repository (if it's a GitHub repository)
     Write-Host ""
@@ -313,9 +313,11 @@ try {
     if ($targetDirectory -and (Test-Path $targetDirectory)) {
         try {
             Write-Host "Cleaning up failed generation directory: $targetDirectory"
+            # Change to a different directory before cleanup to avoid "in use" errors
+            Set-Location ([System.IO.Path]::GetTempPath())
             Remove-Item -Path $targetDirectory -Recurse -Force
         } catch {
-            Write-Warning "Could not clean up directory: $targetDirectory"
+            Write-Warning "Could not clean up directory: $targetDirectory - $($_.Exception.Message)"
         }
     }
     
