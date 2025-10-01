@@ -1,0 +1,26 @@
+﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
+{
+    internal class GitHubPagesEnabler : BaseExecutor
+    {
+        public GitHubPagesEnabler(Context context) : base(context)
+        {
+        }
+
+        public override void Execute()
+        {
+            var result = ProcessExecutor.RunProcess("gh", $"api -X POST \"repos/{_context.RepositoryPath}/pages\" -f \"source[branch]=main\" -f \"source[path]=/docs\"");
+            
+            if(result.IsError)
+            {
+                throw new ExecutionException(_context, $"Could not enable GitHub Pages");
+            }
+        }
+    }
+}

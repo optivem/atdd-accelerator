@@ -9,7 +9,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
 {
     public static class ProcessExecutor
     {
-        public static string RunProcess(string fileName, string arguments, bool captureOutput = false)
+        public static ProcessResult RunProcess(string fileName, string arguments)
         {
             var process = new Process
             {
@@ -17,15 +17,16 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
                 {
                     FileName = fileName,
                     Arguments = arguments,
-                    RedirectStandardOutput = captureOutput,
-                    RedirectStandardError = captureOutput,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     UseShellExecute = false
                 }
             };
             process.Start();
-            string output = captureOutput ? process.StandardOutput.ReadToEnd() : null;
+            var output = process.StandardOutput.ReadToEnd();
+            var errors = process.StandardError.ReadToEnd();
             process.WaitForExit();
-            return output;
+            return new ProcessResult(process.ExitCode, output, errors);
         }
     }
 }

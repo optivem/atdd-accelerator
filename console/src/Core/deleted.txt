@@ -1,0 +1,32 @@
+    private string GetGitHubUsername(string providedUsername)
+    {
+        if (!string.IsNullOrWhiteSpace(providedUsername))
+            return providedUsername;
+
+        try
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "gh",
+                    Arguments = "auth status",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+            };
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            var match = System.Text.RegularExpressions.Regex.Match(output, @"Logged in to github\.com as (\S+)");
+            if (match.Success)
+                return match.Groups[1].Value.Trim();
+        }
+        catch
+        {
+            Console.WriteLine("GitHub CLI not authenticated. Using default username 'user'");
+        }
+        return "user";
+    }

@@ -34,13 +34,18 @@ public class GenerateCommand
 
         var options = OptionsParser.ParseMonorepoOptions(args);
 
-        OptionsValidator.Validate(options);
+        var result = OptionsValidator.Validate(options);
+        if(result != 0)
+        {
+            return result;
+        }
 
         try
         {
             Console.WriteLine($" Generating monorepo template...");
+            var context = OptionsConverter.Convert(options);
             
-            await _templateService.GenerateMonorepoAsync(options);
+            await _templateService.GenerateAsync(context);
             
             Console.WriteLine($" Monorepo template generated successfully!");
             Console.WriteLine($" Repository name: {options.RepositoryName}");
