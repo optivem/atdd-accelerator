@@ -33,9 +33,12 @@ public class TemplateService
     {
         var arguments = BuildPowerShellArguments(scriptPath, options);
 
+        // Use appropriate PowerShell executable based on platform
+        var powerShellExecutable = OperatingSystem.IsWindows() ? "powershell.exe" : "pwsh";
+
         var startInfo = new ProcessStartInfo
         {
-            FileName = "powershell.exe",
+            FileName = powerShellExecutable,
             Arguments = arguments,
             UseShellExecute = false,
             RedirectStandardOutput = true,

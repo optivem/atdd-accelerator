@@ -40,6 +40,17 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
+    - name: Install PowerShell
+      run: |
+        # Install PowerShell on Ubuntu
+        sudo apt-get update
+        sudo apt-get install -y wget apt-transport-https software-properties-common
+        source /etc/os-release
+        wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
+        sudo dpkg -i packages-microsoft-prod.deb
+        sudo apt-get update
+        sudo apt-get install -y powershell
+
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
