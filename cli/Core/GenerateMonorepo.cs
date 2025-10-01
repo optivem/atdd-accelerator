@@ -7,7 +7,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator;
 
 public class GenerateMonorepo
 {
-    private static readonly string[] ValidLanguages = { "java", "dotnet", "typescript" };
+
 
     public async Task<int> GenerateAsync(MonorepoOptions options)
     {
@@ -18,10 +18,6 @@ public class GenerateMonorepo
             Console.WriteLine($"Repository Name: {options.RepositoryName}");
             Console.WriteLine($"System Language: {options.SystemLanguage}");
             Console.WriteLine($"System Test Language: {options.SystemTestLanguage}");
-
-            // Validate languages
-            TestSystemLanguage(options.SystemLanguage);
-            TestSystemLanguage(options.SystemTestLanguage);
 
             var githubUsername = GetGitHubUsername(options.GitHubUsername);
 
@@ -97,12 +93,7 @@ public class GenerateMonorepo
         }
     }
 
-    private void TestSystemLanguage(string language)
-    {
-        if (string.IsNullOrWhiteSpace(language) || Array.IndexOf(ValidLanguages, language.ToLower()) < 0)
-            throw new ArgumentException($"Invalid SystemLanguage: '{language}'. Valid options: {string.Join(", ", ValidLanguages)}");
-        Console.WriteLine($"SystemLanguage '{language}' is valid");
-    }
+
 
     private string GetGitHubUsername(string providedUsername)
     {

@@ -1,3 +1,4 @@
+using Optivem.AtddAccelerator.TemplateGenerator.Commands;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -31,26 +32,9 @@ public class GenerateCommand
             return 1;
         }
 
-        var options = ParseMonorepoOptions(args);
+        var options = OptionsParser.ParseMonorepoOptions(args);
 
-        if (string.IsNullOrEmpty(options.RepositoryName))  // Fixed: Changed from ProjectName to RepositoryName
-        {
-            Console.WriteLine("Error: --repository-name is required.");
-            Console.WriteLine("Usage: atdd generate monorepo --repository-name <name> [options]");
-            return 1;
-        }
-
-        if (string.IsNullOrEmpty(options.SystemLanguage))
-        {
-            Console.WriteLine("Error: --system-language is required.");
-            return 1;
-        }
-
-        if (string.IsNullOrEmpty(options.SystemTestLanguage))
-        {
-            Console.WriteLine("Error: --system-test-language is required.");
-            return 1;
-        }
+        OptionsValidator.Validate(options);
 
         try
         {
@@ -59,8 +43,7 @@ public class GenerateCommand
             await _templateService.GenerateMonorepoAsync(options);
             
             Console.WriteLine($" Monorepo template generated successfully!");
-            Console.WriteLine($" Output directory: {options.OutputPath}");
-            Console.WriteLine($" Repository name: {options.RepositoryName}");  // Fixed: Changed from ProjectName to RepositoryName
+            Console.WriteLine($" Repository name: {options.RepositoryName}");
             
             return 0;
         }
@@ -69,36 +52,5 @@ public class GenerateCommand
             Console.WriteLine($" Error generating template: {ex.Message}");
             return 1;
         }
-    }
-
-    private MonorepoOptions ParseMonorepoOptions(string[] args)
-    {
-        var options = new MonorepoOptions
-        {
-            OutputPath = Directory.GetCurrentDirectory()
-        };
-
-        for (int i = 1; i < args.Length; i += 2)
-        {
-            if (i + 1 >= args.Length) break;
-
-            switch (args[i])
-            {
-                case "--repository-name":
-                    options.RepositoryName = args[i + 1];
-                    break;
-                case "--system-language":
-                    options.SystemLanguage = args[i + 1];
-                    break;
-                case "--system-test-language":
-                    options.SystemTestLanguage = args[i + 1];
-                    break;
-                case "--output-path":
-                    options.OutputPath = Path.GetFullPath(args[i + 1]);
-                    break;
-            }
-        }
-
-        return options;
     }
 }
