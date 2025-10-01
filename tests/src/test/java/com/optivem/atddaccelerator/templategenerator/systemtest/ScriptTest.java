@@ -49,7 +49,7 @@ class ScriptTest {
         var created = generator.isCreated(repoName);
 
         if(created && gitHub != null) {
-            gitHub.deleteRepository();
+//            gitHub.deleteRepository();
         }
     }
 
