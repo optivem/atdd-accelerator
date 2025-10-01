@@ -8,7 +8,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
     {
         private const string RepoOwner = "valentinajemuovic";
 
-        private static GeneratorDsl _generator;
+        private GeneratorDsl _generator;
         private GitHubDsl _gitHub;
         private string _repoName;
 
@@ -52,29 +52,29 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
 
         [Theory]
         [MemberData(nameof(LanguageProvider))]
-        public void ShouldCreateRepositoryWithLanguages(Language systemLanguage, Language systemTestLanguage)
+        public async Task ShouldCreateRepositoryWithLanguages(Language systemLanguage, Language systemTestLanguage)
         {
-            _generator.GenerateNewRepository(_repoName, systemLanguage, systemTestLanguage);
+            await _generator.GenerateNewRepository(_repoName, systemLanguage, systemTestLanguage);
 
-            // _gitHub.VerifyRepositoryExists();
-            // _gitHub.VerifyPathsExist(systemLanguage, systemTestLanguage);
-            // _gitHub.VerifyDockerComposeImage(systemLanguage, systemTestLanguage);
-            // _gitHub.VerifyReadmeHasBadges(systemLanguage, systemTestLanguage);
-            // _gitHub.VerifyPagesEnabled();
-            //
-            // _gitHub.VerifyWorkflowsPass(systemLanguage, systemTestLanguage);
-            // _gitHub.VerifyPackagesExist(systemLanguage);
+            _gitHub.VerifyRepositoryExists();
+            _gitHub.VerifyPathsExist(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyDockerComposeImage(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyReadmeHasBadges(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyPagesEnabled();
 
-            // TODO: VJ: Verify that only one package exists, rest are deleted
+            _gitHub.VerifyWorkflowsPass(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyPackagesExist(systemLanguage);
 
-            // TODO: VJ: Rewrite like this
-            // _gitHub.VerifyCommitStageSuccessful(systemLanguage); - this checks only this path, the docker come, the readme badge, and that package was created
+             // TODO: VJ: Verify that only one package exists, rest are deleted
+
+             // TODO: VJ: Rewrite like this
+             // _gitHub.VerifyCommitStageSuccessful(systemLanguage); // -this checks only this path, the docker come, the readme badge, and that package was created
         }
 
         [Fact]
-        public void ShouldReturnErrorForInvalidSystemLanguage()
+        public async Task ShouldReturnErrorForInvalidSystemLanguage()
         {
-            _generator.GenerateNewRepositoryExpectError(_repoName, Language.None, Language.TypeScript);
+            await _generator.GenerateNewRepositoryExpectError(_repoName, Language.None, Language.TypeScript);
         }
 
         private static string NewName()
