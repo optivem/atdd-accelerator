@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator;
 
-class Program
+public class Generator
 {
-    static async Task<int> Main(string[] args)
+    public static async Task<int> Main(string[] args)
     {
         try
         {
