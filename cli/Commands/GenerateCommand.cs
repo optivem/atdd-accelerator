@@ -102,11 +102,3 @@ public class GenerateCommand
         return options;
     }
 }
-
-public class MonorepoOptions
-{
-    public string RepositoryName { get; set; } = "";
-    public string SystemLanguage { get; set; } = "";
-    public string SystemTestLanguage { get; set; } = "";
-    public string OutputPath { get; set; } = "";
-}

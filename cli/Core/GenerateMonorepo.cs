@@ -1,9 +1,9 @@
-﻿using Optivem.AtddAccelerator.TemplateGenerator;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+
+namespace Optivem.AtddAccelerator.TemplateGenerator;
 
 public class GenerateMonorepo
 {
@@ -11,6 +11,7 @@ public class GenerateMonorepo
 
     public async Task<int> GenerateAsync(MonorepoOptions options)
     {
+        string targetDirectory = null;
         try
         {
             Console.WriteLine("ATDD Accelerator Setup Script");
@@ -18,20 +19,55 @@ public class GenerateMonorepo
             Console.WriteLine($"System Language: {options.SystemLanguage}");
             Console.WriteLine($"System Test Language: {options.SystemTestLanguage}");
 
+            // Validate languages
             TestSystemLanguage(options.SystemLanguage);
             TestSystemLanguage(options.SystemTestLanguage);
 
-            var githubUsername = GetGitHubUsername(null);
+            var githubUsername = GetGitHubUsername(options.GitHubUsername);
 
-            var targetDirectory = GetOutputDirectory(options.RepositoryName, options.OutputPath);
+            // Get target directory
+            targetDirectory = GetOutputDirectory(options.RepositoryName, options.OutputPath);
 
+            // Create repository from template
             NewRepositoryFromTemplate(options.RepositoryName, targetDirectory, options.SystemLanguage, options.SystemTestLanguage);
 
-            // TODO: Call helper classes here as needed
+            // Call imported functions (converted to C#)
+            Console.WriteLine("Removing unused language folders...");
+            RemoveUnusedLanguageFolders.RemoveUnusedLanguageFoldersMethod(
+                options.SystemLanguage,
+                options.SystemTestLanguage,
+                githubUsername,
+                options.RepositoryName);
 
+            Console.WriteLine("Updating README badges...");
+            UpdateReadmeBadges.UpdateReadmeBadgesMethod(
+                options.SystemLanguage,
+                githubUsername,
+                options.RepositoryName,
+                options.SystemTestLanguage);
+
+            Console.WriteLine("Setting up GitHub Pages...");
+            SetupGitHubPages.EnableGitHubPages(
+                githubUsername,
+                options.RepositoryName);
+
+            Console.WriteLine("Updating Docker Compose...");
+            UpdateDockerComposeFiles.UpdateDockerComposeFilesMethod(
+                options.SystemLanguage,
+                githubUsername,
+                options.RepositoryName);
+
+            // Optionally: Call workflow triggers if needed
+            // InvokeBuildWorkflows.WaitForBuildWorkflows(...);
+            // InvokeSystemTestReleaseWorkflows.InvokeSystemTestWorkflows(...);
+
+            // Push all changes to remote repository (if it's a GitHub repository)
+            Console.WriteLine();
+            Console.WriteLine("Pushing changes to remote repository...");
             PushChangesToRemote(targetDirectory);
 
-            Console.WriteLine("\nRepository setup completed successfully!");
+            Console.WriteLine();
+            Console.WriteLine("Repository setup completed successfully!");
             Console.WriteLine($"Repository: {githubUsername}/{options.RepositoryName}");
             Console.WriteLine($"Local path: {targetDirectory}");
             Console.WriteLine($"System Language: {options.SystemLanguage}");
@@ -42,18 +78,33 @@ public class GenerateMonorepo
         catch (Exception ex)
         {
             Console.Error.WriteLine($"Setup failed: {ex.Message}");
+
+            // Clean up any partially created directories when the script fails
+            if (!string.IsNullOrEmpty(targetDirectory) && Directory.Exists(targetDirectory))
+            {
+                try
+                {
+                    Console.WriteLine($"Cleaning up failed generation directory: {targetDirectory}");
+                    Directory.SetCurrentDirectory(Path.GetTempPath());
+                    Directory.Delete(targetDirectory, true);
+                }
+                catch (Exception cleanupEx)
+                {
+                    Console.WriteLine($"Could not clean up directory: {targetDirectory} - {cleanupEx.Message}");
+                }
+            }
             return 1;
         }
     }
 
-    static void TestSystemLanguage(string language)
+    private void TestSystemLanguage(string language)
     {
-        if (string.IsNullOrWhiteSpace(language) || !ValidLanguages.Contains(language.ToLower()))
+        if (string.IsNullOrWhiteSpace(language) || Array.IndexOf(ValidLanguages, language.ToLower()) < 0)
             throw new ArgumentException($"Invalid SystemLanguage: '{language}'. Valid options: {string.Join(", ", ValidLanguages)}");
         Console.WriteLine($"SystemLanguage '{language}' is valid");
     }
 
-    static string GetGitHubUsername(string providedUsername)
+    private string GetGitHubUsername(string providedUsername)
     {
         if (!string.IsNullOrWhiteSpace(providedUsername))
             return providedUsername;
@@ -86,7 +137,7 @@ public class GenerateMonorepo
         return "user";
     }
 
-    static string GetOutputDirectory(string repositoryName, string outputPath)
+    private string GetOutputDirectory(string repositoryName, string outputPath)
     {
         if (!string.IsNullOrWhiteSpace(outputPath))
         {
@@ -103,7 +154,7 @@ public class GenerateMonorepo
         return targetDirectory;
     }
 
-    static void NewRepositoryFromTemplate(string repositoryName, string targetDirectory, string systemLanguage, string systemTestLanguage, string templateName = "optivem/atdd-accelerator-template-mono-repo")
+    private void NewRepositoryFromTemplate(string repositoryName, string targetDirectory, string systemLanguage, string systemTestLanguage, string templateName = "optivem/atdd-accelerator-template-mono-repo")
     {
         Console.WriteLine("Creating repository from template...");
         Console.WriteLine($"Target directory: {targetDirectory}");
@@ -199,7 +250,7 @@ Generated with ATDD Accelerator
         }
     }
 
-    static void PushChangesToRemote(string targetDirectory)
+    private void PushChangesToRemote(string targetDirectory)
     {
         Directory.SetCurrentDirectory(targetDirectory);
         try
@@ -229,7 +280,7 @@ Generated with ATDD Accelerator
         }
     }
 
-    static string RunProcess(string fileName, string arguments, bool captureOutput = false)
+    private string RunProcess(string fileName, string arguments, bool captureOutput = false)
     {
         var process = new Process
         {
@@ -247,4 +298,14 @@ Generated with ATDD Accelerator
         process.WaitForExit();
         return output;
     }
+}
+
+// Extend MonorepoOptions to include GitHubUsername if needed
+public class MonorepoOptions
+{
+    public string RepositoryName { get; set; } = "";
+    public string SystemLanguage { get; set; } = "";
+    public string SystemTestLanguage { get; set; } = "";
+    public string OutputPath { get; set; } = "";
+    public string GitHubUsername { get; set; } = "";
 }
