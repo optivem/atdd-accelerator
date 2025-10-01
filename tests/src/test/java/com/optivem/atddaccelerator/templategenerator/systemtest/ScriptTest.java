@@ -4,12 +4,9 @@ import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GithubCl
 import com.optivem.atddaccelerator.templategenerator.systemtest.clients.GeneratorClient;
 import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.GeneratorDsl;
 import com.optivem.atddaccelerator.templategenerator.systemtest.dsl.GitHubDsl;
-import com.optivem.atddaccelerator.templategenerator.systemtest.util.Constants;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -87,7 +84,7 @@ class ScriptTest {
 
 
     @Test
-    void shouldReturnErrorForInvalidLanguage() {
+    void shouldReturnErrorForInvalidSystemLanguage() {
         generator.generateNewRepositoryExpectError(repoName, Language.NONE, Language.TYPESCRIPT);
     }
 

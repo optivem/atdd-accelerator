@@ -27,13 +27,15 @@ public class GeneratorDsl {
     }
 
     public void generateNewRepository(String repoName, Language systemLanguage, Language systemTestLanguage) {
-        client.generateRepository(repoName, systemLanguage, systemTestLanguage);
+        var result = client.generateRepository(repoName, systemLanguage, systemTestLanguage);
+        assertSuccess(result, "Repository generation should succeed.");
 
         waitTime(MILLIS);
         created.add(repoName);
     }
 
     public void generateNewRepositoryExpectError(String repoName, Language systemLanguage, Language systemTestLanguage) {
-        client.generateRepository(repoName, systemLanguage, systemTestLanguage);
+        var result = client.generateRepository(repoName, systemLanguage, systemTestLanguage);
+        assertFailure(result, "Repository generation should fail.");
     }
 }
