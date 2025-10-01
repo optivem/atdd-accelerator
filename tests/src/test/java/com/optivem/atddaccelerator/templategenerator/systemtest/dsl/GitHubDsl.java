@@ -11,6 +11,7 @@ public class GitHubDsl {
     private final PagesClient pagesClient;
     private final DockerComposeClient dockerComposeClient;
     private final RepositoryClient repositoryClient;
+    private final PackageClient packageClient;
 
     public GitHubDsl(GithubClient client) {
         this.readmeClient = new ReadmeClient(client);
@@ -19,6 +20,7 @@ public class GitHubDsl {
         this.pagesClient = new PagesClient(client);
         this.dockerComposeClient = new DockerComposeClient(client);
         this.repositoryClient = new RepositoryClient(client);
+        this.packageClient = new PackageClient(client);
     }
 
     public void verifyReadmeHasBadges(Language systemLanguage, Language systemTestLanguage) {
@@ -47,5 +49,9 @@ public class GitHubDsl {
 
     public void verifyRepositoryExists() {
         repositoryClient.verifyRepositoryExists();
+    }
+
+    public void verifyPackagesExist(Language systemLanguage) {
+        packageClient.verifyPackagesExist(systemLanguage);
     }
 }

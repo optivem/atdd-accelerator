@@ -79,8 +79,10 @@ class ScriptTest {
         gitHub.verifyDockerComposeImage(systemLanguage, systemTestLanguage);
         gitHub.verifyReadmeHasBadges(systemLanguage, systemTestLanguage);
         gitHub.verifyPagesEnabled();
+        gitHub.verifyPackagesExist(systemLanguage);
 
         gitHub.verifyWorkflowsPass(systemLanguage, systemTestLanguage);
+
 
         // TODO: VJ: Verify that only one package exists, rest are deleted
     }
