@@ -279,6 +279,36 @@ try {
         Update-DockerCompose -SystemLanguage $SystemLanguage
     }
     
+    # Push all changes to remote repository (if it's a GitHub repository)
+    Write-Host ""
+    Write-Host "Pushing changes to remote repository..."
+    try {
+        # Check if we have a remote origin (indicating this is a cloned GitHub repo)
+        $remoteOrigin = git remote get-url origin 2>$null
+        if ($remoteOrigin) {
+            # Add all changes and commit if there are any uncommitted changes
+            $status = git status --porcelain
+            if ($status) {
+                Write-Host "Committing final changes..."
+                git add .
+                git commit -m "Final setup and configuration changes"
+            }
+            
+            # Push to remote
+            Write-Host "Pushing to remote repository..."
+            git push origin main 2>&1
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "✅ Changes pushed successfully to GitHub"
+            } else {
+                Write-Warning "⚠️ Failed to push changes to GitHub"
+            }
+        } else {
+            Write-Host "No remote origin found - skipping push (local repository only)"
+        }
+    } catch {
+        Write-Warning "Failed to push changes: $($_.Exception.Message)"
+    }
+    
     Write-Host ""
     Write-Host "Repository setup completed successfully!"
     Write-Host "Repository: $GitHubUsername/$RepositoryName"
