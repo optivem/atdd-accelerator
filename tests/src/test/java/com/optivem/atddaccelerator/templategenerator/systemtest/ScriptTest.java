@@ -29,16 +29,11 @@ class ScriptTest {
     private GitHubDsl gitHub;
     private String repoName;
 
-    @BeforeAll
-    static void beforeAll() {
-        var generatorClient = new GeneratorClient();
-        generatorClient.buildGenerator();
-
-        generator = new GeneratorDsl(generatorClient);
-    }
-
     @BeforeEach
     void setup() {
+        var generatorClient = new GeneratorClient();
+        generator = new GeneratorDsl(generatorClient);
+
         repoName = newName();
         var githubClient = new GithubClient(REPO_OWNER, repoName);
         gitHub = new GitHubDsl(githubClient);

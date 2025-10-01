@@ -21,7 +21,7 @@ public class ProcessResultAssertions {
     }
 
     private static String stringify(ProcessResult result) {
-        return "Process finished with exit code " + result.getExitCode() + "\nErrors: " + result.getErrors();
+        return "Process finished with exit code " + result.getExitCode() + "\nErrors: " + result.getErrors() + "\nOutput: " + result.getOutput();
     }
 
     private static String stringify(ProcessResult result, String customMessage) {
