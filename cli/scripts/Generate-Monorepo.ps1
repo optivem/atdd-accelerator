@@ -149,14 +149,14 @@ function New-RepositoryFromTemplate {
         $errorOutput = ""
         if (Test-Path "gh_error.txt") {
             $errorOutput = Get-Content "gh_error.txt" -Raw
-            Remove-Item "gh_error.txt" -Force -ErrorAction SilentlyContinue
+            Remove-Item "gh_error.txt" -Force
         }
         
         # Read the standard output
         $standardOutput = ""
         if (Test-Path "gh_output.txt") {
             $standardOutput = Get-Content "gh_output.txt" -Raw
-            Remove-Item "gh_output.txt" -Force -ErrorAction SilentlyContinue
+            Remove-Item "gh_output.txt" -Force
         }
         
         if ($processInfo.ExitCode -eq 0) {
@@ -254,30 +254,18 @@ try {
     # Create repository from template
     New-RepositoryFromTemplate -RepositoryName $RepositoryName -TargetDirectory $targetDirectory
     
-    # Call imported functions if they exist
-    if (Get-Command "Remove-UnusedLanguageFolders" -ErrorAction SilentlyContinue) {
-        Write-Host "Removing unused language folders..."
-        Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage
-    } else {
-        Write-Warning "Remove-UnusedLanguageFolders function not available"
-    }
+    # Call imported functions
+    Write-Host "Removing unused language folders..."
+    Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage
     
-    if (Get-Command "Update-ReadmeBadges" -ErrorAction SilentlyContinue) {
-        Write-Host "Updating README badges..."
-        Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName -SystemTestLanguage $SystemTestLanguage
-    } else {
-        Write-Warning "Update-ReadmeBadges function not available"
-    }
+    Write-Host "Updating README badges..."
+    Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName -SystemTestLanguage $SystemTestLanguage
     
-    if (Get-Command "Setup-GitHubPages" -ErrorAction SilentlyContinue) {
-        Write-Host "Setting up GitHub Pages..."
-        Setup-GitHubPages
-    }
+    Write-Host "Setting up GitHub Pages..."
+    Setup-GitHubPages
     
-    if (Get-Command "Update-DockerCompose" -ErrorAction SilentlyContinue) {
-        Write-Host "Updating Docker Compose..."
-        Update-DockerCompose -SystemLanguage $SystemLanguage
-    }
+    Write-Host "Updating Docker Compose..."
+    Update-DockerCompose -SystemLanguage $SystemLanguage
     
     # Push all changes to remote repository (if it's a GitHub repository)
     Write-Host ""
@@ -325,7 +313,7 @@ try {
     if ($targetDirectory -and (Test-Path $targetDirectory)) {
         try {
             Write-Host "Cleaning up failed generation directory: $targetDirectory"
-            Remove-Item -Path $targetDirectory -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path $targetDirectory -Recurse -Force
         } catch {
             Write-Warning "Could not clean up directory: $targetDirectory"
         }
