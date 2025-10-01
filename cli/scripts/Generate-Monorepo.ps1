@@ -141,9 +141,24 @@ function New-RepositoryFromTemplate {
     Set-Location $parentDir
     
     try {
-        gh repo create $RepositoryName --template $TemplateName --public --clone
+        # Capture both stdout and stderr
+        $processInfo = Start-Process -FilePath "gh" -ArgumentList @("repo", "create", $RepositoryName, "--template", $TemplateName, "--public", "--clone") -Wait -PassThru -RedirectStandardError "gh_error.txt" -RedirectStandardOutput "gh_output.txt" -NoNewWindow
         
-        if ($LASTEXITCODE -eq 0) {
+        # Read the error output
+        $errorOutput = ""
+        if (Test-Path "gh_error.txt") {
+            $errorOutput = Get-Content "gh_error.txt" -Raw
+            Remove-Item "gh_error.txt" -Force -ErrorAction SilentlyContinue
+        }
+        
+        # Read the standard output
+        $standardOutput = ""
+        if (Test-Path "gh_output.txt") {
+            $standardOutput = Get-Content "gh_output.txt" -Raw
+            Remove-Item "gh_output.txt" -Force -ErrorAction SilentlyContinue
+        }
+        
+        if ($processInfo.ExitCode -eq 0) {
             Write-Host "Repository created successfully with GitHub CLI"
             
             # Rename the cloned directory if needed
@@ -155,11 +170,32 @@ function New-RepositoryFromTemplate {
             Set-Location $TargetDirectory
             return
         } else {
-            throw "GitHub CLI failed with exit code $LASTEXITCODE"
+            # Check if the error is specifically about repository name already existing
+            if ($errorOutput -match "(Name already exists|already exists on this account|repository name .* already exists)" -or 
+                $standardOutput -match "(Name already exists|already exists on this account|repository name .* already exists)") {
+                throw "Repository name '$RepositoryName' already exists on this GitHub account. Please choose a different name."
+            } else {
+                throw "GitHub CLI failed with exit code $($processInfo.ExitCode). Error: $errorOutput"
+            }
         }
     } catch {
+        # Check if this is a "repository already exists" error
+        if ($_.Exception.Message -match "already exists") {
+            Write-Error $_.Exception.Message
+            Set-Location $originalLocation
+            exit 1
+        }
+        
         Write-Warning "GitHub CLI not available or failed: $($_.Exception.Message)"
-        Write-Host "Creating local directory structure instead..."
+        Write-Host "This will create a local directory structure only (not a GitHub repository)."
+        
+        # Ask user if they want to continue with local-only setup
+        $continue = Read-Host "Do you want to continue with local setup only? (y/N)"
+        if ($continue -notmatch "^[yY]") {
+            Write-Host "Operation cancelled by user."
+            Set-Location $originalLocation
+            exit 1
+        }
         
         # Create directory structure
         New-Item -ItemType Directory -Path $TargetDirectory -Force | Out-Null
