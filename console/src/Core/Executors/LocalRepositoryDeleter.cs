@@ -15,11 +15,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
         public override void Execute()
         {
-            if (Directory.Exists(_context.TargetDirectory))
-            {
-                Directory.SetCurrentDirectory(Path.GetTempPath());
-                Directory.Delete(_context.TargetDirectory, true);
-            }
+            // TODO: VJ: Fix later, fails locally but passes on GitHub flows
+
+            //if (Directory.Exists(_context.TargetDirectory))
+            //{
+            //    Directory.SetCurrentDirectory(Path.GetTempPath());
+            //    Directory.Delete(_context.TargetDirectory, true);
+            //}
         }
     }
 }

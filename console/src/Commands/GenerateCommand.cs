@@ -54,7 +54,7 @@ public class GenerateCommand
         }
         catch (Exception ex)
         {
-            Console.WriteLine($" Error generating template: {ex.Message}");
+            Console.Error.WriteLine($" Error generating template: {ex.Message} \n \n {ex.ToString()}");
             return 1;
         }
     }
