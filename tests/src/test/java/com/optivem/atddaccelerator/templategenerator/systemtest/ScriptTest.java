@@ -61,11 +61,11 @@ class ScriptTest {
 
                 // Arguments.of(Language.JAVA, Language.DOTNET),
                 // Arguments.of(Language.JAVA, Language.JAVA),
-                // Arguments.of(Language.JAVA, Language.TYPESCRIPT),
+                 Arguments.of(Language.JAVA, Language.TYPESCRIPT)
 
                 // Arguments.of(Language.TYPESCRIPT, Language.DOTNET),
                 // Arguments.of(Language.TYPESCRIPT, Language.JAVA),
-                Arguments.of(Language.TYPESCRIPT, Language.TYPESCRIPT)
+                // Arguments.of(Language.TYPESCRIPT, Language.TYPESCRIPT)
         );
     }
 
@@ -81,7 +81,11 @@ class ScriptTest {
         gitHub.verifyPagesEnabled();
 
         gitHub.verifyWorkflowsPass(systemLanguage, systemTestLanguage);
+
+        // TODO: VJ: Verify that only one package exists, rest are deleted
     }
+
+
 
     @Test
     void shouldReturnErrorForInvalidLanguage() {
