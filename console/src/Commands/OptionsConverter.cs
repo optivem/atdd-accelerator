@@ -11,7 +11,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
     {
         public static Context Convert(MonorepoOptions options)
         {
-            var repository = new Repository(options.RepositoryName, options.GitHubUsername);
+            var repository = new Repository(options.GitHubUsername, options.RepositoryName);
             var systemLanguage = ParseLanguage(options.SystemLanguage);
             var systemTestLanguage = ParseLanguage(options.SystemTestLanguage);
             var outputPath = GetOutputDirectory(options.RepositoryName); // TODO: VJ: Allow user input
