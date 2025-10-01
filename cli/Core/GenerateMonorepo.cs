@@ -1,50 +1,41 @@
-﻿using System;
+﻿using Optivem.AtddAccelerator.TemplateGenerator;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
-class GenerateMonorepo
+public class GenerateMonorepo
 {
-    static readonly string[] ValidLanguages = { "java", "dotnet", "typescript" };
+    private static readonly string[] ValidLanguages = { "java", "dotnet", "typescript" };
 
-    static int Main(string[] args)
+    public async Task<int> GenerateAsync(MonorepoOptions options)
     {
         try
         {
-            // Parse arguments (use a proper parser for production)
-            string repositoryName = GetArg(args, "--repositoryName", true);
-            string githubUsername = GetArg(args, "--githubUsername", false);
-            string systemLanguage = GetArg(args, "--systemLanguage", true);
-            string systemTestLanguage = GetArg(args, "--systemTestLanguage", true);
-            string outputPath = GetArg(args, "--outputPath", false);
-
             Console.WriteLine("ATDD Accelerator Setup Script");
-            Console.WriteLine($"Repository Name: {repositoryName}");
-            Console.WriteLine($"System Language: {systemLanguage}");
-            Console.WriteLine($"System Test Language: {systemTestLanguage}");
+            Console.WriteLine($"Repository Name: {options.RepositoryName}");
+            Console.WriteLine($"System Language: {options.SystemLanguage}");
+            Console.WriteLine($"System Test Language: {options.SystemTestLanguage}");
 
-            TestSystemLanguage(systemLanguage);
-            TestSystemLanguage(systemTestLanguage);
+            TestSystemLanguage(options.SystemLanguage);
+            TestSystemLanguage(options.SystemTestLanguage);
 
-            githubUsername = GetGitHubUsername(githubUsername);
+            var githubUsername = GetGitHubUsername(null);
 
-            string targetDirectory = GetOutputDirectory(repositoryName, outputPath);
+            var targetDirectory = GetOutputDirectory(options.RepositoryName, options.OutputPath);
 
-            NewRepositoryFromTemplate(repositoryName, targetDirectory, systemLanguage, systemTestLanguage);
+            NewRepositoryFromTemplate(options.RepositoryName, targetDirectory, options.SystemLanguage, options.SystemTestLanguage);
 
-            // TODO: Implement helper methods below
-            // RemoveUnusedLanguageFolders(systemLanguage, systemTestLanguage, githubUsername, repositoryName, targetDirectory);
-            // UpdateReadmeBadges(systemLanguage, githubUsername, repositoryName, systemTestLanguage, targetDirectory);
-            // EnableGitHubPages(githubUsername, repositoryName, targetDirectory);
-            // UpdateDockerComposeFiles(systemLanguage, githubUsername, repositoryName, targetDirectory);
+            // TODO: Call helper classes here as needed
 
             PushChangesToRemote(targetDirectory);
 
             Console.WriteLine("\nRepository setup completed successfully!");
-            Console.WriteLine($"Repository: {githubUsername}/{repositoryName}");
+            Console.WriteLine($"Repository: {githubUsername}/{options.RepositoryName}");
             Console.WriteLine($"Local path: {targetDirectory}");
-            Console.WriteLine($"System Language: {systemLanguage}");
-            Console.WriteLine($"System Test Language: {systemTestLanguage}");
+            Console.WriteLine($"System Language: {options.SystemLanguage}");
+            Console.WriteLine($"System Test Language: {options.SystemTestLanguage}");
 
             return 0;
         }
@@ -53,14 +44,6 @@ class GenerateMonorepo
             Console.Error.WriteLine($"Setup failed: {ex.Message}");
             return 1;
         }
-    }
-
-    static string GetArg(string[] args, string name, bool required)
-    {
-        var value = args.SkipWhile(a => a != name).Skip(1).FirstOrDefault();
-        if (required && string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException($"Missing required argument: {name}");
-        return value;
     }
 
     static void TestSystemLanguage(string language)
