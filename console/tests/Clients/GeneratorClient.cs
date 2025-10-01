@@ -7,11 +7,14 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
 {
     public class GeneratorClient
     {
-        private const string CliDllPath = @"c:\GitHub\optivem\atdd-accelerator\cli\bin\Release\net8.0\Optivem.AtddAccelerator.TemplateGenerator.dll";
+        private static readonly string ConsoleDllPath = Path.GetFullPath(
+            @"..\..\..\..\console\bin\Release\net8.0\Optivem.AtddAccelerator.TemplateGenerator.dll",
+            AppContext.BaseDirectory
+        );
 
         public ProcessResult GenerateRepository(string repoName, Language systemLanguage, Language systemTestLanguage)
         {
-            var result = ExecuteProcess("dotnet", CliDllPath, "generate", "monorepo",
+            var result = ExecuteProcess("dotnet", ConsoleDllPath, "generate", "monorepo",
                 "--repository-name", repoName,
                 "--system-language", systemLanguage.GetValue(),  // This is sending "none" somehow
                 "--system-test-language", systemTestLanguage.GetValue());
@@ -28,7 +31,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
                 Console.Error.WriteLine($"Exit code: {result.ExitCode}");
                 Console.Error.WriteLine($"Output: {result.Output}");
                 Console.Error.WriteLine($"Errors: {result.Errors}");
-                Console.Error.WriteLine($"Command executed: dotnet {CliDllPath} generate monorepo --repository-name {repoName} --system-language {systemLanguage.GetValue()} --system-test-language {systemTestLanguage.GetValue()}");
+                Console.Error.WriteLine($"Command executed: dotnet {ConsoleDllPath} generate monorepo --repository-name {repoName} --system-language {systemLanguage.GetValue()} --system-test-language {systemTestLanguage.GetValue()}");
             }
 
             AssertSuccess(result, "Repository generation process should complete successfully.");
