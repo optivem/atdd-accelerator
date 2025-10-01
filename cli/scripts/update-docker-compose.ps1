@@ -5,13 +5,13 @@ function Update-DockerComposeFiles {
         [string]$RepositoryName
     )
     
-    Write-Output "Updating Docker Compose files using templates..."
+    Write-Host "Updating Docker Compose files using templates..."
     
     # Find the single system-test folder
     $systemTestFolders = Get-ChildItem -Path "system-test-*" -Directory -ErrorAction SilentlyContinue
     
     if ($systemTestFolders.Count -eq 0) {
-        Write-Error "No system-test folder found"
+        Write-Warning "No system-test folder found - skipping Docker Compose update"
         return $false
     }
     
@@ -22,12 +22,12 @@ function Update-DockerComposeFiles {
     }
     
     $systemTestFolder = $systemTestFolders[0]
-    Write-Output "Found system-test folder: $($systemTestFolder.Name)"
+    Write-Host "Found system-test folder: $($systemTestFolder.Name)"
     
     # Extract the system-test language from the folder name (e.g., "system-test-typescript" -> "typescript")
     if ($systemTestFolder.Name -match "^system-test-(.+)$") {
         $systemTestLanguage = $matches[1].ToLower()
-        Write-Output "Detected system-test language: $systemTestLanguage"
+        Write-Host "Detected system-test language: $systemTestLanguage"
     } else {
         Write-Error "Could not extract language from folder name: $($systemTestFolder.Name)"
         return $false
@@ -49,7 +49,7 @@ function Update-DockerComposeFiles {
         throw "Docker Compose template missing for language: $systemTestLanguage"
     }
     
-    Write-Output "Using template: $templatePath"
+    Write-Host "Using template: $templatePath"
     
     # Check if docker-compose.yml exists in the system-test folder
     $targetDockerCompose = Join-Path $systemTestFolder.FullName "docker-compose.yml"
