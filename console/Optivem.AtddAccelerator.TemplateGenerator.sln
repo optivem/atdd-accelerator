@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optivem.AtddAccelerator.Tem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optivem.AtddAccelerator.TemplateGenerator.SystemTests", "tests\Optivem.AtddAccelerator.TemplateGenerator.SystemTests.csproj", "{7A371405-4BD9-1A14-6AF9-D8F7ACEB809E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{0310A477-9F90-4967-A566-9B611DB9A39E}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\console-tests.yml = ..\.github\workflows\console-tests.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +31,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0310A477-9F90-4967-A566-9B611DB9A39E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FC7E23C-A4FA-4FCF-95AC-AA383CF90C2E}

@@ -1,3 +1,4 @@
+using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -51,30 +52,11 @@ public static class UpdateReadmeBadges
         if (readmeContent != originalContent)
         {
             File.WriteAllText("README.md", readmeContent);
-            RunProcess("git", "add README.md");
+            ProcessExecutor.RunProcess("git", "add README.md");
             Console.WriteLine("README badges updated successfully");
             return true;
         }
         Console.WriteLine("No changes needed to README badges");
         return false;
-    }
-
-    private static string RunProcess(string fileName, string arguments)
-    {
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = fileName,
-                Arguments = arguments,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false
-            }
-        };
-        process.Start();
-        string output = process.StandardOutput.ReadToEnd();
-        process.WaitForExit();
-        return output;
     }
 }

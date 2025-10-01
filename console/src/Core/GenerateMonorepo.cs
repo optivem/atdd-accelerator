@@ -1,3 +1,4 @@
+using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -213,18 +214,18 @@ public class GenerateMonorepo
         Directory.SetCurrentDirectory(targetDirectory);
         try
         {
-            var remoteOrigin = RunProcess("git", "remote get-url origin", true);
+            var remoteOrigin = ProcessExecutor.RunProcess("git", "remote get-url origin", true);
             if (!string.IsNullOrWhiteSpace(remoteOrigin))
             {
-                var status = RunProcess("git", "status --porcelain", true);
+                var status = ProcessExecutor.RunProcess("git", "status --porcelain", true);
                 if (!string.IsNullOrWhiteSpace(status))
                 {
                     Console.WriteLine("Committing final changes...");
-                    RunProcess("git", "add .");
-                    RunProcess("git", "commit -m \"Final setup and configuration changes\"");
+                    ProcessExecutor.RunProcess("git", "add .");
+                    ProcessExecutor.RunProcess("git", "commit -m \"Final setup and configuration changes\"");
                 }
                 Console.WriteLine("Pushing to remote repository...");
-                var pushResult = RunProcess("git", "push origin main", true);
+                var pushResult = ProcessExecutor.RunProcess("git", "push origin main", true);
                 Console.WriteLine(pushResult.Contains("error") ? " Failed to push changes to GitHub" : " Changes pushed successfully to GitHub");
             }
             else
@@ -236,25 +237,6 @@ public class GenerateMonorepo
         {
             Console.WriteLine($"Failed to push changes: {ex.Message}");
         }
-    }
-
-    private string RunProcess(string fileName, string arguments, bool captureOutput = false)
-    {
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = fileName,
-                Arguments = arguments,
-                RedirectStandardOutput = captureOutput,
-                RedirectStandardError = captureOutput,
-                UseShellExecute = false
-            }
-        };
-        process.Start();
-        string output = captureOutput ? process.StandardOutput.ReadToEnd() : null;
-        process.WaitForExit();
-        return output;
     }
 }
 

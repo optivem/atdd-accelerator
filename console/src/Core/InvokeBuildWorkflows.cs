@@ -1,3 +1,4 @@
+using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -38,7 +39,7 @@ public static class BuildWorkflows
         {
             try
             {
-                var result = RunProcess("gh", $"run list --repo \"{repositoryOwner}/{repositoryName}\" --workflow \"{workflowName}\" --limit 1 --json status,conclusion,createdAt");
+                var result = ProcessExecutor.RunProcess("gh", $"run list --repo \"{repositoryOwner}/{repositoryName}\" --workflow \"{workflowName}\" --limit 1 --json status,conclusion,createdAt");
                 // Parse JSON and check status/conclusion (use Newtonsoft.Json or System.Text.Json)
                 // For brevity, assume success if output contains "completed" and "success"
                 if (result.Contains("completed") && result.Contains("success"))
@@ -70,17 +71,17 @@ public static class BuildWorkflows
     public static bool TestDockerImageExists(string systemLanguage, string repositoryOwner, string repositoryName)
     {
         string imageName = $"ghcr.io/{repositoryOwner}/{repositoryName}/monolith-{systemLanguage.ToLower()}:latest";
-        var result = RunProcess("docker", $"manifest inspect {imageName}");
+        var result = ProcessExecutor.RunProcess("docker", $"manifest inspect {imageName}");
         return !string.IsNullOrWhiteSpace(result);
     }
 
     public static bool TestContainerHealth(string systemLanguage, string repositoryOwner, string repositoryName)
     {
         Console.WriteLine("Checking container health...");
-        var status = RunProcess("docker", "ps --filter \"name=monolith\" --format \"table {{.Names}}\\t{{.Status}}\\t{{.Ports}}\"");
+        var status = ProcessExecutor.RunProcess("docker", "ps --filter \"name=monolith\" --format \"table {{.Names}}\\t{{.Status}}\\t{{.Ports}}\"");
         Console.WriteLine(status);
 
-        var logs = RunProcess("docker", "logs --tail 20 $(docker ps -q --filter \"name=monolith\")");
+        var logs = ProcessExecutor.RunProcess("docker", "logs --tail 20 $(docker ps -q --filter \"name=monolith\")");
         Console.WriteLine(logs);
 
         using var client = new HttpClient();
@@ -103,24 +104,5 @@ public static class BuildWorkflows
         }
         Console.Error.WriteLine(" Application is not responding after 2 minutes");
         return false;
-    }
-
-    private static string RunProcess(string fileName, string arguments)
-    {
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = fileName,
-                Arguments = arguments,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false
-            }
-        };
-        process.Start();
-        string output = process.StandardOutput.ReadToEnd();
-        process.WaitForExit();
-        return output;
     }
 }

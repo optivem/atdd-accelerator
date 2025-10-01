@@ -1,3 +1,4 @@
+using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ public static class SystemTestReleaseWorkflows
         foreach (var workflow in workflows)
         {
             Console.WriteLine($"Triggering workflow: {workflow}");
-            var result = RunProcess("gh", $"workflow run {workflow} --repo \"{repositoryOwner}/{repositoryName}\"");
+            var result = ProcessExecutor.RunProcess("gh", $"workflow run {workflow} --repo \"{repositoryOwner}/{repositoryName}\"");
             if (!string.IsNullOrWhiteSpace(result))
             {
                 Console.WriteLine($"   Successfully triggered: {workflow}");
@@ -35,24 +36,5 @@ public static class SystemTestReleaseWorkflows
         Console.WriteLine($"   Successfully triggered ({triggered})");
         Console.WriteLine($"   Failed to trigger ({failed})");
         return triggered > 0;
-    }
-
-    private static string RunProcess(string fileName, string arguments)
-    {
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = fileName,
-                Arguments = arguments,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false
-            }
-        };
-        process.Start();
-        string output = process.StandardOutput.ReadToEnd();
-        process.WaitForExit();
-        return output;
     }
 }

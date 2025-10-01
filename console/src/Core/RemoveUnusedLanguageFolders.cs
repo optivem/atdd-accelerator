@@ -1,8 +1,9 @@
+using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Diagnostics;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator;
 
@@ -54,12 +55,12 @@ public static class RemoveUnusedLanguageFolders
                 if (isFolder && Directory.Exists(item))
                 {
                     Directory.Delete(item, true);
-                    RunProcess("git", $"rm -r {item}");
+                    ProcessExecutor.RunProcess("git", $"rm -r {item}");
                 }
                 else if (File.Exists(item))
                 {
                     File.Delete(item);
-                    RunProcess("git", $"rm {item}");
+                    ProcessExecutor.RunProcess("git", $"rm {item}");
                 }
 
                 removedItems.Add(item);
@@ -125,27 +126,10 @@ public static class RemoveUnusedLanguageFolders
             if (dockerComposeUpdated) changes.Add("Update Docker Compose files");
 
             var commitMessage = string.Join(", ", changes);
-            RunProcess("git", $"commit -m \"{commitMessage}\"");
+            ProcessExecutor.RunProcess("git", $"commit -m \"{commitMessage}\"");
             return true;
         }
 
         return false;
-    }
-
-    private static void RunProcess(string fileName, string arguments)
-    {
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = fileName,
-                Arguments = arguments,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false
-            }
-        };
-        process.Start();
-        process.WaitForExit();
     }
 }
