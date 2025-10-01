@@ -79,12 +79,14 @@ class ScriptTest {
         gitHub.verifyDockerComposeImage(systemLanguage, systemTestLanguage);
         gitHub.verifyReadmeHasBadges(systemLanguage, systemTestLanguage);
         gitHub.verifyPagesEnabled();
-        gitHub.verifyPackagesExist(systemLanguage);
 
         gitHub.verifyWorkflowsPass(systemLanguage, systemTestLanguage);
-
+        gitHub.verifyPackagesExist(systemLanguage);
 
         // TODO: VJ: Verify that only one package exists, rest are deleted
+
+        // TODO: VJ: Rewrite like this
+        // gitHub.verifyCommitStageSuccessful(systemLanguage); - this checks only this path, the docker come, the readme badge, and that package was created
     }
 
 

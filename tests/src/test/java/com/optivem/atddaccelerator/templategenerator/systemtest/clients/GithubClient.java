@@ -60,7 +60,7 @@ public class GithubClient {
     }
 
     public boolean packageExists(String packageName) {
-        var url = String.format("https://github.com/%s/pkgs/container/%s%2F%s", repositoryPath, repoName, packageName);
+        var url = String.format("https://github.com/%s/pkgs/container/%s/%s", repositoryPath, repoName, packageName);
         return urlExists(url);
     }
 
