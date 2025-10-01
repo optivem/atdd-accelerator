@@ -33,7 +33,7 @@ foreach ($moduleFile in $moduleFiles) {
     if (Test-Path $modulePath) {
         try {
             . $modulePath
-            Write-Output "Loaded module: $moduleFile"
+            Write-Host "Loaded module: $moduleFile"
         } catch {
             Write-Warning "Failed to load module $moduleFile : $($_.Exception.Message)"
         }
@@ -51,7 +51,7 @@ function Get-OutputDirectory {
     # If OutputPath is specified, use it
     if (-not [string]::IsNullOrWhiteSpace($OutputPath)) {
         $targetDir = Join-Path $OutputPath $RepositoryName
-        Write-Output "Using specified output path: $targetDir"
+        Write-Host "Using specified output path: $targetDir"
         return $targetDir
     }
     
@@ -65,7 +65,7 @@ function Get-OutputDirectory {
         New-Item -ItemType Directory -Path $atddTempDir -Force | Out-Null
     }
     
-    Write-Output "Using temp directory: $targetDir"
+    Write-Host "Using temp directory: $targetDir"
     return $targetDir
 }
 
@@ -82,7 +82,7 @@ function Test-SystemLanguage {
         throw "Invalid SystemLanguage: '$SystemLanguage'. Valid options: $($validLanguages -join ', ')"
     }
     
-    Write-Output "SystemLanguage '$SystemLanguage' is valid"
+    Write-Host "SystemLanguage '$SystemLanguage' is valid"
 }
 
 function Get-GitHubUsername {
@@ -121,8 +121,8 @@ function New-RepositoryFromTemplate {
         [string]$TemplateName = "optivem/atdd-accelerator-template-mono-repo"
     )
     
-    Write-Output "Creating repository from template..."
-    Write-Output "Target directory: $TargetDirectory"
+    Write-Host "Creating repository from template..."
+    Write-Host "Target directory: $TargetDirectory"
     
     # Ensure parent directory exists
     $parentDir = Split-Path $TargetDirectory -Parent
@@ -132,7 +132,7 @@ function New-RepositoryFromTemplate {
     
     # Remove existing directory if it exists
     if (Test-Path $TargetDirectory) {
-        Write-Output "Removing existing directory: $TargetDirectory"
+        Write-Host "Removing existing directory: $TargetDirectory"
         Remove-Item -Path $TargetDirectory -Recurse -Force
     }
     
@@ -144,7 +144,7 @@ function New-RepositoryFromTemplate {
         gh repo create $RepositoryName --template $TemplateName --public --clone
         
         if ($LASTEXITCODE -eq 0) {
-            Write-Output "Repository created successfully with GitHub CLI"
+            Write-Host "Repository created successfully with GitHub CLI"
             
             # Rename the cloned directory if needed
             $clonedDir = Join-Path $parentDir $RepositoryName
@@ -159,7 +159,7 @@ function New-RepositoryFromTemplate {
         }
     } catch {
         Write-Warning "GitHub CLI not available or failed: $($_.Exception.Message)"
-        Write-Output "Creating local directory structure instead..."
+        Write-Host "Creating local directory structure instead..."
         
         # Create directory structure
         New-Item -ItemType Directory -Path $TargetDirectory -Force | Out-Null
@@ -182,7 +182,7 @@ Generated with ATDD Accelerator
             git init
             git add .
             git commit -m "Initial commit from ATDD Accelerator"
-            Write-Output "Git repository initialized"
+            Write-Host "Git repository initialized"
         } catch {
             Write-Warning "Git not available or failed to initialize repository"
         }
@@ -196,17 +196,17 @@ Generated with ATDD Accelerator
 
 # Main execution
 try {
-    Write-Output "ATDD Accelerator Setup Script"
-    Write-Output "Repository Name: $RepositoryName"
-    Write-Output "System Language: $SystemLanguage"
-    Write-Output "System Test Language: $SystemTestLanguage"
+    Write-Host "ATDD Accelerator Setup Script"
+    Write-Host "Repository Name: $RepositoryName"
+    Write-Host "System Language: $SystemLanguage"
+    Write-Host "System Test Language: $SystemTestLanguage"
     
     # Validate languages
     Test-SystemLanguage -SystemLanguage $SystemLanguage
     Test-SystemLanguage -SystemLanguage $SystemTestLanguage
 
     $GitHubUsername = Get-GitHubUsername -ProvidedUsername $GitHubUsername
-    Write-Output "GitHub Username: $GitHubUsername"
+    Write-Host "GitHub Username: $GitHubUsername"
     
     # Get target directory (temp or specified)
     $targetDirectory = Get-OutputDirectory -RepositoryName $RepositoryName -OutputPath $OutputPath
@@ -216,35 +216,35 @@ try {
     
     # Call imported functions if they exist
     if (Get-Command "Remove-UnusedLanguageFolders" -ErrorAction SilentlyContinue) {
-        Write-Output "Removing unused language folders..."
+        Write-Host "Removing unused language folders..."
         Remove-UnusedLanguageFolders -SystemLanguage $SystemLanguage -SystemTestLanguage $SystemTestLanguage
     } else {
         Write-Warning "Remove-UnusedLanguageFolders function not available"
     }
     
     if (Get-Command "Update-ReadmeBadges" -ErrorAction SilentlyContinue) {
-        Write-Output "Updating README badges..."
+        Write-Host "Updating README badges..."
         Update-ReadmeBadges -SystemLanguage $SystemLanguage -RepositoryOwner $GitHubUsername -RepositoryName $RepositoryName -SystemTestLanguage $SystemTestLanguage
     } else {
         Write-Warning "Update-ReadmeBadges function not available"
     }
     
     if (Get-Command "Setup-GitHubPages" -ErrorAction SilentlyContinue) {
-        Write-Output "Setting up GitHub Pages..."
+        Write-Host "Setting up GitHub Pages..."
         Setup-GitHubPages
     }
     
     if (Get-Command "Update-DockerCompose" -ErrorAction SilentlyContinue) {
-        Write-Output "Updating Docker Compose..."
+        Write-Host "Updating Docker Compose..."
         Update-DockerCompose -SystemLanguage $SystemLanguage
     }
     
-    Write-Output ""
-    Write-Output "Repository setup completed successfully!"
-    Write-Output "Repository: $GitHubUsername/$RepositoryName"
-    Write-Output "Local path: $targetDirectory"
-    Write-Output "System Language: $SystemLanguage"
-    Write-Output "System Test Language: $SystemTestLanguage"
+    Write-Host ""
+    Write-Host "Repository setup completed successfully!"
+    Write-Host "Repository: $GitHubUsername/$RepositoryName"
+    Write-Host "Local path: $targetDirectory"
+    Write-Host "System Language: $SystemLanguage"
+    Write-Host "System Test Language: $SystemTestLanguage"
     
     exit 0
     
