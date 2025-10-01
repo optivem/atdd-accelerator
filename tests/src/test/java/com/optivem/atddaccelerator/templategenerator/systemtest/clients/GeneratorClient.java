@@ -87,13 +87,17 @@ public class GeneratorClient {
     public ProcessResult generateRepository(String repoName, Language systemLanguage, Language systemTestLanguage) {
         System.out.println("=== STARTING GENERATION PROCESS ===");
         System.out.println("Repository Name: " + repoName);
-        System.out.println("System Language: " + systemLanguage.getValue());
+        System.out.println("System Language: " + systemLanguage.getValue());  // This should print "typescript"
         System.out.println("System Test Language: " + systemTestLanguage.getValue());
         System.out.println("DLL Path: " + CLI_DLL_PATH);
         
+        // Check what's actually being passed here:
+        System.out.println("DEBUG: systemLanguage.getValue() = '" + systemLanguage.getValue() + "'");
+        System.out.println("DEBUG: systemTestLanguage.getValue() = '" + systemTestLanguage.getValue() + "'");
+        
         ProcessResult result = executeProcess("dotnet", CLI_DLL_PATH, "generate", "monorepo",
             "--repository-name", repoName, 
-            "--system-language", systemLanguage.getValue(), 
+            "--system-language", systemLanguage.getValue(),  // This is sending "none" somehow
             "--system-test-language", systemTestLanguage.getValue());
         
         // Debug output for failed generation
