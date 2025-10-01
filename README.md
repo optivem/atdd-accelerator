@@ -1,7 +1,6 @@
 # ATDD Accelerator Quickstart
 
-[![system-test](https://github.com/optivem/atdd-accelerator/actions/workflows/system-test.yml/badge.svg)](https://github.com/optivem/atdd-accelerator/actions/workflows/system-test.yml)
-[![release-stage](https://github.com/optivem/atdd-accelerator/actions/workflows/release-stage.yml/badge.svg)](https://github.com/optivem/atdd-accelerator/actions/workflows/release-stage.yml)
+[![Console Tests](https://github.com/optivem/atdd-accelerator/actions/workflows/console-tests.yml/badge.svg)](https://github.com/optivem/atdd-accelerator/actions/workflows/console-tests.yml)
 
 This is a quickstart guide for the [ATDD Accelerator](https://atdd-accelerator.optivem.com/). This is designed to help you complete your Sandbox Project Setup.
 
