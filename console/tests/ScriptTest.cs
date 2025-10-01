@@ -71,7 +71,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
             // _gitHub.VerifyCommitStageSuccessful(systemLanguage); - this checks only this path, the docker come, the readme badge, and that package was created
         }
 
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void ShouldReturnErrorForInvalidSystemLanguage()
         {
             _generator.GenerateNewRepositoryExpectError(_repoName, Language.None, Language.TypeScript);
