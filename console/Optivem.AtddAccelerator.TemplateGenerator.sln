@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36511.14 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optivem.AtddAccelerator.TemplateGenerator", "Optivem.AtddAccelerator.TemplateGenerator.csproj", "{0E1E15A0-3512-41D8-8926-F9D51E95D5B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optivem.AtddAccelerator.TemplateGenerator.SystemTests", "..\Optivem.AtddAccelerator.TemplateGenerator.SystemTests\Optivem.AtddAccelerator.TemplateGenerator.SystemTests.csproj", "{B68F023A-ECC1-4725-9E40-97A1F05B1FED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E1E15A0-3512-41D8-8926-F9D51E95D5B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E1E15A0-3512-41D8-8926-F9D51E95D5B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E1E15A0-3512-41D8-8926-F9D51E95D5B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E1E15A0-3512-41D8-8926-F9D51E95D5B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B68F023A-ECC1-4725-9E40-97A1F05B1FED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B68F023A-ECC1-4725-9E40-97A1F05B1FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B68F023A-ECC1-4725-9E40-97A1F05B1FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B68F023A-ECC1-4725-9E40-97A1F05B1FED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FC7E23C-A4FA-4FCF-95AC-AA383CF90C2E}
+	EndGlobalSection
+EndGlobal
