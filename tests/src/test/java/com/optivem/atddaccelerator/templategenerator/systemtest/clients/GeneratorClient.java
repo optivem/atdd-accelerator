@@ -4,6 +4,7 @@ import com.optivem.atddaccelerator.templategenerator.systemtest.util.Language;
 import com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResult;
 
 import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessExecutor.*;
+import static com.optivem.atddaccelerator.templategenerator.systemtest.util.process.ProcessResultAssertions.assertSuccess;
 
 public class GeneratorClient {
     private static final String CLI_DLL_PATH = "../cli/bin/Release/net8.0/Optivem.AtddAccelerator.TemplateGenerator.dll";
@@ -81,6 +82,9 @@ public class GeneratorClient {
         }
         
         System.out.println("=== BUILD PROCESS COMPLETED ===");
+
+        assertSuccess(buildResult, "CLI build process should complete successfully.");
+
         return buildResult;
     }
     
@@ -115,6 +119,9 @@ public class GeneratorClient {
         }
         
         System.out.println("=== GENERATION PROCESS COMPLETED ===");
+
+        assertSuccess(result, "Repository generation process should complete successfully.");
+
         return result;
     }
 }
