@@ -55,9 +55,10 @@ function Get-OutputDirectory {
         return $targetDir
     }
     
-    # Otherwise, use temp directory
+    # Otherwise, use temp directory with unique identifier for parallel test safety
     $tempDir = [System.IO.Path]::GetTempPath()
-    $atddTempDir = Join-Path $tempDir "ATDD-Accelerator"
+    $uniqueId = [System.Guid]::NewGuid().ToString("N").Substring(0, 8)
+    $atddTempDir = Join-Path $tempDir "ATDD-Accelerator-$uniqueId"
     $targetDir = Join-Path $atddTempDir $RepositoryName
     
     # Ensure the ATDD temp directory exists
@@ -237,7 +238,10 @@ try {
     Write-Host "System Language: $SystemLanguage"
     Write-Host "System Test Language: $SystemTestLanguage"
     
-    # Validate languages
+    # Initialize target directory variable for cleanup purposes
+    $targetDirectory = $null
+    
+    # Validate languages FIRST - before any directory operations
     Test-SystemLanguage -SystemLanguage $SystemLanguage
     Test-SystemLanguage -SystemLanguage $SystemTestLanguage
 
@@ -286,5 +290,16 @@ try {
     
 } catch {
     Write-Error "Setup failed: $($_.Exception.Message)"
+    
+    # Clean up any partially created directories when the script fails
+    if ($targetDirectory -and (Test-Path $targetDirectory)) {
+        try {
+            Write-Host "Cleaning up failed generation directory: $targetDirectory"
+            Remove-Item -Path $targetDirectory -Recurse -Force -ErrorAction SilentlyContinue
+        } catch {
+            Write-Warning "Could not clean up directory: $targetDirectory"
+        }
+    }
+    
     exit 1
 }
