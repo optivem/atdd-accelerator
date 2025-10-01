@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Optivem.AtddAccelerator.TemplateGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "generate monorepo --repository-name Repo$([guid]::NewGuid().ToString('N').Substring(0,8)) --system-language dotnet --system-test-language typescript"
+    }
+  }
+}
