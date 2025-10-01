@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -21,19 +21,19 @@ public static class SystemTestReleaseWorkflows
             var result = RunProcess("gh", $"workflow run {workflow} --repo \"{repositoryOwner}/{repositoryName}\"");
             if (!string.IsNullOrWhiteSpace(result))
             {
-                Console.WriteLine($"  ✅ Successfully triggered: {workflow}");
+                Console.WriteLine($"   Successfully triggered: {workflow}");
                 triggered++;
             }
             else
             {
-                Console.WriteLine($"  ❌ Failed to trigger: {workflow}");
+                Console.WriteLine($"   Failed to trigger: {workflow}");
                 failed++;
             }
             Task.Delay(500).Wait();
         }
         Console.WriteLine("\nWorkflow trigger summary:");
-        Console.WriteLine($"  ✅ Successfully triggered ({triggered})");
-        Console.WriteLine($"  ❌ Failed to trigger ({failed})");
+        Console.WriteLine($"   Successfully triggered ({triggered})");
+        Console.WriteLine($"   Failed to trigger ({failed})");
         return triggered > 0;
     }
 

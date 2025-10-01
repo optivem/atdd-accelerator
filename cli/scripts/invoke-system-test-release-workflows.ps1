@@ -26,14 +26,14 @@ function Invoke-SystemTestWorkflows {
             gh workflow run $workflow --repo "$RepositoryOwner/$RepositoryName"
             
             if ($LASTEXITCODE -eq 0) {
-                Write-Output "  ✅ Successfully triggered: $workflow"
+                Write-Output "   Successfully triggered: $workflow"
                 $triggeredWorkflows += $workflow
             } else {
-                Write-Warning "  ❌ Failed to trigger: $workflow (exit code: $LASTEXITCODE)"
+                Write-Warning "   Failed to trigger: $workflow (exit code: $LASTEXITCODE)"
                 $failedWorkflows += $workflow
             }
         } catch {
-            Write-Warning "  ❌ Error triggering $workflow : $_"
+            Write-Warning "   Error triggering $workflow : $_"
             $failedWorkflows += $workflow
         }
         
@@ -45,12 +45,12 @@ function Invoke-SystemTestWorkflows {
     Write-Output ""
     Write-Output "Workflow trigger summary:"
     if ($triggeredWorkflows.Count -gt 0) {
-        Write-Output "  ✅ Successfully triggered ($($triggeredWorkflows.Count)):"
+        Write-Output "   Successfully triggered ($($triggeredWorkflows.Count)):"
         $triggeredWorkflows | ForEach-Object { Write-Output "    - $_" }
     }
     
     if ($failedWorkflows.Count -gt 0) {
-        Write-Warning "  ❌ Failed to trigger ($($failedWorkflows.Count)):"
+        Write-Warning "   Failed to trigger ($($failedWorkflows.Count)):"
         $failedWorkflows | ForEach-Object { Write-Warning "    - $_" }
         Write-Warning "You may need to trigger these workflows manually in GitHub Actions"
     }

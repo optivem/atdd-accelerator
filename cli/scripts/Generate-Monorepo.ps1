@@ -286,9 +286,9 @@ try {
             Write-Host "Pushing to remote repository..."
             git push origin main 2>&1
             if ($LASTEXITCODE -eq 0) {
-                Write-Host "✅ Changes pushed successfully to GitHub"
+                Write-Host " Changes pushed successfully to GitHub"
             } else {
-                Write-Warning "⚠️ Failed to push changes to GitHub"
+                Write-Warning " Failed to push changes to GitHub"
             }
         } else {
             Write-Host "No remote origin found - skipping push (local repository only)"

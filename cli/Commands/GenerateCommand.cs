@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -54,19 +54,19 @@ public class GenerateCommand
 
         try
         {
-            Console.WriteLine($"🚀 Generating monorepo template...");
+            Console.WriteLine($" Generating monorepo template...");
             
             await _templateService.GenerateMonorepoAsync(options);
             
-            Console.WriteLine($"✅ Monorepo template generated successfully!");
-            Console.WriteLine($"📁 Output directory: {options.OutputPath}");
-            Console.WriteLine($"📦 Repository name: {options.RepositoryName}");  // Fixed: Changed from ProjectName to RepositoryName
+            Console.WriteLine($" Monorepo template generated successfully!");
+            Console.WriteLine($" Output directory: {options.OutputPath}");
+            Console.WriteLine($" Repository name: {options.RepositoryName}");  // Fixed: Changed from ProjectName to RepositoryName
             
             return 0;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error generating template: {ex.Message}");
+            Console.WriteLine($" Error generating template: {ex.Message}");
             return 1;
         }
     }

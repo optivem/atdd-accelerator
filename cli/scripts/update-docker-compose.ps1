@@ -84,7 +84,7 @@ function Update-DockerComposeFiles {
     # Add to git
     git add $targetDockerCompose
     
-    Write-Output "✅ Updated Docker Compose file: $targetDockerCompose"
+    Write-Output " Updated Docker Compose file: $targetDockerCompose"
     Write-Output "   Applied template for system-test language: $systemTestLanguage"
     Write-Output "   Updated monolith image to use system language: $($SystemLanguage.ToLower())"
     Write-Output "   Updated repository references to: ghcr.io/$RepositoryOwner/$RepositoryName/"

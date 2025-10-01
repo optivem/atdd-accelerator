@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -234,7 +234,7 @@ public class GenerateMonorepo
                 }
                 Console.WriteLine("Pushing to remote repository...");
                 var pushResult = RunProcess("git", "push origin main", true);
-                Console.WriteLine(pushResult.Contains("error") ? "⚠️ Failed to push changes to GitHub" : "✅ Changes pushed successfully to GitHub");
+                Console.WriteLine(pushResult.Contains("error") ? " Failed to push changes to GitHub" : " Changes pushed successfully to GitHub");
             }
             else
             {

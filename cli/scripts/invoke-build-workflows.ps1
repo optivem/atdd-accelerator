@@ -12,22 +12,22 @@ function Wait-ForBuildWorkflows {
     $commitWorkflowCompleted = Wait-ForCommitStageWorkflow -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName -TimeoutMinutes $TimeoutMinutes
     
     if (-not $commitWorkflowCompleted) {
-        Write-Error "❌ Commit stage workflow did not complete successfully"
+        Write-Error " Commit stage workflow did not complete successfully"
         return $false
     }
     
-    Write-Output "✅ Commit stage workflow completed successfully"
+    Write-Output " Commit stage workflow completed successfully"
     
     # Now check if Docker image exists (should be available after commit-stage)
     Write-Output "Checking if Docker image exists..."
     $imageExists = Test-DockerImageExists -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
     
     if (-not $imageExists) {
-        Write-Error "❌ Docker image does not exist even after commit stage completion"
+        Write-Error " Docker image does not exist even after commit stage completion"
         return $false
     }
     
-    Write-Output "✅ Docker image exists"
+    Write-Output " Docker image exists"
     
     # Test if container can start and application is healthy
     $containerHealthy = Test-ContainerHealth -SystemLanguage $SystemLanguage -RepositoryOwner $RepositoryOwner -RepositoryName $RepositoryName
@@ -56,7 +56,7 @@ function Wait-ForCommitStageWorkflow {
             
             if ($workflowRuns.Count -eq 0) {
                 $elapsed = (Get-Date) - $startTime
-                Write-Output "⏳ No workflow runs found yet... (elapsed: $([int]$elapsed.TotalMinutes) min)"
+                Write-Output " No workflow runs found yet... (elapsed: $([int]$elapsed.TotalMinutes) min)"
                 Start-Sleep -Seconds 30
                 continue
             }
@@ -70,10 +70,10 @@ function Wait-ForCommitStageWorkflow {
             if ($status -eq "completed") {
                 if ($conclusion -eq "success") {
                     $elapsed = (Get-Date) - $startTime
-                    Write-Output "✅ Workflow '$workflowName' completed successfully (after $([int]$elapsed.TotalMinutes) minutes)"
+                    Write-Output " Workflow '$workflowName' completed successfully (after $([int]$elapsed.TotalMinutes) minutes)"
                     return $true
                 } else {
-                    Write-Error "❌ Workflow '$workflowName' completed but failed with conclusion: $conclusion"
+                    Write-Error " Workflow '$workflowName' completed but failed with conclusion: $conclusion"
                     
                     # Show workflow URL for debugging
                     $workflowUrl = "https://github.com/$RepositoryOwner/$RepositoryName/actions/workflows/$workflowName.yml"
@@ -82,7 +82,7 @@ function Wait-ForCommitStageWorkflow {
                 }
             } else {
                 $elapsed = (Get-Date) - $startTime
-                Write-Output "⏳ Workflow '$workflowName' is still running... (elapsed: $([int]$elapsed.TotalMinutes) min)"
+                Write-Output " Workflow '$workflowName' is still running... (elapsed: $([int]$elapsed.TotalMinutes) min)"
                 Start-Sleep -Seconds 30
             }
             
@@ -92,7 +92,7 @@ function Wait-ForCommitStageWorkflow {
         }
     }
     
-    Write-Error "❌ Timeout waiting for workflow '$workflowName' to complete"
+    Write-Error " Timeout waiting for workflow '$workflowName' to complete"
     return $false
 }
 
@@ -128,17 +128,17 @@ function Test-ContainerHealth {
             try {
                 $response = Invoke-WebRequest -Uri "http://localhost:8080/actuator/health" -TimeoutSec 5 -ErrorAction Stop
                 if ($response.StatusCode -eq 200) {
-                    Write-Output "✅ Application is healthy and responding"
+                    Write-Output " Application is healthy and responding"
                     return $true
                 }
             } catch {
                 $attempt++
-                Write-Output "⏳ Attempt $attempt/$maxAttempts - Application not ready yet..."
+                Write-Output " Attempt $attempt/$maxAttempts - Application not ready yet..."
                 Start-Sleep -Seconds 10
             }
         }
         
-        Write-Warning "❌ Application is not responding after 2 minutes"
+        Write-Warning " Application is not responding after 2 minutes"
         return $false
         
     } catch {
@@ -182,7 +182,7 @@ function Test-ApplicationReady {
             $containerRunning = docker ps --filter "name=$ContainerName" --format "{{.Names}}" | Select-String $ContainerName
             
             if (-not $containerRunning) {
-                Write-Error "❌ Container is not running"
+                Write-Error " Container is not running"
                 docker logs $ContainerName
                 return $false
             }
@@ -199,7 +199,7 @@ function Test-ApplicationReady {
                     $response = Invoke-WebRequest -Uri $endpoint -TimeoutSec 5 -ErrorAction Stop
                     if ($response.StatusCode -eq 200) {
                         $elapsed = (Get-Date) - $startTime
-                        Write-Output "✅ Application is ready at $endpoint (after $([int]$elapsed.TotalSeconds) seconds)"
+                        Write-Output " Application is ready at $endpoint (after $([int]$elapsed.TotalSeconds) seconds)"
                         return $true
                     }
                 } catch {
@@ -208,7 +208,7 @@ function Test-ApplicationReady {
             }
             
             $elapsed = (Get-Date) - $startTime
-            Write-Output "⏳ Still waiting for application... (elapsed: $([int]$elapsed.TotalSeconds)s)"
+            Write-Output " Still waiting for application... (elapsed: $([int]$elapsed.TotalSeconds)s)"
             Start-Sleep -Seconds 5
             
         } catch {
@@ -217,7 +217,7 @@ function Test-ApplicationReady {
         }
     }
     
-    Write-Error "❌ Application did not become ready within $TimeoutSeconds seconds"
+    Write-Error " Application did not become ready within $TimeoutSeconds seconds"
     
     # Show container logs for debugging
     Write-Output "Container logs:"

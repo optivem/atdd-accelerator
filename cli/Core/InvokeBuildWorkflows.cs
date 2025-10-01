@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -11,18 +11,18 @@ public static class BuildWorkflows
         Console.WriteLine("Waiting for build workflows to complete...");
         if (!WaitForCommitStageWorkflow(systemLanguage, repositoryOwner, repositoryName, timeoutMinutes))
         {
-            Console.Error.WriteLine("❌ Commit stage workflow did not complete successfully");
+            Console.Error.WriteLine(" Commit stage workflow did not complete successfully");
             return false;
         }
-        Console.WriteLine("✅ Commit stage workflow completed successfully");
+        Console.WriteLine(" Commit stage workflow completed successfully");
 
         Console.WriteLine("Checking if Docker image exists...");
         if (!TestDockerImageExists(systemLanguage, repositoryOwner, repositoryName))
         {
-            Console.Error.WriteLine("❌ Docker image does not exist even after commit stage completion");
+            Console.Error.WriteLine(" Docker image does not exist even after commit stage completion");
             return false;
         }
-        Console.WriteLine("✅ Docker image exists");
+        Console.WriteLine(" Docker image exists");
 
         return TestContainerHealth(systemLanguage, repositoryOwner, repositoryName);
     }
@@ -43,18 +43,18 @@ public static class BuildWorkflows
                 // For brevity, assume success if output contains "completed" and "success"
                 if (result.Contains("completed") && result.Contains("success"))
                 {
-                    Console.WriteLine($"✅ Workflow '{workflowName}' completed successfully");
+                    Console.WriteLine($" Workflow '{workflowName}' completed successfully");
                     return true;
                 }
                 else if (result.Contains("completed"))
                 {
-                    Console.Error.WriteLine($"❌ Workflow '{workflowName}' completed but failed");
+                    Console.Error.WriteLine($" Workflow '{workflowName}' completed but failed");
                     Console.Error.WriteLine($"Check workflow details at: https://github.com/{repositoryOwner}/{repositoryName}/actions/workflows/{workflowName}.yml");
                     return false;
                 }
                 else
                 {
-                    Console.WriteLine("⏳ Workflow is still running...");
+                    Console.WriteLine(" Workflow is still running...");
                     Task.Delay(30000).Wait();
                 }
             }
@@ -63,7 +63,7 @@ public static class BuildWorkflows
                 Task.Delay(30000).Wait();
             }
         }
-        Console.Error.WriteLine($"❌ Timeout waiting for workflow '{workflowName}' to complete");
+        Console.Error.WriteLine($" Timeout waiting for workflow '{workflowName}' to complete");
         return false;
     }
 
@@ -91,17 +91,17 @@ public static class BuildWorkflows
                 var response = client.GetAsync("http://localhost:8080/actuator/health").Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("✅ Application is healthy and responding");
+                    Console.WriteLine(" Application is healthy and responding");
                     return true;
                 }
             }
             catch
             {
-                Console.WriteLine($"⏳ Attempt {attempt + 1}/12 - Application not ready yet...");
+                Console.WriteLine($" Attempt {attempt + 1}/12 - Application not ready yet...");
                 Task.Delay(10000).Wait();
             }
         }
-        Console.Error.WriteLine("❌ Application is not responding after 2 minutes");
+        Console.Error.WriteLine(" Application is not responding after 2 minutes");
         return false;
     }
 

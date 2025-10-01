@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -47,7 +47,7 @@ public static class UpdateDockerComposeFiles
         }
         File.WriteAllText(targetDockerCompose, updatedContent);
         RunProcess("git", $"add {targetDockerCompose}");
-        Console.WriteLine($"✅ Updated Docker Compose file: {targetDockerCompose}");
+        Console.WriteLine($" Updated Docker Compose file: {targetDockerCompose}");
         return true;
     }
 
