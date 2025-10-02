@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions
 {
-    internal class ExecutionException : Exception
+    public class ExecutionException : Exception
     {
         public ExecutionException(Context context, string customMessage)
             : base(customMessage + "\n" + context.ToString())

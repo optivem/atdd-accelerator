@@ -20,7 +20,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             
             if(result.IsError)
             {
-                throw new ExecutionException(_context, $"Could not enable GitHub Pages");
+                throw CreateException(result, $"Could not enable GitHub Pages");
             }
         }
     }

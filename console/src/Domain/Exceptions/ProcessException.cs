@@ -7,16 +7,14 @@ using System.Threading.Tasks;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions
 {
-    public class ProcessException : Exception
+    public class ProcessException : ExecutionException
     {
-        public ProcessException(ProcessResult result, string customMessage)
-            : base(customMessage + "\n" + result.ToString())
+        public ProcessException(Context context, ProcessResult result, string customMessage)
+            : base(context, customMessage + "\n" + result.ToString())
         {
             Result = result;
-            CustomMessage = customMessage;
         }
 
         public ProcessResult Result { get; }
-        public string CustomMessage { get; }
     }
 }

@@ -21,14 +21,14 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
             if (remoteOriginResult.IsError)
             {
-                throw new ProcessException(remoteOriginResult, "Failed to get remote origin");
+                throw CreateException(remoteOriginResult, "Failed to get remote origin");
             }
 
             var statusResult = ProcessExecutor.RunProcess("git", "status --porcelain");
 
             if (statusResult.IsError)
             {
-                throw new ProcessException(statusResult, "Failed to get git status");
+                throw CreateException(statusResult, "Failed to get git status");
             }
 
             ProcessExecutor.RunProcess("git", "add .");
@@ -38,7 +38,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
             if (pushResult.IsError)
             {
-                throw new ProcessException(pushResult, "Failed to push changes to remote");
+                throw CreateException(pushResult, "Failed to push changes to remote");
             }
         }
     }

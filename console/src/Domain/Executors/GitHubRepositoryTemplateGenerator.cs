@@ -41,7 +41,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
                     }
                     else
                     {
-                        throw new ProcessException(result, $"Failed to create repository {_context.RepositoryName}");
+                        throw CreateException(result, $"Failed to create repository {_context.RepositoryName}");
                     }
                 }
 

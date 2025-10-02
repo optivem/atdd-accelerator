@@ -28,7 +28,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
 
         public override string ToString()
         {   var sb = new StringBuilder();
-            sb.AppendLine($"Repository: {Repository}");
+            sb.AppendLine($"Repository Name: {RepositoryName}");
+            sb.AppendLine($"Repository Owner: {RepositoryOwner}");
             sb.AppendLine($"System Language: {SystemLanguage}");
             sb.AppendLine($"System Test Language: {SystemTestLanguage}");
             sb.AppendLine($"Output Path: {OutputPath}");

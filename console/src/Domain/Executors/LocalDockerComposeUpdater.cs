@@ -19,11 +19,11 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             var systemTestFolders = Directory.GetDirectories(Directory.GetCurrentDirectory(), "system-test-*");
             if (systemTestFolders.Length == 0)
             {
-                throw new ExecutionException(_context, "No system-test folder found - cannot update Docker Compose files");
+                throw CreateException("No system-test folder found - cannot update Docker Compose files");
             }
             if (systemTestFolders.Length > 1)
             {
-                throw new ExecutionException(_context, "Multiple system-test folders found: " + string.Join(", ", systemTestFolders));
+                throw CreateException("Multiple system-test folders found: " + string.Join(", ", systemTestFolders));
             }
             var systemTestFolder = systemTestFolders[0];
             var systemTestLanguage = systemTestFolder.Split('-').Last().ToLower();
@@ -32,12 +32,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             if (!File.Exists(templatePath))
             {
                 var fullPath = Path.GetFullPath(templatePath);
-                throw new ExecutionException(_context, $"Template Docker Compose file not found: {templatePath} with full path {templatePath}");
+                throw CreateException($"Template Docker Compose file not found: {templatePath} with full path {templatePath}");
             }
             var targetDockerCompose = Path.Combine(systemTestFolder, "docker-compose.yml");
             if (!File.Exists(targetDockerCompose))
             {
-                throw new ExecutionException(_context, $"Docker Compose file not found in system-test folder: {targetDockerCompose}");
+                throw CreateException($"Docker Compose file not found in system-test folder: {targetDockerCompose}");
             }
             var templateContent = File.ReadAllText(templatePath);
             var updatedContent = templateContent

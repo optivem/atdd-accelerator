@@ -17,6 +17,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
         private readonly LocalDockerComposeUpdater _localDockerComposeUpdater;
         private readonly GitHubPagesEnabler _gitHubPagesEnabler;
         private readonly LocalRepositoryDeleter _localRepositoryDeleter;
+        private readonly GitHubCommitWorkflowWaiter _gitHubCommitWorkflowWaiter;
+        private readonly GitHubTestReleaseWorkflowWaiter _gitHubTestReleaseWorkflowWaiter;
 
         public TemplateRepositoryGenerator(Context context)
         {
@@ -27,6 +29,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
             _localDockerComposeUpdater = new LocalDockerComposeUpdater(context);
             _gitHubPagesEnabler = new GitHubPagesEnabler(context);
             _localRepositoryDeleter = new LocalRepositoryDeleter(context);
+            _gitHubCommitWorkflowWaiter = new GitHubCommitWorkflowWaiter(context);
+            _gitHubTestReleaseWorkflowWaiter = new GitHubTestReleaseWorkflowWaiter(context);
         }
 
         public async Task GenerateAsync()
@@ -44,14 +48,11 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
                 _gitHubPagesEnabler.Execute();
                 _gitHubCommitPusher.Execute();
 
-
-                // Optionally: Call workflow triggers if needed
-                // InvokeBuildWorkflows.WaitForBuildWorkflows(...);
-                // InvokeSystemTestReleaseWorkflows.InvokeSystemTestWorkflows(...);
+                _gitHubCommitWorkflowWaiter.Execute();
+                _gitHubTestReleaseWorkflowWaiter.Execute();
             }
             finally
             {
-                // Clean up any partially created directories when the script fails
                 _localRepositoryDeleter.Execute();
             }
         }
