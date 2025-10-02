@@ -28,7 +28,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
 
             if (created && _gitHub != null)
             {
-                _gitHub.DeleteRepository();
+                // _gitHub.DeleteRepository();
             }
         }
 
