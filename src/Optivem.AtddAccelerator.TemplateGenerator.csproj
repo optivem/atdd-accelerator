@@ -12,7 +12,7 @@
     
     <!-- NuGet Package Information -->
     <PackageId>Optivem.AtddAccelerator.TemplateGenerator</PackageId>
-    <PackageVersion>1.0.5</PackageVersion>
+    <PackageVersion>1.0.6</PackageVersion>
     <Authors>Optivem</Authors>
     <Description>ATDD Accelerator Template Generator</Description>
     <PackageTags>atdd;testing;accelerator;template</PackageTags>
