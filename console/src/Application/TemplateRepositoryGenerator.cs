@@ -1,5 +1,6 @@
 ﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Executors;
 using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
+using Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
 {
     internal class TemplateRepositoryGenerator
     {
+        private readonly GitHubPreconditionsChecker _gitHubPreconditionsChecker;
         private readonly GitHubRepositoryTemplateGenerator _gitHubRepositoryTemplateGenerator;
         private readonly GitHubCommitPusher _gitHubCommitPusher;
         private readonly LocalLanguageFoldersCleaner _localLanguageFoldersCleaner;
@@ -22,6 +24,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
 
         public TemplateRepositoryGenerator(Context context)
         {
+            _gitHubPreconditionsChecker = new GitHubPreconditionsChecker(context);
             _gitHubRepositoryTemplateGenerator = new GitHubRepositoryTemplateGenerator(context);
             _gitHubCommitPusher = new GitHubCommitPusher(context);
             _localLanguageFoldersCleaner = new LocalLanguageFoldersCleaner(context);
@@ -37,6 +40,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
         {
             try
             {
+                _gitHubPreconditionsChecker.Execute();
                 _gitHubRepositoryTemplateGenerator.Execute();
                 _localLanguageFoldersCleaner.Execute();
                 _localReadmeBadgeUpdater.Execute();

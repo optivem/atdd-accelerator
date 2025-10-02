@@ -41,7 +41,7 @@ public class GeneratorProgram
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"Failed to generate repository. {ex.Message}");
             return 1;
         }
     }

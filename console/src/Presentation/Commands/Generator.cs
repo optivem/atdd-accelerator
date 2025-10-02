@@ -2,6 +2,7 @@ using Optivem.AtddAccelerator.TemplateGenerator.Application;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
 
@@ -11,8 +12,8 @@ public class Generator
     {
         if (args.Length == 0)
         {
-            Console.WriteLine("Error: Please specify a template name.");
-            Console.WriteLine("Usage: atdd generate monorepo [options]");
+            Console.Error.WriteLine("Error: Please specify a template name.");
+            Console.Error.WriteLine("Usage: atdd generate monorepo [options]");
             return 1;
         }
 
@@ -20,8 +21,8 @@ public class Generator
         
         if (!templateName.Equals("monorepo", StringComparison.OrdinalIgnoreCase))
         {
-            Console.WriteLine($"Error: Unknown template '{templateName}'");
-            Console.WriteLine("Available templates: monorepo");
+            Console.Error.WriteLine($"Error: Unknown template '{templateName}'");
+            Console.Error.WriteLine("Available templates: monorepo");
             return 1;
         }
 
@@ -33,23 +34,13 @@ public class Generator
             return result;
         }
 
-        try
-        {
-            Console.WriteLine($" Generating monorepo template...");
-            var context = OptionsConverter.Convert(options);
+        var context = OptionsConverter.Convert(options);
 
-            var templateRepositoryGenerator = new TemplateRepositoryGenerator(context);
-            await templateRepositoryGenerator.GenerateAsync();
-            
-            Console.WriteLine($" Monorepo template generated successfully!");
-            Console.WriteLine($" Repository name: {options.RepositoryName}");
-            
-            return 0;
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($" Error generating template: {ex.Message} \n \n {ex.ToString()}");
-            return 1;
-        }
+        var templateRepositoryGenerator = new TemplateRepositoryGenerator(context);
+        await templateRepositoryGenerator.GenerateAsync();
+
+        Console.WriteLine($"Repository was successfully created: {options.RepositoryName}");
+
+        return 0;
     }
 }
