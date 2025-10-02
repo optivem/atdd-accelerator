@@ -19,6 +19,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
             CheckGitHubCliInstalled();
             CheckDockerInstalled();
 
+            CheckRepositoryOwnerExists();
             CheckGitHubAuthenticated();
         }
 
@@ -34,7 +35,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
                     throw CreateException(processResult, "GitHub CLI (gh) is not installed or not available in PATH. See installation instructions");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception("GitHub CLI (gh) is not installed or not available in PATH. See installation instructions at https://cli.github.com/manual/installation", ex);
             }
@@ -72,12 +73,22 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
             }
         }
 
+        private void CheckRepositoryOwnerExists() 
+        {
+            var processResult = ProcessExecutor.RunProcess("gh", $"api /users/{_context.RepositoryOwner}");
+
+            if (processResult.IsError)
+            {
+                throw CreateException(processResult, $"--repository-owner '{_context.RepositoryOwner}' does not exist on GitHub.");
+            }
+        }
+
         private void CheckGitHubAuthenticated()
         {
             // Use GitHub CLI to check authentication status
             var processResult = ProcessExecutor.RunProcess("gh", "auth status");
 
-            if (processResult.IsError || processResult.ExitCode != 0)
+            if (processResult.IsError)
             {
                 throw CreateException(processResult, "You are not authenticated with GitHub CLI (gh). Please run 'gh auth login' to authenticate.");
             }
@@ -88,6 +99,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
                 throw CreateException(processResult, "GitHub CLI (gh) is not authenticated. Please run 'gh auth login' to authenticate.");
             }
         }
+        
+
 
     }
 }

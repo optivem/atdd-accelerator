@@ -36,18 +36,17 @@ public class GeneratorProgram
             }
 
             // Unknown command
-            Console.WriteLine($"Unknown command: {args[0]}");
-            Console.WriteLine("Use 'atdd --help' for usage information.");
+            Console.Error.WriteLine($"Error: Command '{args[0]}' is not recognized. Use 'atdd --help' for usage information.");
             return 1;
         }
         catch (ExecutionException ex)
         {
-            Console.WriteLine($"Failed to generate repository. {ex.CustomMessage}");
+            Console.Error.WriteLine($"Error: {ex.CustomMessage}");
             return 1;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"Failed to generate repository.");
+            Console.Error.WriteLine($"Unexpected error occurred.");
             return 1;
         }
     }
