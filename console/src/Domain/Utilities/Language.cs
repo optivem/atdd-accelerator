@@ -27,5 +27,10 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
                 _ => "none"
             };
         }
+
+        public static IEnumerable<Language> GetAll()
+        {
+            return (Language[])Enum.GetValues(typeof(Language));
+        }
     }
 }

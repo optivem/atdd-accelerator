@@ -10,20 +10,30 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 {
     internal class LocalReadmeBadgeUpdater : BaseExecutor
     {
+        private static readonly string ReadmeFilePath = "README.md";
+
         public LocalReadmeBadgeUpdater(Context context) : base(context)
         {
         }
 
         public override void Execute()
         {
-            if (!File.Exists("README.md"))
+            if (!File.Exists(ReadmeFilePath))
             {
                 throw new FileNotFoundException("README.md not found in the current directory.");
             }
-            var readmeContent = File.ReadAllText("README.md");
-            var originalContent = readmeContent;
+            var originalContent = File.ReadAllText(ReadmeFilePath);
+            var updatedContent = GetUpdatedContent(originalContent);
+            File.WriteAllText(ReadmeFilePath, updatedContent);
 
-            var badgesToRemove = new System.Collections.Generic.List<string>();
+            AddToStaging();
+        }
+
+        private string GetUpdatedContent(string originalContent)
+        {
+            var readmeContent = originalContent;
+
+            var badgesToRemove = new List<string>();
             switch (_context.SystemLanguage)
             {
                 case Language.Java:
@@ -40,23 +50,22 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
                     break;
             }
 
-            foreach (var lang in new[] { "java", "dotnet", "typescript" })
+            foreach (var language in LanguageExtensions.GetAll())
             {
-                if (lang != _context.SystemTestLanguage.ToString())
+                if (language != _context.SystemTestLanguage)
                 {
-                    badgesToRemove.Add($"local-acceptance-stage-test-{lang}");
-                    badgesToRemove.Add($"acceptance-stage-test-{lang}");
-                    badgesToRemove.Add($"qa-stage-test-{lang}");
-                    badgesToRemove.Add($"prod-stage-test-{lang}");
+                    var languageString = language.Stringify();
+                    badgesToRemove.Add($"local-acceptance-stage-test-{languageString}");
+                    badgesToRemove.Add($"acceptance-stage-test-{languageString}");
+                    badgesToRemove.Add($"qa-stage-test-{languageString}");
+                    badgesToRemove.Add($"prod-stage-test-{languageString}");
                 }
             }
             foreach (var badge in badgesToRemove)
             {
                 readmeContent = Regex.Replace(readmeContent, $@".*\[!\[{badge}\].*(?:\r?\n)?", "", RegexOptions.Multiline);
             }
-            readmeContent = readmeContent.Replace("optivem/atdd-accelerator-template-mono-repo", $"{_context.RepositoryPath}");
-
-            AddToStaging();
+            return readmeContent.Replace("optivem/atdd-accelerator-template-mono-repo", $"{_context.RepositoryPath}");
         }
 
         private void AddToStaging()
