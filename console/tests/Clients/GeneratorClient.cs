@@ -1,9 +1,6 @@
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Optivem.AtddAccelerator.TemplateGenerator.Presentation;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process;
-using static Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process.ProcessExecutor;
-using static Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process.ProcessResultAssertions;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
 {

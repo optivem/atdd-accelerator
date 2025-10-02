@@ -28,13 +28,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
         private void VerifyPathExists(string path)
         {
             var result = _client.ViewPath(path);
-            AssertSuccess(result, $"Path '{path}' should exist.");
+            result.ShouldSucceed($"Path '{path}' should exist.");
         }
 
         private void VerifyPathDoesNotExist(string path)
         {
             var result = _client.ViewPath(path);
-            AssertFailure(result, $"Path '{path}' should not exist.");
+            result.ShouldFail($"Path '{path}' should not exist.");
         }
 
         private void VerifyPathLanguageExists(string pathFormat, Language language)

@@ -72,7 +72,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
         private WorkflowRunResult GetWorkflowRunResult(string workflowFileName)
         {
             var result = _client.ViewWorkflowRuns(workflowFileName);
-            AssertSuccess(result, $"Failed to get workflow runs for '{workflowFileName}'.");
+            result.ShouldSucceed($"Failed to get workflow runs for '{workflowFileName}'.");
 
             var jsonOutput = result.Output;
             var workflowRuns = ParseWorkflowRuns(jsonOutput);

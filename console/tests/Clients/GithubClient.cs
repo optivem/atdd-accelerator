@@ -45,7 +45,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
             var result = ExecuteProcess("gh", "api",
                 "-H", "Accept: application/vnd.github.raw",
                 $"/repos/{_repositoryPath}/contents/{filePath}");
-            AssertSuccess(result);
+            result.ShouldSucceed();
             return result.Output;
         }
 

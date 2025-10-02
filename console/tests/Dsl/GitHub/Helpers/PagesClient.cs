@@ -17,14 +17,14 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
         public void VerifyPagesEnabled()
         {
             var result = _client.ViewPages();
-            ProcessResultAssertions.AssertSuccess(result, "GitHub Pages should be enabled.");
+            ProcessResultAssertions.ShouldSucceed(result, "GitHub Pages should be enabled.");
             VerifyPagesSourceIsMainDocs();
         }
 
         private void VerifyPagesSourceIsMainDocs()
         {
             var result = _client.ViewPages();
-            ProcessResultAssertions.AssertSuccess(result, "Failed to get GitHub Pages info.");
+            ProcessResultAssertions.ShouldSucceed(result, "Failed to get GitHub Pages info.");
 
             var json = result.Output;
             using var doc = JsonDocument.Parse(json);

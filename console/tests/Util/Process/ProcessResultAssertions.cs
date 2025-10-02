@@ -1,25 +1,28 @@
+using FluentAssertions;
+using Xunit;
+
 namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process
 {
     public static class ProcessResultAssertions
     {
-        public static void AssertSuccess(ProcessResult result)
+        public static void ShouldSucceed(this ProcessResult result)
         {
-            Assert.True(result.IsSuccess, Stringify(result));
+            result.IsSuccess.Should().BeTrue(Stringify(result));
         }
 
-        public static void AssertFailure(ProcessResult result)
+        public static void ShouldSucceed(this ProcessResult result, string customMessage)
         {
-            Assert.True(result.IsError, Stringify(result));
+            result.IsSuccess.Should().BeTrue(Stringify(result, customMessage));
         }
 
-        public static void AssertSuccess(ProcessResult result, string customMessage)
+        public static void ShouldFail(this ProcessResult result)
         {
-            Assert.True(result.IsSuccess, Stringify(result, customMessage));
+            result.IsError.Should().BeTrue(Stringify(result));
         }
 
-        public static void AssertFailure(ProcessResult result, string customMessage)
+        public static void ShouldFail(this ProcessResult result, string customMessage)
         {
-            Assert.True(result.IsError, Stringify(result, customMessage));
+            result.IsError.Should().BeTrue(Stringify(result, customMessage));
         }
 
         private static string Stringify(ProcessResult result)

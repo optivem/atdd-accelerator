@@ -17,13 +17,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
         public void VerifyRepositoryExists()
         {
             var result = _client.ViewRepository();
-            AssertSuccess(result, $"Repository '{_client.GetRepositoryPath()}' should exist.");
+            result.ShouldSucceed($"Repository '{_client.GetRepositoryPath()}' should exist.");
         }
 
         public void DeleteRepository()
         {
             var result = _client.DeleteRepository();
-            AssertSuccess(result, $"Failed to delete repository '{_client.GetRepositoryPath()}'.");
+            result.ShouldSucceed($"Failed to delete repository '{_client.GetRepositoryPath()}'.");
         }
     }
 }
