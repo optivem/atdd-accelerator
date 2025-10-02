@@ -58,7 +58,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
 
             _gitHub.VerifyRepositoryExists();
             _gitHub.VerifyPathsExist(systemLanguage, systemTestLanguage);
-            //_gitHub.VerifyDockerComposeImage(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyDockerComposeImage(systemLanguage, systemTestLanguage);
             //_gitHub.VerifyReadmeHasBadges(systemLanguage, systemTestLanguage);
             //_gitHub.VerifyPagesEnabled();
 
