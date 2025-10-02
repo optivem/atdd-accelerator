@@ -1,4 +1,5 @@
-﻿using Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
+﻿using Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions;
+using Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -39,9 +40,14 @@ public class GeneratorProgram
             Console.WriteLine("Use 'atdd --help' for usage information.");
             return 1;
         }
+        catch (ExecutionException ex)
+        {
+            Console.WriteLine($"Failed to generate repository. {ex.CustomMessage}");
+            return 1;
+        }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to generate repository. {ex.Message}");
+            Console.WriteLine($"Failed to generate repository.");
             return 1;
         }
     }

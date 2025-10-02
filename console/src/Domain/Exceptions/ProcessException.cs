@@ -10,7 +10,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions
     public class ProcessException : ExecutionException
     {
         public ProcessException(Context context, ProcessResult result, string customMessage)
-            : base(context, customMessage + "\n" + result.ToString())
+            : base(context, customMessage)
         {
             Result = result;
         }

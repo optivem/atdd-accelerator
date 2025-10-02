@@ -19,8 +19,6 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
         public override void Execute()
         {
             var workingDirectory = Directory.GetCurrentDirectory();
-            Console.WriteLine("Current working directory: " + Directory.GetCurrentDirectory());
-
 
             // System
             RemoveItemsByTemplate("monolith-{language}", _context.SystemLanguage, true);

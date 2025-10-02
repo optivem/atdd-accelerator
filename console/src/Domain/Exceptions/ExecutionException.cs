@@ -10,7 +10,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions
     public class ExecutionException : Exception
     {
         public ExecutionException(Context context, string customMessage)
-            : base(customMessage + "\n" + context.ToString())
+            : base(customMessage)
         {
             Context = context;
             CustomMessage = customMessage;
