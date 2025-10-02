@@ -43,7 +43,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
         {
             var result = ProcessExecutor.RunProcess("gh", $"workflow run {workflow} --repo \"{_context.RepositoryPath}\"");
 
-            if (result.IsError || string.IsNullOrWhiteSpace(result.Output))
+            if (result.IsError)
             {
                 throw CreateException(result, $"Failed to trigger: {workflow}");
             }
