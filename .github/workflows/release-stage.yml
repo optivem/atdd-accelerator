@@ -130,9 +130,9 @@ jobs:
 
     - name: 'Test tool commands'
       run: |
-        atdd
-        atdd --help
-        atdd --version
+        atdd-accelerator
+        atdd-accelerator --help
+        atdd-accelerator --version
 
     - name: 'Cleanup'
       run: dotnet tool uninstall --global Optivem.AtddAccelerator.TemplateGenerator
@@ -158,9 +158,9 @@ jobs:
 
     - name: 'Test tool commands'
       run: |
-        atdd
-        atdd --help
-        atdd --version
+        atdd-accelerator
+        atdd-accelerator --help
+        atdd-accelerator --version
 
   attach-release-assets:
     name: 'Attach Package to Release'
