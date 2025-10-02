@@ -29,13 +29,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
         private string[] GetWorkflows()
         {
-            var systemLanguageString = _context.SystemLanguage.Stringify();
+            var systemTestLanguageString = _context.SystemTestLanguage.Stringify();
 
             return [
-                $"local-acceptance-stage-test-{systemLanguageString}",
-                $"acceptance-stage-test-{systemLanguageString}",
-                $"qa-stage-test-{systemLanguageString}",
-                $"prod-stage-test-{systemLanguageString}"
+                $"local-acceptance-stage-test-{systemTestLanguageString}",
+                $"acceptance-stage-test-{systemTestLanguageString}",
+                $"qa-stage-test-{systemTestLanguageString}",
+                $"prod-stage-test-{systemTestLanguageString}"
             ];
         }
 
