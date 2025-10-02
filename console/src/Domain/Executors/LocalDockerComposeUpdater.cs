@@ -28,10 +28,11 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             var systemTestFolder = systemTestFolders[0];
             var systemTestLanguage = systemTestFolder.Split('-').Last().ToLower();
 
-            var templatePath = Path.Combine("temp", _context.SystemLanguage.ToString(), "docker-compose.yml");
+            var templatePath = Path.Combine("temp", _context.SystemLanguage.Stringify(), "docker-compose.yml");
             if (!File.Exists(templatePath))
             {
-                throw new ExecutionException(_context, $"Template Docker Compose file not found: {templatePath}");
+                var fullPath = Path.GetFullPath(templatePath);
+                throw new ExecutionException(_context, $"Template Docker Compose file not found: {templatePath} with full path {templatePath}");
             }
             var targetDockerCompose = Path.Combine(systemTestFolder, "docker-compose.yml");
             if (!File.Exists(targetDockerCompose))

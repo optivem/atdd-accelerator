@@ -16,7 +16,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
 
     public static class LanguageExtensions
     {
-        public static string ToString(this Language language)
+        public static string Stringify(this Language language)
         {
             return language switch
             {
