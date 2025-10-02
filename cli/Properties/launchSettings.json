@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Optivem.AtddAccelerator.TemplateGenerator": {
-      "commandName": "Project",
-      "commandLineArgs": "generate monorepo --repository-name Repo-4 --system-language dotnet --system-test-language typescript"
-    }
-  }
-}
