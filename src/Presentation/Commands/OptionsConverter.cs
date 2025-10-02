@@ -11,7 +11,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
     {
         public static Context Convert(Options options)
         {
-            var repository = new Repository(options.GitHubUsername, options.RepositoryName);
+            var repository = new Repository(options.RepositoryOwner, options.RepositoryName);
             var systemLanguage = ParseLanguage(options.SystemLanguage);
             var systemTestLanguage = ParseLanguage(options.SystemTestLanguage);
             var outputPath = GetOutputDirectory(options.RepositoryName); // TODO: VJ: Allow user input

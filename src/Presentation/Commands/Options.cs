@@ -8,10 +8,10 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
 {
     public class Options
     {
+        public string RepositoryOwner { get; set; } = "";
         public string RepositoryName { get; set; } = "";
         public string SystemLanguage { get; set; } = "";
         public string SystemTestLanguage { get; set; } = "";
         public string OutputPath { get; set; } = "";
-        public string GitHubUsername { get; set; } = "";
     }
 }

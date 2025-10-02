@@ -16,9 +16,9 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
             var isValidRepositoryName = ValidateRepositoryName(options);
             var isValidSystemLanguage = ValidateSystemLanguage(options);
             var isValidSystemTestLanguage = ValidateSystemTestLanguage(options);
-            var isValidGitHubUsername = ValidateGitHubUsername(options);
+            var isValidRepositoryOwner = ValidateRepositoryOwner(options);
 
-            var success = isValidRepositoryName && isValidSystemLanguage && isValidSystemTestLanguage && isValidGitHubUsername;
+            var success = isValidRepositoryName && isValidSystemLanguage && isValidSystemTestLanguage && isValidRepositoryOwner;
 
             return success ? 0 : 1;
         }
@@ -68,12 +68,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
             return true;
         }
 
-        private static bool ValidateGitHubUsername(Options options)
+        private static bool ValidateRepositoryOwner(Options options)
         {
-            var username = options.GitHubUsername;
+            var username = options.RepositoryOwner;
             if (string.IsNullOrWhiteSpace(username))
             {
-                Console.Error.WriteLine("Error: --github-username is required.");
+                Console.Error.WriteLine("Error: --repository-owner is required.");
                 return false;
             }
 
@@ -83,7 +83,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
                 username.Contains("--") ||
                 !username.All(c => char.IsLetterOrDigit(c) || c == '-'))
             {
-                Console.Error.WriteLine("Error: --github-username is invalid. It must be 1-39 characters, alphanumeric or hyphens, cannot start/end with hyphen, and no consecutive hyphens.");
+                Console.Error.WriteLine("Error: --repository-owner is invalid. It must be 1-39 characters, alphanumeric or hyphens, cannot start/end with hyphen, and no consecutive hyphens.");
                 return false;
             }
 

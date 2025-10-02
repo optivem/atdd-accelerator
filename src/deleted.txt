@@ -1,4 +1,4 @@
-    private string GetGitHubUsername(string providedUsername)
+    private string GetRepositoryOwner(string providedUsername)
     {
         if (!string.IsNullOrWhiteSpace(providedUsername))
             return providedUsername;

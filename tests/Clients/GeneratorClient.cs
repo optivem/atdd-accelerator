@@ -18,7 +18,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
                 "--repository-name", repoName,
                 "--system-language", systemLanguage,
                 "--system-test-language", systemTestLanguage,
-                "--github-username", RepoOwner,
+                "--repository-owner", RepoOwner,
             };
 
             var originalOut = Console.Out;

@@ -34,8 +34,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
                     case "--output-path":
                         options.OutputPath = Path.GetFullPath(args[i + 1]);
                         break;
-                    case "--github-username":
-                        options.GitHubUsername = args[i + 1];
+                    case "--repository-owner":
+                        options.RepositoryOwner = args[i + 1];
                         break;
                 }
             }
