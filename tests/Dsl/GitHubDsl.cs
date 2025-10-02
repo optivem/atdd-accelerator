@@ -59,5 +59,10 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl
         {
             _packageClient.VerifyPackagesExist(systemLanguage);
         }
+
+        public void DeleteRepository()
+        {
+            _repositoryClient.DeleteRepository();
+        }
     }
 }
