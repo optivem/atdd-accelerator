@@ -5,6 +5,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Information -->
+    <PackageId>Optivem.AtddAccelerator.TemplateGenerator</PackageId>
+    <PackageVersion>1.0.4</PackageVersion>
+    <Authors>Optivem</Authors>
+    <Description>ATDD Accelerator Template Generator</Description>
+    <PackageTags>atdd;testing;accelerator;template</PackageTags>
+    <RepositoryUrl>https://github.com/optivem/atdd-accelerator</RepositoryUrl>
   </PropertyGroup>
 
 </Project>

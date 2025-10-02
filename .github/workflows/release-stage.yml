@@ -10,7 +10,6 @@ on:
 
 env:
   DOTNET_VERSION: '8.0.x'
-  PROJECT_PATH: 'cli/Optivem.AtddAccelerator.TemplateGenerator.csproj'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
@@ -29,13 +28,13 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: 'Restore dependencies'
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+      run: dotnet restore
 
     - name: 'Build'
-      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore
 
     - name: 'Pack'
-      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+      run: dotnet pack --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
 
     - name: 'Upload package artifacts'
       uses: actions/upload-artifact@v4
