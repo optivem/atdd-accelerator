@@ -63,20 +63,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
             _gitHub.VerifyPagesEnabled();
 
             _gitHub.VerifyWorkflowsPass(systemLanguage, systemTestLanguage);
-            // _gitHub.VerifyPackagesExist(systemLanguage);
-
-            // TODO: VJ: Verify that only one package exists, rest are deleted
-
-            // TODO: VJ: Rewrite like this
-            // _gitHub.VerifyCommitStageSuccessful(systemLanguage); // -this checks only this path, the docker come, the readme badge, and that package was created
+            _gitHub.VerifyPackagesExist(systemLanguage); /// TODO: VJ: Continue here
         }
-
-        // TODO: Cannot create repository if name already exists
-        // TODO: Error if gh not installed
-        // TODO: Error if not logged into gh auth
-        // TODO: Error if some mandatory parameter missing, or invalid, or empty
-        // TODO: Error if no internet connection
-
 
         [Fact]
         public async Task QuickTest()
