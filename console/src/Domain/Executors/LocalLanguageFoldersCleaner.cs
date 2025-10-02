@@ -24,14 +24,14 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
             // System
             RemoveItemsByTemplate("monolith-{language}", _context.SystemLanguage, true);
-            //RemoveItemsByTemplate(".github/workflows/commit-stage-monolith-{language}.yml", _context.SystemLanguage, false);
+            RemoveItemsByTemplate(".github/workflows/commit-stage-monolith-{language}.yml", _context.SystemLanguage, false);
 
             // System Language
-            //RemoveItemsByTemplate("system-test-{language}", _context.SystemTestLanguage, true);
-            //RemoveItemsByTemplate(".github/workflows/local-acceptance-stage-test-{language}.yml", _context.SystemTestLanguage, false);
-            //RemoveItemsByTemplate(".github/workflows/acceptance-stage-test-{language}.yml", _context.SystemTestLanguage, false);
-            //RemoveItemsByTemplate(".github/workflows/qa-stage-test-{language}.yml", _context.SystemTestLanguage, false);
-            //RemoveItemsByTemplate(".github/workflows/prod-stage-test-{language}.yml", _context.SystemTestLanguage, false);
+            RemoveItemsByTemplate("system-test-{language}", _context.SystemTestLanguage, true);
+            RemoveItemsByTemplate(".github/workflows/local-acceptance-stage-test-{language}.yml", _context.SystemTestLanguage, false);
+            RemoveItemsByTemplate(".github/workflows/acceptance-stage-test-{language}.yml", _context.SystemTestLanguage, false);
+            RemoveItemsByTemplate(".github/workflows/qa-stage-test-{language}.yml", _context.SystemTestLanguage, false);
+            RemoveItemsByTemplate(".github/workflows/prod-stage-test-{language}.yml", _context.SystemTestLanguage, false);
         }
 
         private class LanguageItems

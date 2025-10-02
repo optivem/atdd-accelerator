@@ -19,6 +19,11 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
         public string Output { get; }
         public string Errors { get; }
         public bool IsSuccess => ExitCode == 0;
-        public bool IsError => ExitCode != 0;   
+        public bool IsError => ExitCode != 0;
+
+        public override string ToString()
+        {
+            return $"Exit Code: {ExitCode}\nErrors: {Errors}\nOutput: {Output}";
+        }
     }
 }

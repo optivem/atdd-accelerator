@@ -4,7 +4,7 @@ $cutoffTime = [DateTime]"2025-09-29T08:50:00"  # Local time
 Write-Host "Cut-off time: $cutoffTime" -ForegroundColor Yellow
 
 # First, let's see what repositories match our criteria
-$reposToDelete = gh repo list --json name,createdAt --limit 10 | ConvertFrom-Json | Where-Object { [DateTime]$_.createdAt -gt $cutoffTime }
+$reposToDelete = gh repo list --json name,createdAt --limit 100 | ConvertFrom-Json | Where-Object { [DateTime]$_.createdAt -gt $cutoffTime }
 
 Write-Host "Found $($reposToDelete.Count) repositories to delete:" -ForegroundColor Yellow
 $reposToDelete | ForEach-Object {

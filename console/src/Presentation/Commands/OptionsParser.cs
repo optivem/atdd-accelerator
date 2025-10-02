@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
+namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
 {
     internal class OptionsParser
     {
-        internal static MonorepoOptions ParseMonorepoOptions(string[] args)
+        internal static Options ParseMonorepoOptions(string[] args)
         {
-            var options = new MonorepoOptions
+            var options = new Options
             {
                 OutputPath = Directory.GetCurrentDirectory()
             };

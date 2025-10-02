@@ -25,5 +25,14 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
         public string TargetDirectory => OutputPath; // For backward compatibility
 
         public object RepositoryPath => Repository.Path;
+
+        public override string ToString()
+        {   var sb = new StringBuilder();
+            sb.AppendLine($"Repository: {Repository}");
+            sb.AppendLine($"System Language: {SystemLanguage}");
+            sb.AppendLine($"System Test Language: {SystemTestLanguage}");
+            sb.AppendLine($"Output Path: {OutputPath}");
+            return sb.ToString();
+        }
     }
 }

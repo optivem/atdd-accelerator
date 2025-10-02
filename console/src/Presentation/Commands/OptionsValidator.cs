@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
+namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
 {
     internal class OptionsValidator
     {
         private static readonly HashSet<string> ValidLanguages = new HashSet<string> { "java", "dotnet", "typescript" };
 
-        internal static int Validate(MonorepoOptions options)
+        internal static int Validate(Options options)
         {
             var isValidRepositoryName = ValidateRepositoryName(options);
             var isValidSystemLanguage = ValidateSystemLanguage(options);
@@ -22,7 +22,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
             return success ? 0 : 1;
         }
 
-        private static bool ValidateRepositoryName(MonorepoOptions options)
+        private static bool ValidateRepositoryName(Options options)
         {
             if (string.IsNullOrWhiteSpace(options.RepositoryName))
             {
@@ -32,7 +32,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
             return true;
         }
 
-        private static bool ValidateSystemLanguage(MonorepoOptions options)
+        private static bool ValidateSystemLanguage(Options options)
         {
             if (string.IsNullOrWhiteSpace(options.SystemLanguage))
             {
@@ -50,7 +50,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
         }
 
 
-        private static bool ValidateSystemTestLanguage(MonorepoOptions options)
+        private static bool ValidateSystemTestLanguage(Options options)
         {
             if (string.IsNullOrEmpty(options.SystemTestLanguage))
             {
@@ -61,7 +61,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
             return true;
         }
 
-        private static bool ValidateGitHubUsername(MonorepoOptions options)
+        private static bool ValidateGitHubUsername(Options options)
         {
             var username = options.GitHubUsername;
             if (string.IsNullOrWhiteSpace(username))

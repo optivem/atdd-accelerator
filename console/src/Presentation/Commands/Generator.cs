@@ -1,19 +1,12 @@
-using Optivem.AtddAccelerator.TemplateGenerator.Commands;
+using Optivem.AtddAccelerator.TemplateGenerator.Application;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Optivem.AtddAccelerator.TemplateGenerator;
+namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
 
-public class GenerateCommand
+public class Generator
 {
-    private readonly TemplateService _templateService;
-
-    public GenerateCommand(TemplateService templateService)
-    {
-        _templateService = templateService;
-    }
-
     public async Task<int> ExecuteAsync(string[] args)
     {
         if (args.Length == 0)
@@ -44,8 +37,9 @@ public class GenerateCommand
         {
             Console.WriteLine($" Generating monorepo template...");
             var context = OptionsConverter.Convert(options);
-            
-            await _templateService.GenerateAsync(context);
+
+            var templateRepositoryGenerator = new TemplateRepositoryGenerator(context);
+            await templateRepositoryGenerator.GenerateAsync();
             
             Console.WriteLine($" Monorepo template generated successfully!");
             Console.WriteLine($" Repository name: {options.RepositoryName}");

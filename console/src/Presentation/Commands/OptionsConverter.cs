@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
+namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
 {
     internal class OptionsConverter
     {
-        public static Context Convert(MonorepoOptions options)
+        public static Context Convert(Options options)
         {
             var repository = new Repository(options.GitHubUsername, options.RepositoryName);
             var systemLanguage = ParseLanguage(options.SystemLanguage);

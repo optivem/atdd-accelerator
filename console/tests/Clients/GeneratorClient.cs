@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestPlatform.TestHost;
+using Optivem.AtddAccelerator.TemplateGenerator.Presentation;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process;
 using static Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process.ProcessExecutor;
@@ -34,7 +35,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
             int exitCode = 0;
             try
             {
-                exitCode = await Generator.Main(args);
+                exitCode = await GeneratorProgram.Main(args);
             }
             catch (Exception ex)
             {

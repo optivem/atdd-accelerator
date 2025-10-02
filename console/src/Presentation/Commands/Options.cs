@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Optivem.AtddAccelerator.TemplateGenerator.Commands
+namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
 {
-    public class MonorepoOptions
+    public class Options
     {
         public string RepositoryName { get; set; } = "";
         public string SystemLanguage { get; set; } = "";

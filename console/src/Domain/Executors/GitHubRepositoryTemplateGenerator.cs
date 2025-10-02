@@ -1,4 +1,5 @@
 ﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
+using Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             catch(Exception ex)
             {
                 Directory.SetCurrentDirectory(originalLocation);
+                throw;
             }
         }
     }

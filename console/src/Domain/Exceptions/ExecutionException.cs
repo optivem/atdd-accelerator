@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
+namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions
 {
     internal class ExecutionException : Exception
     {
         public ExecutionException(Context context, string customMessage)
+            : base(customMessage + "\n" + context.ToString())
         {
             Context = context;
             CustomMessage = customMessage;

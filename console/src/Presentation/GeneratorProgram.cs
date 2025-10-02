@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Optivem.AtddAccelerator.TemplateGenerator;
+namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation;
 
-public class Generator
+public class GeneratorProgram
 {
     public static async Task<int> Main(string[] args)
     {
@@ -28,9 +29,9 @@ public class Generator
             // Handle generate command
             if (args[0] == "generate")
             {
-                var templateService = new TemplateService();
-                var generateCommand = new GenerateCommand(templateService);
-                return await generateCommand.ExecuteAsync(args.Skip(1).ToArray());
+                var generator = new Generator();
+                var generatorArgs = args.Skip(1).ToArray();
+                return await generator.ExecuteAsync(generatorArgs);
             }
 
             // Unknown command
