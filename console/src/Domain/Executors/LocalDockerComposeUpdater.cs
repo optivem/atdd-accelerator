@@ -42,7 +42,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             var templateContent = File.ReadAllText(templatePath);
             var updatedContent = templateContent
                 .Replace("ghcr.io/optivem/atdd-accelerator-template-mono-repo/", $"ghcr.io/{_context.RepositoryPath}/")
-                .Replace($"monolith-{systemTestLanguage}", $"monolith-{_context.SystemLanguage.ToString()}");
+                .Replace($"monolith-{systemTestLanguage}", $"monolith-{_context.SystemLanguage.Stringify()}");
 
             var currentContent = File.ReadAllText(targetDockerCompose);
 

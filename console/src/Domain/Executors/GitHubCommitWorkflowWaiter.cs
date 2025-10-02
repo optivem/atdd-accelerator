@@ -16,7 +16,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
         public override void Execute()
         {
             // TODO: VJ: continue
-            //WaitForBuildWorkflows(_context.SystemLanguage.ToString(), _context.RepositoryOwner, _context.RepositoryName);
+            //WaitForBuildWorkflows(_context.SystemLanguage.Stringify(), _context.RepositoryOwner, _context.RepositoryName);
         }
 
 

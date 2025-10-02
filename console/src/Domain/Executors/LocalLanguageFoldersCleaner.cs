@@ -65,7 +65,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             Dictionary<string, string> languageToItemMapping,
             bool isFolder)
         {
-            var keepItem = languageToItemMapping[language.ToString()];
+            var keepItem = languageToItemMapping[language.Stringify()];
 
             foreach (var item in allItems)
             {

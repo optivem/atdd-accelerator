@@ -16,7 +16,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
         public override void Execute()
         {
             // TODO: VJ
-            //InvokeSystemTestWorkflows(_context.SystemTestLanguage.ToString(), _context.RepositoryOwner, _context.RepositoryName);
+            //InvokeSystemTestWorkflows(_context.SystemTestLanguage.Stringify(), _context.RepositoryOwner, _context.RepositoryName);
         }
 
         private static bool InvokeSystemTestWorkflows(string systemTestLanguage, string repositoryOwner, string repositoryName)
