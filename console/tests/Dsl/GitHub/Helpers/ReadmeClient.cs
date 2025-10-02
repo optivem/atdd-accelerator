@@ -1,5 +1,6 @@
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util;
+using FluentAssertions;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpers
 {
@@ -61,15 +62,15 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
         {
             var readmeContent = GetReadmeContent();
 
-            Assert.Contains(badgeName, readmeContent);
-            Assert.Contains(badgeWorkflow, readmeContent);
-            Assert.Contains(badgeSvg, readmeContent);
+            readmeContent.Should().Contain(badgeName, $"Expected README to contain badge name '{badgeName}', but it was not found.");
+            readmeContent.Should().Contain(badgeWorkflow, $"Expected README to contain badge workflow '{badgeWorkflow}', but it was not found.");
+            readmeContent.Should().Contain(badgeSvg, $"Expected README to contain badge SVG '{badgeSvg}', but it was not found.");
         }
 
         private void VerifyReadmeDoesNotContainBadge(string badge)
         {
             var readmeContent = GetReadmeContent();
-            Assert.DoesNotContain(badge, readmeContent);
+            readmeContent.Should().NotContain(badge, $"Expected README to NOT contain badge '{badge}', but it was found.");
         }
 
         private string GetReadmeContent()

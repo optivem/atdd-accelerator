@@ -58,17 +58,17 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
 
             _gitHub.VerifyRepositoryExists();
             _gitHub.VerifyPathsExist(systemLanguage, systemTestLanguage);
-            //_gitHub.VerifyDockerComposeImage(systemLanguage, systemTestLanguage);
-            //_gitHub.VerifyReadmeHasBadges(systemLanguage, systemTestLanguage);
-            //_gitHub.VerifyPagesEnabled();
+            _gitHub.VerifyDockerComposeImage(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyReadmeHasBadges(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyPagesEnabled();
 
-            //_gitHub.VerifyWorkflowsPass(systemLanguage, systemTestLanguage);
-            //_gitHub.VerifyPackagesExist(systemLanguage);
+            _gitHub.VerifyWorkflowsPass(systemLanguage, systemTestLanguage);
+            // _gitHub.VerifyPackagesExist(systemLanguage);
 
-             // TODO: VJ: Verify that only one package exists, rest are deleted
+            // TODO: VJ: Verify that only one package exists, rest are deleted
 
-             // TODO: VJ: Rewrite like this
-             // _gitHub.VerifyCommitStageSuccessful(systemLanguage); // -this checks only this path, the docker come, the readme badge, and that package was created
+            // TODO: VJ: Rewrite like this
+            // _gitHub.VerifyCommitStageSuccessful(systemLanguage); // -this checks only this path, the docker come, the readme badge, and that package was created
         }
 
         // TODO: Cannot create repository if name already exists
