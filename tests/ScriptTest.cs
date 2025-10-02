@@ -54,7 +54,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         [MemberData(nameof(LanguageProvider))]
         public async Task ShouldCreateRepositoryWithLanguages(string systemLanguage, string systemTestLanguage)
         {
-            await _generator.GenerateNewRepository(_repoName, systemLanguage, systemTestLanguage);
+            await _generator.GenerateNewRepository(RepoOwner, _repoName, systemLanguage, systemTestLanguage);
 
             _gitHub.VerifyRepositoryExists();
             _gitHub.VerifyPathsExist(systemLanguage, systemTestLanguage);
@@ -84,7 +84,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
             string systemLanguage = Language.Java;
             string systemTestLanguage = Language.TypeScript;
 
-            await _generator.GenerateNewRepository(_repoName, systemLanguage, systemTestLanguage);
+            await _generator.GenerateNewRepository(RepoOwner, _repoName, systemLanguage, systemTestLanguage);
 
             _gitHub.VerifyRepositoryExists();
             _gitHub.VerifyPathsExist(systemLanguage, systemTestLanguage);
@@ -93,13 +93,36 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
             _gitHub.VerifyPagesEnabled();
         }
 
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldReturnErrorForEmptyRepositoryOwner(string repositoryOwner)
+        {
+            await _generator.GenerateNewRepositoryExpectError(repositoryOwner, _repoName, Language.Java, Language.TypeScript, "Error: --repository-owner is empty.");
+        }
+
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldReturnErrorForEmptyRepositoryName(string repositoryName)
+        {
+            await _generator.GenerateNewRepositoryExpectError(RepoOwner, repositoryName, Language.Java, Language.TypeScript, "Error: --repository-name is empty.");
+        }
+
+        [Fact]
+        public async Task ShouldReturnErrorForDuplicateRepositoryName()
+        {
+            await _generator.GenerateNewRepository(RepoOwner, _repoName, Language.Java, Language.TypeScript);
+            await _generator.GenerateNewRepositoryExpectError(RepoOwner, _repoName, Language.Java, Language.TypeScript, $"Error: Repository {_repoName} already exists");
+        }
 
         [Theory]
         [InlineData("")]
         [InlineData("   ")]
         public async Task ShouldReturnErrorForEmptySystemLanguage(string invalidSystemLanguage)
         {
-            await _generator.GenerateNewRepositoryExpectError(_repoName, invalidSystemLanguage, Language.TypeScript, "Error: --system-language is empty.");
+            await _generator.GenerateNewRepositoryExpectError(RepoOwner, _repoName, invalidSystemLanguage, Language.TypeScript, "Error: --system-language is empty.");
         }
 
         [Theory]
@@ -107,7 +130,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         [InlineData("hello")]
         public async Task ShouldReturnErrorForInvalidSystemLanguage(string invalidSystemLanguage)
         {
-            await _generator.GenerateNewRepositoryExpectError(_repoName, invalidSystemLanguage, Language.TypeScript, $"Error: --system-language '{invalidSystemLanguage}' is invalid. Valid options: java, dotnet, typescript");
+            await _generator.GenerateNewRepositoryExpectError(RepoOwner, _repoName, invalidSystemLanguage, Language.TypeScript, $"Error: --system-language '{invalidSystemLanguage}' is invalid. Valid options: java, dotnet, typescript");
         }
 
         [Theory]
@@ -115,7 +138,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         [InlineData("   ")]
         public async Task ShouldReturnErrorForEmptySystemTestLanguage(string invalidSystemTestLanguage)
         {
-            await _generator.GenerateNewRepositoryExpectError(_repoName, Language.Java, invalidSystemTestLanguage, "Error: --system-test-language is empty.");
+            await _generator.GenerateNewRepositoryExpectError(RepoOwner, _repoName, Language.Java, invalidSystemTestLanguage, "Error: --system-test-language is empty.");
         }
 
         [Theory]
@@ -123,23 +146,10 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         [InlineData("hello")]
         public async Task ShouldReturnErrorForInvalidSystemTestLanguage(string invalidSystemTestLanguage)
         {
-            await _generator.GenerateNewRepositoryExpectError(_repoName, Language.Java, invalidSystemTestLanguage, $"Error: --system-test-language: '{invalidSystemTestLanguage}' is invalid. Valid options: java, dotnet, typescript");
+            await _generator.GenerateNewRepositoryExpectError(RepoOwner, _repoName, Language.Java, invalidSystemTestLanguage, $"Error: --system-test-language: '{invalidSystemTestLanguage}' is invalid. Valid options: java, dotnet, typescript");
         }
 
-        [Theory]
-        [InlineData("")]
-        [InlineData("   ")]
-        public async Task ShouldReturnErrorForEmptyRepositoryName(string repositoryName)
-        {
-            await _generator.GenerateNewRepositoryExpectError(repositoryName, Language.Java, Language.TypeScript, "Error: --repository-name is empty.");
-        }
 
-        [Fact]
-        public async Task ShouldReturnErrorForDuplicateRepositoryName()
-        {
-            await _generator.GenerateNewRepository(_repoName, Language.Java, Language.TypeScript);
-            await _generator.GenerateNewRepositoryExpectError(_repoName, Language.Java, Language.TypeScript, $"Error: Repository {_repoName} already exists");
-        }
 
 
         private static string NewName()

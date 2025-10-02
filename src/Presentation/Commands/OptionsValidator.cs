@@ -70,20 +70,10 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
 
         private static bool ValidateRepositoryOwner(Options options)
         {
-            var username = options.RepositoryOwner;
-            if (string.IsNullOrWhiteSpace(username))
+            var repositoryOwner = options.RepositoryOwner;
+            if (string.IsNullOrWhiteSpace(repositoryOwner))
             {
                 Console.Error.WriteLine("Error: --repository-owner is required.");
-                return false;
-            }
-
-            // Basic GitHub username format check
-            if (username.Length < 1 || username.Length > 39 ||
-                username.StartsWith("-") || username.EndsWith("-") ||
-                username.Contains("--") ||
-                !username.All(c => char.IsLetterOrDigit(c) || c == '-'))
-            {
-                Console.Error.WriteLine("Error: --repository-owner is invalid. It must be 1-39 characters, alphanumeric or hyphens, cannot start/end with hyphen, and no consecutive hyphens.");
                 return false;
             }
 

@@ -10,7 +10,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 {
     internal class GitHubCommitWorkflowWaiter : BaseExecutor
     {
-        private static int MaxAttempts = 20;
+        private static int MaxAttempts = 50;
         private static int DelayMilliseconds = 30000;
 
         public GitHubCommitWorkflowWaiter(Context context) : base(context)
