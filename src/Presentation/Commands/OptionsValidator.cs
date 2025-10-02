@@ -8,6 +8,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
 {
     internal class OptionsValidator
     {
+        // TODO: VJ: Should come from enum
         private static readonly HashSet<string> ValidLanguages = new HashSet<string> { "java", "dotnet", "typescript" };
 
         internal static int Validate(Options options)
@@ -26,7 +27,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
         {
             if (string.IsNullOrWhiteSpace(options.RepositoryName))
             {
-                Console.Error.WriteLine("Error: --repository-name is required.");
+                Console.Error.WriteLine("Error: --repository-name is empty.");
                 return false;
             }
             return true;
@@ -36,13 +37,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
         {
             if (string.IsNullOrWhiteSpace(options.SystemLanguage))
             {
-                Console.Error.WriteLine("Error: --system-language is required.");
+                Console.Error.WriteLine("Error: --system-language is empty.");
                 return false;
             }
 
             if(!ValidLanguages.Contains(options.SystemLanguage))
             {
-                Console.Error.WriteLine($"Invalid --system-language: '{options.SystemLanguage}'. Valid options: {string.Join(", ", ValidLanguages)}");
+                Console.Error.WriteLine($"Error: --system-language '{options.SystemLanguage}' is invalid. Valid options: {string.Join(", ", ValidLanguages)}");
                 return false;
             }
 
@@ -52,9 +53,15 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
 
         private static bool ValidateSystemTestLanguage(Options options)
         {
-            if (string.IsNullOrEmpty(options.SystemTestLanguage))
+            if (string.IsNullOrWhiteSpace(options.SystemTestLanguage))
             {
-                Console.Error.WriteLine("Error: --system-test-language is required.");
+                Console.Error.WriteLine("Error: --system-test-language is empty.");
+                return false;
+            }
+
+            if(!ValidLanguages.Contains(options.SystemTestLanguage))
+            {
+                Console.Error.WriteLine($"Error: --system-test-language: '{options.SystemTestLanguage}' is invalid. Valid options: {string.Join(", ", ValidLanguages)}");
                 return false;
             }
 

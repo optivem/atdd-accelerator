@@ -1,5 +1,6 @@
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util;
+using Shouldly;
 using static Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process.ProcessExecutor;
 using static Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process.ProcessResultAssertions;
 
@@ -32,10 +33,11 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl
             _created.Add(repoName);
         }
 
-        public async Task GenerateNewRepositoryExpectError(string repoName, string systemLanguage, string systemTestLanguage)
+        public async Task GenerateNewRepositoryExpectError(string repoName, string systemLanguage, string systemTestLanguage, string expectedErrorMessage)
         {
             var result = await _client.GenerateRepositoryAsync(repoName, systemLanguage, systemTestLanguage);
             result.ShouldFail("Repository generation should fail.");
+            result.Errors.ShouldContain(expectedErrorMessage, Case.Insensitive);
         }
     }
 }

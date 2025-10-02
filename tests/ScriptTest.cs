@@ -93,11 +93,54 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
             _gitHub.VerifyPagesEnabled();
         }
 
-        [Fact]
-        public async Task ShouldReturnErrorForInvalidSystemLanguage()
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldReturnErrorForEmptySystemLanguage(string invalidSystemLanguage)
         {
-            await _generator.GenerateNewRepositoryExpectError(_repoName, Language.None, Language.TypeScript);
+            await _generator.GenerateNewRepositoryExpectError(_repoName, invalidSystemLanguage, Language.TypeScript, "Error: --system-language is empty.");
         }
+
+        [Theory]
+        [InlineData("Java")]
+        [InlineData("hello")]
+        public async Task ShouldReturnErrorForInvalidSystemLanguage(string invalidSystemLanguage)
+        {
+            await _generator.GenerateNewRepositoryExpectError(_repoName, invalidSystemLanguage, Language.TypeScript, $"Error: --system-language '{invalidSystemLanguage}' is invalid. Valid options: java, dotnet, typescript");
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldReturnErrorForEmptySystemTestLanguage(string invalidSystemTestLanguage)
+        {
+            await _generator.GenerateNewRepositoryExpectError(_repoName, Language.Java, invalidSystemTestLanguage, "Error: --system-test-language is empty.");
+        }
+
+        [Theory]
+        [InlineData("Java")]
+        [InlineData("hello")]
+        public async Task ShouldReturnErrorForInvalidSystemTestLanguage(string invalidSystemTestLanguage)
+        {
+            await _generator.GenerateNewRepositoryExpectError(_repoName, Language.Java, invalidSystemTestLanguage, $"Error: --system-test-language: '{invalidSystemTestLanguage}' is invalid. Valid options: java, dotnet, typescript");
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldReturnErrorForEmptyRepositoryName(string repositoryName)
+        {
+            await _generator.GenerateNewRepositoryExpectError(repositoryName, Language.Java, Language.TypeScript, "Error: --repository-name is empty.");
+        }
+
+        [Fact]
+        public async Task ShouldReturnErrorForDuplicateRepositoryName()
+        {
+            await _generator.GenerateNewRepository(_repoName, Language.Java, Language.TypeScript);
+            await _generator.GenerateNewRepositoryExpectError(_repoName, Language.Java, Language.TypeScript, $"Error: Repository {_repoName} already exists");
+        }
+
 
         private static string NewName()
         {
