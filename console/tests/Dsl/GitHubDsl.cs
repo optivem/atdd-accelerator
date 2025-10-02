@@ -6,6 +6,11 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl
 {
     public class GitHubDsl
     {
+
+        public void VerifyRepositoryExists()
+        {
+            _repositoryClient.VerifyRepositoryExists();
+        }
         private readonly ReadmeClient _readmeClient;
         private readonly FileClient _fileClient;
         private readonly WorkflowClient _workflowClient;
@@ -25,17 +30,17 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl
             _packageClient = new PackageClient(client);
         }
 
-        public void VerifyReadmeHasBadges(Language systemLanguage, Language systemTestLanguage)
+        public void VerifyReadmeHasBadges(string systemLanguage, string systemTestLanguage)
         {
             _readmeClient.VerifyReadmeHasBadges(systemLanguage, systemTestLanguage);
         }
 
-        public void VerifyPathsExist(Language systemLanguage, Language systemTestLanguage)
+        public void VerifyPathsExist(string systemLanguage, string systemTestLanguage)
         {
             _fileClient.VerifyPathsExist(systemLanguage, systemTestLanguage);
         }
 
-        public void VerifyWorkflowsPass(Language systemLanguage, Language systemTestLanguage)
+        public void VerifyWorkflowsPass(string systemLanguage, string systemTestLanguage)
         {
             _workflowClient.VerifyWorkflowsPass(systemLanguage, systemTestLanguage);
         }
@@ -45,22 +50,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl
             _pagesClient.VerifyPagesEnabled();
         }
 
-        public void VerifyDockerComposeImage(Language systemLanguage, Language systemTestLanguage)
+        public void VerifyDockerComposeImage(string systemLanguage, string systemTestLanguage)
         {
             _dockerComposeClient.VerifyDockerComposeImage(systemLanguage, systemTestLanguage);
         }
 
-        public void DeleteRepository()
-        {
-            _repositoryClient.DeleteRepository();
-        }
-
-        public void VerifyRepositoryExists()
-        {
-            _repositoryClient.VerifyRepositoryExists();
-        }
-
-        public void VerifyPackagesExist(Language systemLanguage)
+        public void VerifyPackagesExist(string systemLanguage)
         {
             _packageClient.VerifyPackagesExist(systemLanguage);
         }

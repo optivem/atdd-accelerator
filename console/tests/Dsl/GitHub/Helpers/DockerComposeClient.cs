@@ -15,14 +15,14 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
             _repositoryPath = client.GetRepositoryPath();
         }
 
-        public void VerifyDockerComposeImage(Language systemLanguage, Language systemTestLanguage)
+        public void VerifyDockerComposeImage(string systemLanguage, string systemTestLanguage)
         {
-            var dockerComposePath = $"system-test-{systemTestLanguage.GetValue()}/docker-compose.yml";
+            var dockerComposePath = $"system-test-{systemTestLanguage}/docker-compose.yml";
 
             foreach (var l in LanguageExtensions.GetAll())
             {
-                var monolithDockerImageName = string.Format(Constants.MonolithDockerImageNameFormat, _repositoryPath, l.GetValue());
-                if (l.Equals(systemLanguage))
+                var monolithDockerImageName = string.Format(Constants.MonolithDockerImageNameFormat, _repositoryPath, l);
+                if (l == systemLanguage)
                 {
                     VerifyDockerComposeContainsImage(dockerComposePath, monolithDockerImageName);
                 }

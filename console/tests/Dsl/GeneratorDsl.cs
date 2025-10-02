@@ -23,7 +23,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl
             return _created.Contains(repoName);
         }
 
-        public async Task GenerateNewRepository(string repoName, Language systemLanguage, Language systemTestLanguage)
+        public async Task GenerateNewRepository(string repoName, string systemLanguage, string systemTestLanguage)
         {
             var result = await _client.GenerateRepositoryAsync(repoName, systemLanguage, systemTestLanguage);
             result.ShouldSucceed("Repository generation should succeed.");
@@ -32,7 +32,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl
             _created.Add(repoName);
         }
 
-        public async Task GenerateNewRepositoryExpectError(string repoName, Language systemLanguage, Language systemTestLanguage)
+        public async Task GenerateNewRepositoryExpectError(string repoName, string systemLanguage, string systemTestLanguage)
         {
             var result = await _client.GenerateRepositoryAsync(repoName, systemLanguage, systemTestLanguage);
             result.ShouldFail("Repository generation should fail.");

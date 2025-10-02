@@ -17,7 +17,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
             _repositoryPath = client.GetRepositoryPath();
         }
 
-        public void VerifyReadmeHasBadges(Language systemLanguage, Language systemTestLanguage)
+        public void VerifyReadmeHasBadges(string systemLanguage, string systemTestLanguage)
         {
             VerifyReadmePagesBadge();
             VerifyReadmeStageLanguageBadge(Constants.CommitStageMonolithFormat, systemLanguage);
@@ -34,12 +34,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
             VerifyReadmeContainsBadge(Constants.PagesBuilderDeployment, badgeWorkflow, badgeSvg);
         }
 
-        private void VerifyReadmeStageLanguageBadge(string workflowNameFormat, Language language)
+        private void VerifyReadmeStageLanguageBadge(string workflowNameFormat, string language)
         {
             foreach (var l in LanguageExtensions.GetAll())
             {
-                var workflowName = string.Format(workflowNameFormat, l.GetValue());
-                if (l.Equals(language))
+                var workflowName = string.Format(workflowNameFormat, l);
+                if (l == language)
                 {
                     VerifyReadmeContainsBadge(workflowName);
                 }

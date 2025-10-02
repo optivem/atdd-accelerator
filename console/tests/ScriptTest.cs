@@ -52,7 +52,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
 
         [Theory]
         [MemberData(nameof(LanguageProvider))]
-        public async Task ShouldCreateRepositoryWithLanguages(Language systemLanguage, Language systemTestLanguage)
+        public async Task ShouldCreateRepositoryWithLanguages(string systemLanguage, string systemTestLanguage)
         {
             await _generator.GenerateNewRepository(_repoName, systemLanguage, systemTestLanguage);
 
@@ -81,8 +81,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         [Fact]
         public async Task QuickTest()
         {
-            Language systemLanguage = Language.Java;
-            Language systemTestLanguage = Language.TypeScript;
+            string systemLanguage = Language.Java;
+            string systemTestLanguage = Language.TypeScript;
 
             await _generator.GenerateNewRepository(_repoName, systemLanguage, systemTestLanguage);
 

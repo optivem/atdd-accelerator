@@ -13,7 +13,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
             _client = client;
         }
 
-        public void VerifyPathsExist(Language systemLanguage, Language systemTestLanguage)
+        public void VerifyPathsExist(string systemLanguage, string systemTestLanguage)
         {
             VerifyPathLanguageExists("monolith-{0}", systemLanguage);
             VerifyPathLanguageExists(GetWorkflowPath(Constants.CommitStageMonolithFormat), systemLanguage);
@@ -37,12 +37,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
             result.ShouldFail($"Path '{path}' should not exist.");
         }
 
-        private void VerifyPathLanguageExists(string pathFormat, Language language)
+        private void VerifyPathLanguageExists(string pathFormat, string language)
         {
             foreach (var l in LanguageExtensions.GetAll())
             {
-                var path = string.Format(pathFormat, l.GetValue());
-                if (l.Equals(language))
+                var path = string.Format(pathFormat, l);
+                if (l == language)
                 {
                     VerifyPathExists(path);
                 }

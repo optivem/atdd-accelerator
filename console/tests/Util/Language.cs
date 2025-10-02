@@ -1,28 +1,17 @@
 namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util
 {
-    public enum Language
+
+    public static class Language
     {
-        None,
-        Java,
-        DotNet,
-        TypeScript
+        public const string None = "none";
+        public const string Java = "java";
+        public const string DotNet = "dotnet";
+        public const string TypeScript = "typescript";
     }
 
     public static class LanguageExtensions
     {
-        public static string GetValue(this Language language)
-        {
-            return language switch
-            {
-                Language.None => "none",
-                Language.Java => "java",
-                Language.DotNet => "dotnet",
-                Language.TypeScript => "typescript",
-                _ => throw new ArgumentOutOfRangeException(nameof(language), language, null)
-            };
-        }
-
-        public static Language[] GetAll()
+        public static string[] GetAll()
         {
             return new[] { Language.Java, Language.DotNet, Language.TypeScript };
         }

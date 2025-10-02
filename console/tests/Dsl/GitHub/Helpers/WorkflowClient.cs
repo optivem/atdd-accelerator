@@ -17,7 +17,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
             _repositoryPath = client.GetRepositoryPath();
         }
 
-        public void VerifyWorkflowsPass(Language systemLanguage, Language systemTestLanguage)
+        public void VerifyWorkflowsPass(string systemLanguage, string systemTestLanguage)
         {
             VerifyWorkflowPasses(Constants.PagesBuilderDeployment);
             VerifyWorkflowPasses(Constants.CommitStageMonolithFormat, systemLanguage);
@@ -34,9 +34,9 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
             workflowRun.Conclusion.ShouldBe("success");
         }
 
-        private void VerifyWorkflowPasses(string workflowFileNameFormat, Language language)
+        private void VerifyWorkflowPasses(string workflowFileNameFormat, string language)
         {
-            var workflowFileName = string.Format(workflowFileNameFormat, language.GetValue());
+            var workflowFileName = string.Format(workflowFileNameFormat, language);
             VerifyWorkflowPasses(workflowFileName);
         }
 

@@ -12,7 +12,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
             _client = client;
         }
 
-        public void VerifyPackagesExist(Language systemLanguage)
+        public void VerifyPackagesExist(string systemLanguage)
         {
             // TODO: Implement package verification logic
             // This would verify that GitHub Packages are created correctly

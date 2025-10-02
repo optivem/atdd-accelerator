@@ -9,15 +9,15 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
         private const string RepoOwner = "valentinajemuovic";
 
 
-        public async Task<ProcessResult> GenerateRepositoryAsync(string repoName, Language systemLanguage, Language systemTestLanguage)
+        public async Task<ProcessResult> GenerateRepositoryAsync(string repoName, string systemLanguage, string systemTestLanguage)
         {
             var args = new[]
             {
                 "generate",
                 "monorepo",
                 "--repository-name", repoName,
-                "--system-language", systemLanguage.GetValue(),
-                "--system-test-language", systemTestLanguage.GetValue(),
+                "--system-language", systemLanguage,
+                "--system-test-language", systemTestLanguage,
                 "--github-username", RepoOwner,
             };
 
