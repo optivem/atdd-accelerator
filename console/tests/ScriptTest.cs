@@ -28,7 +28,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
 
             if (created && _gitHub != null)
             {
-                // _gitHub.DeleteRepository();
+                _gitHub.DeleteRepository();
             }
         }
 
@@ -36,17 +36,17 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         {
             return new List<object[]>
             {
-                // new object[] { Language.DotNet, Language.DotNet },
-                // new object[] { Language.DotNet, Language.Java },
-                // new object[] { Language.DotNet, Language.TypeScript },
+                new object[] { Language.DotNet, Language.DotNet },
+                new object[] { Language.DotNet, Language.Java },
+                new object[] { Language.DotNet, Language.TypeScript },
 
-                // new object[] { Language.Java, Language.DotNet },
-                // new object[] { Language.Java, Language.Java },
-                new object[] { Language.Java, Language.TypeScript }
+                new object[] { Language.Java, Language.DotNet },
+                new object[] { Language.Java, Language.Java },
+                new object[] { Language.Java, Language.TypeScript },
 
-                // new object[] { Language.TypeScript, Language.DotNet },
-                // new object[] { Language.TypeScript, Language.Java },
-                // new object[] { Language.TypeScript, Language.TypeScript }
+                new object[] { Language.TypeScript, Language.DotNet },
+                new object[] { Language.TypeScript, Language.Java },
+                new object[] { Language.TypeScript, Language.TypeScript }
             };
         }
 
@@ -77,6 +77,21 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         // TODO: Error if some mandatory parameter missing, or invalid, or empty
         // TODO: Error if no internet connection
 
+
+        [Fact]
+        public async Task QuickTest()
+        {
+            Language systemLanguage = Language.Java;
+            Language systemTestLanguage = Language.TypeScript;
+
+            await _generator.GenerateNewRepository(_repoName, systemLanguage, systemTestLanguage);
+
+            _gitHub.VerifyRepositoryExists();
+            _gitHub.VerifyPathsExist(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyDockerComposeImage(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyReadmeHasBadges(systemLanguage, systemTestLanguage);
+            _gitHub.VerifyPagesEnabled();
+        }
 
         [Fact]
         public async Task ShouldReturnErrorForInvalidSystemLanguage()

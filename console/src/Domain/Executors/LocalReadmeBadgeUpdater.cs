@@ -34,31 +34,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             var readmeContent = originalContent;
 
             var badgesToRemove = new List<string>();
-            switch (_context.SystemLanguage)
-            {
-                case Language.Java:
-                    badgesToRemove.Add("commit-stage-monolith-dotnet");
-                    badgesToRemove.Add("commit-stage-monolith-typescript");
-                    break;
-                case Language.DotNet:
-                    badgesToRemove.Add("commit-stage-monolith-java");
-                    badgesToRemove.Add("commit-stage-monolith-typescript");
-                    break;
-                case Language.TypeScript:
-                    badgesToRemove.Add("commit-stage-monolith-java");
-                    badgesToRemove.Add("commit-stage-monolith-dotnet");
-                    break;
-            }
 
             foreach (var language in LanguageExtensions.GetAll())
             {
-                if (language != _context.SystemTestLanguage)
+                if (language != _context.SystemLanguage)
                 {
                     var languageString = language.Stringify();
-                    badgesToRemove.Add($"local-acceptance-stage-test-{languageString}");
-                    badgesToRemove.Add($"acceptance-stage-test-{languageString}");
-                    badgesToRemove.Add($"qa-stage-test-{languageString}");
-                    badgesToRemove.Add($"prod-stage-test-{languageString}");
+                    badgesToRemove.Add($"commit-stage-monolith-{languageString}");
                 }
             }
             foreach (var badge in badgesToRemove)
