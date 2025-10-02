@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util;
+using Shouldly;
 using static Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process.ProcessResultAssertions;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpers
@@ -30,7 +31,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
         {
             var workflowRun = WaitUntilCompleted(workflowFileName);
 
-            Assert.Equal("success", workflowRun.Conclusion);
+            workflowRun.Conclusion.ShouldBe("success");
         }
 
         private void VerifyWorkflowPasses(string workflowFileNameFormat, Language language)

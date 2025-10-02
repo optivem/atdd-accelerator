@@ -1,6 +1,6 @@
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util.Process;
-using FluentAssertions;
+using Shouldly;
 using System.Text.Json;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpers
@@ -32,8 +32,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
             var branch = source.GetProperty("branch").GetString();
             var path = source.GetProperty("path").GetString();
 
-            branch.Should().Be("main", "GitHub Pages source branch should be 'main'");
-            path.Should().Be("/docs", "GitHub Pages source path should be '/docs'");
+            branch.ShouldBe("main", "GitHub Pages source branch should be 'main'");
+            path.ShouldBe("/docs", "GitHub Pages source path should be '/docs'");
         }
     }
 }

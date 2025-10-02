@@ -1,6 +1,6 @@
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util;
-using FluentAssertions;
+using Shouldly;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpers
 {
@@ -62,15 +62,15 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
         {
             var readmeContent = GetReadmeContent();
 
-            readmeContent.Should().Contain(badgeName, $"Expected README to contain badge name '{badgeName}', but it was not found.");
-            readmeContent.Should().Contain(badgeWorkflow, $"Expected README to contain badge workflow '{badgeWorkflow}', but it was not found.");
-            readmeContent.Should().Contain(badgeSvg, $"Expected README to contain badge SVG '{badgeSvg}', but it was not found.");
+            readmeContent.ShouldContain(badgeName, Case.Insensitive, $"Expected README to contain badge name '{badgeName}', but it was not found.");
+            readmeContent.ShouldContain(badgeWorkflow, Case.Insensitive, $"Expected README to contain badge workflow '{badgeWorkflow}', but it was not found.");
+            readmeContent.ShouldContain(badgeSvg, Case.Insensitive, $"Expected README to contain badge SVG '{badgeSvg}', but it was not found.");
         }
 
         private void VerifyReadmeDoesNotContainBadge(string badge)
         {
             var readmeContent = GetReadmeContent();
-            readmeContent.Should().NotContain(badge, $"Expected README to NOT contain badge '{badge}', but it was found.");
+            readmeContent.ShouldNotContain(badge, Case.Insensitive, $"Expected README to NOT contain badge '{badge}', but it was found.");
         }
 
         private string GetReadmeContent()
