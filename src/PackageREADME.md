@@ -14,10 +14,29 @@ dotnet tool install -g atdd-accelerator-cli
 
 ## Requirements
 
-- .NET 8.0 or later
-- GitHub Desktop installed
-- GitHub CLI (`gh`) installed and authenticated
-- Docker Desktop installed
+- [.NET 8.0](https://dotnet.microsoft.com/en-us/download)
+- [GitHub](https://git-scm.com/downloads)
+- [GitHub CLI](https://cli.github.com)
+- [Docker Desktop](https://www.docker.com/get-started)
+
+
+You can check that you have installed them:
+```
+dotnet --version    # .NET
+git --version       # Git
+gh --version        # GitHub CLI
+docker --version    # Docker
+```
+
+Also check that you have authenticated into GitHub:
+```
+gh auth status
+```
+
+If you haven't authenticated, then you'll need to log into GitHub:
+```
+gh auth login
+```
 
 ## Usage
 
