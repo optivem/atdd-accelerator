@@ -1,5 +1,6 @@
 ﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions;
+using Optivem.AtddAccelerator.TemplateGenerator.Domain.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,6 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 {
     internal class GitHubRepositoryTemplateGenerator : BaseExecutor
     {
-        private static string TemplateName = "optivem/atdd-accelerator-template-mono-repo";
-
         public GitHubRepositoryTemplateGenerator(Context context) : base(context)
         {
         }
@@ -31,7 +30,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
             try
             {
-                var result = ProcessExecutor.RunProcess("gh", $"repo create {_context.RepositoryName} --template {TemplateName} --public --clone");
+                var result = ProcessExecutor.RunProcess("gh", $"repo create {_context.RepositoryName} --template {TemplateConstants.TemplatePath} --public --clone");
 
                 if (result.IsError)
                 {

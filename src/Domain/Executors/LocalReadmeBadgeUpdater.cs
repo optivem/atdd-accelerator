@@ -1,4 +1,6 @@
-﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
+﻿using Microsoft.VisualBasic;
+using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
+using Optivem.AtddAccelerator.TemplateGenerator.Domain.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +62,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             {
                 readmeContent = Regex.Replace(readmeContent, $@".*\[!\[{badge}\].*(?:\r?\n)?", "", RegexOptions.Multiline);
             }
-            return readmeContent.Replace("optivem/atdd-accelerator-template-mono-repo", $"{_context.RepositoryPath}");
+            return readmeContent.Replace(TemplateConstants.TemplatePath, $"{_context.RepositoryPath}");
         }
 
         private void AddToStaging()

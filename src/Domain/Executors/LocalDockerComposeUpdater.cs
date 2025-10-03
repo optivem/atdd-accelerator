@@ -1,5 +1,6 @@
 ﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions;
+using Optivem.AtddAccelerator.TemplateGenerator.Domain.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             }
             var templateContent = File.ReadAllText(templatePath);
             var updatedContent = templateContent
-                .Replace("ghcr.io/optivem/atdd-accelerator-template-mono-repo/", $"ghcr.io/{_context.RepositoryPath}/")
+                .Replace($"ghcr.io/{TemplateConstants.TemplatePath}", $"ghcr.io/{_context.RepositoryPath}")
                 .Replace($"monolith-{systemTestLanguage}", $"monolith-{_context.SystemLanguage.Stringify()}");
 
             var currentContent = File.ReadAllText(targetDockerCompose);
