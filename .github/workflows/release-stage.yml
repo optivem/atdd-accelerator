@@ -80,7 +80,26 @@ jobs:
 
     - name: 'Install tool from NuGet.org'
       run: |
-        dotnet tool install --global atdd-accelerator --version ${{ github.event.release.tag_name }}
+        max_attempts=30
+        attempt=1
+        # Remove leading 'v' from tag name if present
+        version="${{ github.event.release.tag_name }}"
+        version="${version#v}"
+        while [ $attempt -le $max_attempts ]; do
+          echo "Attempt $attempt to install tool from NuGet.org (version: $version)..."
+          if dotnet tool install --global atdd-accelerator --version "$version"; then
+            echo "Tool installed successfully."
+            break
+          else
+            echo "Tool not found yet. Waiting 30 seconds before retrying..."
+            sleep 30
+            attempt=$((attempt + 1))
+          fi
+        done
+        if [ $attempt -gt $max_attempts ]; then
+          echo "Failed to install tool after $max_attempts attempts."
+          exit 1
+        fi
 
     - name: 'Test tool commands'
       run: |
