@@ -20,6 +20,8 @@ What is the Repository Strategy that you use in your Real Life Project:
 - **GitHub CLI**: [Install Guide](https://cli.github.com)
 - **Docker Desktop**: [Install Guide](https://www.docker.com/get-started)
 
+If you do install, make sure that you restart your terminal/command prompt after installation (and you may need to restart your computer too).
+
 Check whether you have these installed:
 
 ```

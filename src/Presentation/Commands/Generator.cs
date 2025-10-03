@@ -12,11 +12,15 @@ public class Generator
 {
     private readonly ILogger<Generator> _logger;
     private readonly ILogger<TemplateRepositoryGenerator> _templateRepositoryGeneratorLogger;
+    private readonly ILogger<OptionsValidator> _optionsValidatorLogger;
 
-    public Generator(ILogger<Generator> logger, ILogger<TemplateRepositoryGenerator> templateRepositoryGeneratorLogger)
+    public Generator(ILogger<Generator> logger, 
+        ILogger<TemplateRepositoryGenerator> templateRepositoryGeneratorLogger,
+        ILogger<OptionsValidator> optionsValidatorLogger)
     {
         _logger = logger;
-        _templateRepositoryGeneratorLogger = templateRepositoryGeneratorLogger;   
+        _templateRepositoryGeneratorLogger = templateRepositoryGeneratorLogger;
+        _optionsValidatorLogger = optionsValidatorLogger;
     }
 
     public async Task<int> ExecuteAsync(string[] args)
@@ -39,7 +43,8 @@ public class Generator
 
         var options = OptionsParser.ParseMonorepoOptions(args);
 
-        var result = OptionsValidator.Validate(options);
+        var optionsValidator = new OptionsValidator(_optionsValidatorLogger);
+        var result = optionsValidator.Validate(options);
         if(result != 0)
         {
             return result;
@@ -51,6 +56,7 @@ public class Generator
         await templateRepositoryGenerator.GenerateAsync();
 
         _logger.LogInformation("Repository '{RepositoryName}' created successfully under owner '{RepositoryOwner}'.", context.RepositoryName, context.RepositoryOwner);
+        _logger.LogInformation("GitHub URL: https://github.com/{RepositoryOwner}/{RepositoryName}", context.RepositoryOwner, context.RepositoryName);
 
         return 0;
     }

@@ -36,7 +36,9 @@ public class GeneratorProgram
         // Configure Serilog
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
-            .WriteTo.Console()
+            .WriteTo.Console(restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)  // Info/Warning to stdout
+            .WriteTo.Console(restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error,
+                             standardErrorFromLevel: Serilog.Events.LogEventLevel.Error)     // Errors to stderr
             .WriteTo.File(logFilePath, 
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 7,
@@ -80,8 +82,9 @@ public class GeneratorProgram
             if (args[0] == "generate")
             {
                 var generatorLogger = loggerFactory.CreateLogger<Generator>();
-                var templateRepositoryGeneratorLogger = loggerFactory.CreateLogger<Application.TemplateRepositoryGenerator>();
-                var generator = new Generator(generatorLogger, templateRepositoryGeneratorLogger);
+                var templateRepositoryGeneratorLogger = loggerFactory.CreateLogger<TemplateRepositoryGenerator>();
+                var optionsValidatorLogger = loggerFactory.CreateLogger<OptionsValidator>();
+                var generator = new Generator(generatorLogger, templateRepositoryGeneratorLogger, optionsValidatorLogger);
                 var generatorArgs = args.Skip(1).ToArray();
                 return await generator.ExecuteAsync(generatorArgs);
             }
