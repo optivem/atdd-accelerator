@@ -68,7 +68,7 @@ public class GeneratorProgram
         try
         {
             using var httpClient = new HttpClient();
-            using var response = await httpClient.GetAsync("https://www.microsoft.com", HttpCompletionOption.ResponseHeadersRead);
+            using var response = await httpClient.GetAsync("https://github.com", HttpCompletionOption.ResponseHeadersRead);
             return response.IsSuccessStatusCode;
         }
         catch
