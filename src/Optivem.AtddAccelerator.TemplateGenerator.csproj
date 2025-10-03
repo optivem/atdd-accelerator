@@ -14,7 +14,7 @@
     
     <!-- NuGet Package Information -->
     <PackageId>atdd-accelerator-cli</PackageId>
-    <PackageVersion>1.0.18</PackageVersion>
+    <PackageVersion>1.0.19</PackageVersion>
     <Authors>Valentina Jemuovic, Optivem</Authors>
     <Description>ATDD Accelerator Template Generator</Description>
     <PackageTags>atdd;testing;accelerator;template</PackageTags>
@@ -24,6 +24,14 @@
     <!-- <PackageIcon>icon.png</PackageIcon> -->
 	  <!-- <PackageReleaseNotes>Initial release.</PackageReleaseNotes> -->
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>PackageREADME.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="PackageREADME.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.9" />
