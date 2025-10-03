@@ -18,11 +18,12 @@ What is the Repository Strategy that you use in your Real Life Project:
 - **.NET 8**: [Install Guide](https://dotnet.microsoft.com/en-us/download)
 - **Git**: [Install Guide](https://git-scm.com/downloads)
 - **GitHub CLI**: [Install Guide](https://cli.github.com/)
-- **Docker Desktop**: [Install Guide](https://docs.docker.com/get-started/introduction/get-docker-desktop/)
+- **Docker Desktop**: [Install Guide](https://docs.docker.com/engine/install)
 
 Check whether you have these installed:
 
 ```
+dotnet --version    # .NET
 git --version       # Git
 gh --version        # GitHub CLI
 docker --version    # Docker
