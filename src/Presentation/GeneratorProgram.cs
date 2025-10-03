@@ -2,12 +2,16 @@
 using Optivem.AtddAccelerator.TemplateGenerator.Application;
 using Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions;
 using Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
+using Serilog;
+using Serilog.Core;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
 using System.Threading.Tasks;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation;
 
@@ -17,15 +21,30 @@ public class GeneratorProgram
 
     public static async Task<int> Main(string[] args)
     {
+        // Create logs directory in user's home folder
+        var logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "atdd-accelerator-logs");
+        Directory.CreateDirectory(logDirectory);
+        
+        var logFilePath = Path.Combine(logDirectory, $"atdd-accelerator-{DateTime.Now:yyyy-MM-dd}.log");
+
+        // Configure Serilog
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .WriteTo.File(logFilePath, 
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 7,
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+            .CreateLogger();
+
         using var loggerFactory = LoggerFactory.Create(builder =>
         {
-            builder
-                .AddConsole()
-                .SetMinimumLevel(LogLevel.Information);
+            builder.AddSerilog();
         });
         _logger = loggerFactory.CreateLogger<GeneratorProgram>();
 
         _logger.LogInformation("Application started.");
+        _logger.LogInformation("Log file location: {LogFilePath}", logFilePath);
 
         if (!await HasInternetConnection())
         {
@@ -55,7 +74,7 @@ public class GeneratorProgram
             if (args[0] == "generate")
             {
                 var generatorLogger = loggerFactory.CreateLogger<Generator>();
-                var templateRepositoryGeneratorLogger = loggerFactory.CreateLogger<TemplateRepositoryGenerator>();
+                var templateRepositoryGeneratorLogger = loggerFactory.CreateLogger<Application.TemplateRepositoryGenerator>();
                 var generator = new Generator(generatorLogger, templateRepositoryGeneratorLogger);
                 var generatorArgs = args.Skip(1).ToArray();
                 return await generator.ExecuteAsync(generatorArgs);
@@ -134,6 +153,7 @@ public class GeneratorProgram
     {
         var assembly = Assembly.GetExecutingAssembly();
         var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
+        var logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "atdd-accelerator-logs");
 
         _logger?.LogInformation("ATDD Accelerator Template Generator");
         _logger?.LogInformation("Version: {Version}", version);
@@ -141,10 +161,14 @@ public class GeneratorProgram
         _logger?.LogInformation("Copyright (c) Optivem");
         _logger?.LogInformation("Licensed under MIT License");
         _logger?.LogInformation("Repository: https://github.com/optivem/atdd-accelerator");
+        _logger?.LogInformation("Log files stored in: {LogDirectory}", logDirectory);
     }
 
     static void ShowHelp()
     {
+
+        var logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "atdd-accelerator-logs");
+
         _logger?.LogInformation("ATDD Accelerator Template Generator");
         _logger?.LogInformation("");
         _logger?.LogInformation("Usage:");
@@ -168,5 +192,9 @@ public class GeneratorProgram
         _logger?.LogInformation("");
         _logger?.LogInformation("For more information, visit:");
         _logger?.LogInformation("https://github.com/optivem/atdd-accelerator");
+
+        _logger?.LogInformation("Troubleshooting:");
+        _logger?.LogInformation("  Log files are stored in: {LogDirectory}", logDirectory);
+        _logger?.LogInformation("  When reporting issues, please include the relevant log file.");
     }
 }
