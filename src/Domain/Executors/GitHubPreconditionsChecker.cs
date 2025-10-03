@@ -25,52 +25,33 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
         }
 
 
-        private void CheckGitHubCliInstalled()
-        {
-            try
-            {
-                var processResult = ProcessExecutor.RunProcess("gh", "--version");
-
-                if (processResult.IsError)
-                {
-                    throw CreateException(processResult, "GitHub CLI (gh) is not installed or not available in PATH. See installation instructions");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("GitHub CLI (gh) is not installed or not available in PATH. See installation instructions at https://cli.github.com/manual/installation", ex);
-            }
-        }
-
         private void CheckGitInstalled()
         {
-            try
+            var processResult = ProcessExecutor.RunProcess("git", "--version");
+            if (processResult.IsError)
             {
-                var processResult = ProcessExecutor.RunProcess("git", "--version");
-                if (processResult.IsError)
-                {
-                    throw CreateException(processResult, "Git is not installed or not available in PATH. See installation instructions");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Git is not installed or not available in PATH. See installation instructions at https://git-scm.com/book/en/v2/Getting-Started-Installing-Git", ex);
+                throw CreateException(processResult, "Git is not installed or not available in PATH. See installation instructions");
             }
         }
+
+        private void CheckGitHubCliInstalled()
+        {
+            var processResult = ProcessExecutor.RunProcess("gh", "--version");
+
+            if (processResult.IsError)
+            {
+                throw CreateException(processResult, "GitHub CLI (gh) is not installed or not available in PATH. See installation instructions");
+            }
+        }
+
+
 
         private void CheckDockerInstalled()
         {
-            try
+            var processResult = ProcessExecutor.RunProcess("docker", "--version");
+            if (processResult.IsError)
             {
-                var processResult = ProcessExecutor.RunProcess("docker", "--version");
-                if (processResult.IsError)
-                {
-                    throw CreateException(processResult, "Docker is not installed or not available in PATH. See installation instructions");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Docker is not installed or not available in PATH. See installation instructions at https://docs.docker.com/get-docker/", ex);
+                throw CreateException(processResult, "Docker is not installed or not available in PATH. See installation instructions");
             }
         }
 
