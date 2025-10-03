@@ -75,9 +75,6 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: 'Wait for NuGet.org indexing'
-      run: sleep 120  # NuGet.org takes longer to index packages
-
     - name: 'Install tool from NuGet.org'
       run: |
         max_attempts=30
