@@ -80,10 +80,10 @@ jobs:
 
     - name: 'Install tool from NuGet.org'
       run: |
-        dotnet tool install --global Optivem.AtddAccelerator.TemplateGenerator
+        dotnet tool install --global atdd-accelerator --version ${{ github.event.release.tag_name }}
 
     - name: 'Test tool commands'
       run: |
-        atdd-accelerator
-        atdd-accelerator --help
-        atdd-accelerator --version
+        atdd
+        atdd --help
+        atdd --version
