@@ -17,8 +17,8 @@ What is the Repository Strategy that you use in your Real Life Project:
 - You have an account on GitHub
 - **.NET 8**: [Install Guide](https://dotnet.microsoft.com/en-us/download)
 - **Git**: [Install Guide](https://git-scm.com/downloads)
-- **GitHub CLI**: [Install Guide](https://cli.github.com/)
-- **Docker Desktop**: [Install Guide](https://docs.docker.com/desktop/)
+- **GitHub CLI**: [Install Guide](https://cli.github.com)
+- **Docker Desktop**: [Install Guide](https://www.docker.com/get-started)
 
 Check whether you have these installed:
 
