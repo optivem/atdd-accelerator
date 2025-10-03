@@ -19,8 +19,9 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
             CheckGitHubCliInstalled();
             CheckDockerInstalled();
 
-            CheckRepositoryOwnerExists();
             CheckGitHubAuthenticated();
+            CheckRepositoryOwnerExists();
+            CheckRepositoryNameDoesNotExist();
         }
 
 
@@ -73,15 +74,6 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
             }
         }
 
-        private void CheckRepositoryOwnerExists() 
-        {
-            var processResult = ProcessExecutor.RunProcess("gh", $"api /users/{_context.RepositoryOwner}");
-
-            if (processResult.IsError)
-            {
-                throw CreateException(processResult, $"--repository-owner '{_context.RepositoryOwner}' does not exist on GitHub.");
-            }
-        }
 
         private void CheckGitHubAuthenticated()
         {
@@ -99,8 +91,36 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
                 throw CreateException(processResult, "GitHub CLI (gh) is not authenticated. Please run 'gh auth login' to authenticate.");
             }
         }
-        
 
+
+        private void CheckRepositoryOwnerExists()
+        {
+            var processResult = ProcessExecutor.RunProcess("gh", $"api /users/{_context.RepositoryOwner}");
+
+            if (processResult.IsError)
+            {
+                throw CreateException(processResult, $"--repository-owner '{_context.RepositoryOwner}' does not exist on GitHub.");
+            }
+        }
+
+
+        private void CheckRepositoryNameDoesNotExist()
+        {
+            // Use GitHub CLI to check if the repository exists for the owner
+            var processResult = ProcessExecutor.RunProcess("gh", $"api /repos/{_context.RepositoryOwner}/{_context.RepositoryName}");
+
+            // If the process succeeded, the repository exists and we should throw
+            if (processResult.IsSuccess)
+            {
+                throw CreateException(processResult, $"--repository-name '{_context.RepositoryName}' already exists for owner '{_context.RepositoryOwner}' on GitHub.");
+            }
+            // If the process failed, check if it's a 404 (not found), which means it's safe to proceed
+            // Otherwise, propagate the error
+            if (processResult.Errors != null && !processResult.Errors.Contains("Not Found", StringComparison.OrdinalIgnoreCase))
+            {
+                throw CreateException(processResult, $"Error checking if repository '{_context.RepositoryName}' exists for owner '{_context.RepositoryOwner}': {processResult.Errors}");
+            }
+        }
 
     }
 }

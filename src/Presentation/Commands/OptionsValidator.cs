@@ -73,7 +73,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
             var repositoryOwner = options.RepositoryOwner;
             if (string.IsNullOrWhiteSpace(repositoryOwner))
             {
-                Console.Error.WriteLine("Error: --repository-owner is required.");
+                Console.Error.WriteLine("Error: --repository-owner is empty.");
                 return false;
             }
 

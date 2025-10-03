@@ -110,7 +110,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         public async Task ShouldReturnErrorForDuplicateRepositoryName()
         {
             await _generator.GenerateNewRepository(RepositoryOwner, _repositoryName, Language.Java, Language.TypeScript);
-            await _generator.GenerateNewRepositoryExpectError(RepositoryOwner, _repositoryName, Language.Java, Language.TypeScript, $"Error: --repository-name '{_repositoryName}' already exists.");
+            await _generator.GenerateNewRepositoryExpectError(RepositoryOwner, _repositoryName, Language.Java, Language.TypeScript, $"Error: --repository-name '{_repositoryName}' already exists for owner '{RepositoryOwner}'");
         }
 
         [Theory]
