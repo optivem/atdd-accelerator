@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
+using System.Runtime.InteropServices.Marshalling;
 using System.Threading.Tasks;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
@@ -174,7 +175,7 @@ public class GeneratorProgram
 
         var logDirectory = GetLogDirectoryPath();
 
-        _logger?.LogInformation("ATDD Accelerator Template Generator");
+        _logger?.LogInformation("ATDD Accelerator CLI");
         _logger?.LogInformation("");
         _logger?.LogInformation("Usage:");
         _logger?.LogInformation("  atdd generate monorepo [options]");
@@ -185,15 +186,15 @@ public class GeneratorProgram
         _logger?.LogInformation("  generate monorepo       Generate a monorepo with ATDD structure");
         _logger?.LogInformation("");
         _logger?.LogInformation("Options:");
-        _logger?.LogInformation("  --repository-name <name>        Repository name (required)");
-        _logger?.LogInformation("  --system-language <language>    System language (required)");
-        _logger?.LogInformation("  --system-test-language <lang>   System test language (required)");
-        _logger?.LogInformation("  --output-path <path>            Output directory (default: current directory)");
+        _logger?.LogInformation("  --repository-owner <name>       Repository owner (required) - Your GitHub username or organization name");
+        _logger?.LogInformation("  --repository-name <name>        Repository name (required) - Unique name for the new repository you want to create");
+        _logger?.LogInformation("  --system-language <language>    System language (required) - Choose the language for source code: java, dotnet, typescript");
+        _logger?.LogInformation("  --system-test-language <lang>   System test language (required) - Choose the language for system tests: java, dotnet, typescript");
         _logger?.LogInformation("  --version, -v                   Show version information");
         _logger?.LogInformation("  --help, -h                      Show help information");
         _logger?.LogInformation("");
         _logger?.LogInformation("Examples:");
-        _logger?.LogInformation("  atdd generate monorepo --repository-name MyRepo --system-language CSharp --system-test-language Java");
+        _logger?.LogInformation("  atdd generate monorepo --repository-owner jsmith --repository-name eshop99 --system-language java --system-test-language typescript");
         _logger?.LogInformation("");
         _logger?.LogInformation("For more information, visit:");
         _logger?.LogInformation("https://github.com/optivem/atdd-accelerator");
