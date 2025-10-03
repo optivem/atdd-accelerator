@@ -107,6 +107,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         }
 
         [Fact]
+        public async Task ShouldReturnErrorForNonLowercaseRepositoryName()
+        {
+            var nonLowercaseRepositoryName = "RepoNameWithUppercase";
+            await _generator.GenerateNewRepositoryExpectError(RepositoryOwner, nonLowercaseRepositoryName, Language.Java, Language.TypeScript, $"Error: --repository-name '{nonLowercaseRepositoryName}' is not lowercase. Please use only lowercase letters, numbers, and hyphens (due to compatibility with Docker repositories).");
+        }
+
+        [Fact]
         public async Task ShouldReturnErrorForDuplicateRepositoryName()
         {
             await _generator.GenerateNewRepository(RepositoryOwner, _repositoryName, Language.Java, Language.TypeScript);
@@ -144,6 +151,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests
         {
             await _generator.GenerateNewRepositoryExpectError(RepositoryOwner, _repositoryName, Language.Java, invalidSystemTestLanguage, $"Error: --system-test-language: '{invalidSystemTestLanguage}' is invalid. Valid options: java, dotnet, typescript");
         }
+
 
 
 

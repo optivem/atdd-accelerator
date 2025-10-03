@@ -9,4 +9,4 @@ Generated with ATDD Accelerator
 
 dotnet clean
 dotnet build 
-.\src\bin\Debug\net8.0\Optivem.AtddAccelerator.TemplateGenerator.exe generate monorepo --repository-name Repo$([guid]::NewGuid().ToString('N').Substring(0,8)) --system-language dotnet --system-test-language typescript --repository-owner valentinajemuovic
+.\src\bin\Debug\net8.0\Optivem.AtddAccelerator.TemplateGenerator.exe generate monorepo  --repository-owner valentinajemuovic --repository-name repo-manual-$([guid]::NewGuid().ToString('N').Substring(0,8)) --system-language dotnet --system-test-language typescript

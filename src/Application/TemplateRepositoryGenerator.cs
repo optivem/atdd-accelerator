@@ -1,6 +1,7 @@
 ﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Executors;
 using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors;
+using Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
 {
     internal class TemplateRepositoryGenerator
     {
+        private readonly Context _context;
+
         private readonly GitHubPreconditionsChecker _gitHubPreconditionsChecker;
         private readonly GitHubRepositoryTemplateGenerator _gitHubRepositoryTemplateGenerator;
         private readonly GitHubCommitPusher _gitHubCommitPusher;
@@ -24,6 +27,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
 
         public TemplateRepositoryGenerator(Context context)
         {
+            _context = context;
             _gitHubPreconditionsChecker = new GitHubPreconditionsChecker(context);
             _gitHubRepositoryTemplateGenerator = new GitHubRepositoryTemplateGenerator(context);
             _gitHubCommitPusher = new GitHubCommitPusher(context);
@@ -40,8 +44,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
         {
             try
             {
+                Console.WriteLine($"Checking preconditions...");
                 _gitHubPreconditionsChecker.Execute();
                 _gitHubRepositoryTemplateGenerator.Execute();
+                Console.WriteLine($"Repository {_context.RepositoryName} was created.");
+                
+                
                 _localLanguageFoldersCleaner.Execute();
                 _localReadmeBadgeUpdater.Execute();
                 _localDockerComposeUpdater.Execute();
@@ -51,9 +59,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
 
                 _gitHubPagesEnabler.Execute();
                 _gitHubCommitPusher.Execute();
+                Console.WriteLine($"Finished post-processing.");
 
+                Console.WriteLine($"Waiting for Commit Stage to complete. This may take several minutes. Please wait...");
                 _gitHubCommitWorkflowWaiter.Execute();
+                Console.WriteLine($"Triggering Acceptance Stage and Release Stages. This may take several minutes. Please wait...");
                 _gitHubTestReleaseWorkflowWaiter.Execute();
+                Console.WriteLine("Workflows have been successfully triggered.");
             }
             finally
             {

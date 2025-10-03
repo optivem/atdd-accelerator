@@ -2,6 +2,8 @@
 using Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
 using System;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -11,6 +13,16 @@ public class GeneratorProgram
 {
     public static async Task<int> Main(string[] args)
     {
+        if (!await HasInternetConnection())
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Error.WriteLine("Error: No internet connection detected. Please check your network and try again.");
+            Console.ResetColor();
+            return 1;
+        }
+
+        await CheckForNewerNugetVersion();
+
         try
         {
             // Handle version command
@@ -49,6 +61,61 @@ public class GeneratorProgram
             Console.Error.WriteLine($"Unexpected error occurred.");
             return 1;
         }
+    }
+
+    static async Task<bool> HasInternetConnection()
+    {
+        try
+        {
+            using var httpClient = new HttpClient();
+            using var response = await httpClient.GetAsync("https://www.microsoft.com", HttpCompletionOption.ResponseHeadersRead);
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    static async Task CheckForNewerNugetVersion()
+    {
+        var packageId = "atdd-accelerator"; // Use your actual PackageId
+        var currentVersion = Assembly.GetExecutingAssembly()
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
+
+        var latestVersion = await GetLatestNugetVersionAsync(packageId);
+
+        if (latestVersion != null && IsOlderVersion(currentVersion, latestVersion))
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Warning: You are using version {currentVersion}, but a newer version {latestVersion} is available on NuGet.org.");
+            Console.ResetColor();
+        }
+    }
+
+    static bool IsOlderVersion(string current, string latest)
+    {
+        // Use NuGet.Versioning for robust comparison if available
+        // Otherwise, fallback to System.Version
+        if (Version.TryParse(current.TrimStart('v'), out var currentVer) &&
+            Version.TryParse(latest.TrimStart('v'), out var latestVer))
+        {
+            return currentVer < latestVer;
+        }
+        return false;
+    }
+
+    static async Task<string?> GetLatestNugetVersionAsync(string packageId)
+    {
+        using var http = new HttpClient();
+        var url = $"https://api.nuget.org/v3-flatcontainer/{packageId.ToLowerInvariant()}/index.json";
+        var response = await http.GetFromJsonAsync<NugetVersionsResponse>(url);
+        return response?.Versions?.LastOrDefault();
+    }
+
+    class NugetVersionsResponse
+    {
+        public List<string>? Versions { get; set; }
     }
 
     static void ShowVersion()

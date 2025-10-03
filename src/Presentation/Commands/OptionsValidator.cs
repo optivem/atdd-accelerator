@@ -13,14 +13,31 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
 
         internal static int Validate(Options options)
         {
+            var isValidRepositoryOwner = ValidateRepositoryOwner(options);
             var isValidRepositoryName = ValidateRepositoryName(options);
             var isValidSystemLanguage = ValidateSystemLanguage(options);
             var isValidSystemTestLanguage = ValidateSystemTestLanguage(options);
-            var isValidRepositoryOwner = ValidateRepositoryOwner(options);
 
-            var success = isValidRepositoryName && isValidSystemLanguage && isValidSystemTestLanguage && isValidRepositoryOwner;
+
+            var success = isValidRepositoryOwner 
+                && isValidRepositoryName 
+                && isValidSystemLanguage 
+                && isValidSystemTestLanguage;
 
             return success ? 0 : 1;
+        }
+
+
+        private static bool ValidateRepositoryOwner(Options options)
+        {
+            var repositoryOwner = options.RepositoryOwner;
+            if (string.IsNullOrWhiteSpace(repositoryOwner))
+            {
+                Console.Error.WriteLine("Error: --repository-owner is empty.");
+                return false;
+            }
+
+            return true;
         }
 
         private static bool ValidateRepositoryName(Options options)
@@ -30,6 +47,16 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
                 Console.Error.WriteLine("Error: --repository-name is empty.");
                 return false;
             }
+
+            var lowercaseRepositoryName = options.RepositoryName.ToLowerInvariant();
+
+            // Ensure repository name is all lowercase
+            if (options.RepositoryName != lowercaseRepositoryName)
+            {
+                Console.Error.WriteLine($"Error: --repository-name '{options.RepositoryName}' is not lowercase. Please use only lowercase letters, numbers, and hyphens (due to compatibility with Docker repositories).");
+                return false;
+            }
+
             return true;
         }
 
@@ -68,16 +95,5 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
             return true;
         }
 
-        private static bool ValidateRepositoryOwner(Options options)
-        {
-            var repositoryOwner = options.RepositoryOwner;
-            if (string.IsNullOrWhiteSpace(repositoryOwner))
-            {
-                Console.Error.WriteLine("Error: --repository-owner is empty.");
-                return false;
-            }
-
-            return true;
-        }
     }
 }

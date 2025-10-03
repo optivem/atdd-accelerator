@@ -39,7 +39,7 @@ public class Generator
         var templateRepositoryGenerator = new TemplateRepositoryGenerator(context);
         await templateRepositoryGenerator.GenerateAsync();
 
-        Console.WriteLine($"Repository was successfully created: {options.RepositoryName}");
+        Console.WriteLine($"Repository '{context.RepositoryName}' created successfully under owner '{context.RepositoryOwner}'.");
 
         return 0;
     }
