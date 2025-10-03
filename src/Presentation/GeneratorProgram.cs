@@ -19,13 +19,18 @@ public class GeneratorProgram
 {
     private static ILogger? _logger;
 
+    private static string GetLogDirectoryPath()
+    {
+        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), $"{ApplicationConstants.PackageId}-logs");
+    }
+
     public static async Task<int> Main(string[] args)
     {
         // Create logs directory in user's home folder
-        var logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "atdd-accelerator-logs");
+        var logDirectory = GetLogDirectoryPath();
         Directory.CreateDirectory(logDirectory);
         
-        var logFilePath = Path.Combine(logDirectory, $"atdd-accelerator-{DateTime.Now:yyyy-MM-dd}.log");
+        var logFilePath = Path.Combine(logDirectory, $"{ApplicationConstants.PackageId}-{DateTime.Now:yyyy-MM-dd}.log");
 
         // Configure Serilog
         Log.Logger = new LoggerConfiguration()
@@ -112,7 +117,7 @@ public class GeneratorProgram
 
     static async Task CheckForNewerNugetVersion()
     {
-        var packageId = "atdd-accelerator"; // Use your actual PackageId
+        var packageId = ApplicationConstants.PackageId; // Use your actual PackageId
         var currentVersion = Assembly.GetExecutingAssembly()
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
 
@@ -153,7 +158,7 @@ public class GeneratorProgram
     {
         var assembly = Assembly.GetExecutingAssembly();
         var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
-        var logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "atdd-accelerator-logs");
+        var logDirectory = GetLogDirectoryPath();
 
         _logger?.LogInformation("ATDD Accelerator Template Generator");
         _logger?.LogInformation("Version: {Version}", version);
@@ -167,7 +172,7 @@ public class GeneratorProgram
     static void ShowHelp()
     {
 
-        var logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "atdd-accelerator-logs");
+        var logDirectory = GetLogDirectoryPath();
 
         _logger?.LogInformation("ATDD Accelerator Template Generator");
         _logger?.LogInformation("");

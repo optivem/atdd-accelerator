@@ -13,8 +13,8 @@
     <ToolCommandName>atdd</ToolCommandName>
     
     <!-- NuGet Package Information -->
-    <PackageId>atdd-accelerator</PackageId>
-    <PackageVersion>1.0.14</PackageVersion>
+    <PackageId>atdd-accelerator-cli</PackageId>
+    <PackageVersion>1.0.15</PackageVersion>
     <Authors>Valentina Jemuovic, Optivem</Authors>
     <Description>ATDD Accelerator Template Generator</Description>
     <PackageTags>atdd;testing;accelerator;template</PackageTags>

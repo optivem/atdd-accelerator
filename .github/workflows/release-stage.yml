@@ -84,7 +84,7 @@ jobs:
         version="${version#v}"
         while [ $attempt -le $max_attempts ]; do
           echo "Attempt $attempt to install tool from NuGet.org (version: $version)..."
-          if dotnet tool install --global atdd-accelerator --version "$version"; then
+          if dotnet tool install --global atdd-accelerator-cli --version "$version"; then
             echo "Tool installed successfully."
             break
           else
