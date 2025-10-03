@@ -14,8 +14,9 @@ What is the Repository Strategy that you use in your Real Life Project:
 
 ## Option A: Automated Setup (Recommended)
 
+- You have an account on GitHub
 - **.NET 8**: [Install Guide](https://dotnet.microsoft.com/en-us/download)
-- **GitHub Desktop**: [Install Guide](https://docs.github.com/en/desktop/installing-and-authenticating-to-github-desktop/installing-github-desktop)
+- **Git**: [Install Guide](https://git-scm.com/downloads)
 - **GitHub CLI**: [Install Guide](https://cli.github.com/)
 - **Docker Desktop**: [Install Guide](https://docs.docker.com/get-started/introduction/get-docker-desktop/)
 
