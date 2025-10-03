@@ -1,4 +1,5 @@
 ﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
+using Serilog.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,51 +21,30 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
             CheckDockerInstalled();
 
             CheckGitHubAuthenticated();
+            
             CheckRepositoryOwnerExists();
             CheckRepositoryNameDoesNotExist();
         }
 
-
         private void CheckGitInstalled()
         {
-            var processResult = ProcessExecutor.RunProcess("git", "--version");
-            if (processResult.IsError)
-            {
-                throw CreateException(processResult, "Git is not installed or not available in PATH. See installation instructions");
-            }
+            TryExecute("git", "--version", "Git is not installed or not available in PATH. See installation instructions.");
         }
 
         private void CheckGitHubCliInstalled()
         {
-            var processResult = ProcessExecutor.RunProcess("gh", "--version");
-
-            if (processResult.IsError)
-            {
-                throw CreateException(processResult, "GitHub CLI (gh) is not installed or not available in PATH. See installation instructions");
-            }
+            TryExecute("gh", "--version", "GitHub CLI (gh) is not installed or not available in PATH. See installation instructions.");
         }
-
-
 
         private void CheckDockerInstalled()
         {
-            var processResult = ProcessExecutor.RunProcess("docker", "--version");
-            if (processResult.IsError)
-            {
-                throw CreateException(processResult, "Docker is not installed or not available in PATH. See installation instructions");
-            }
+            TryExecute("docker", "--version", "Docker is not installed or not available in PATH. See installation instructions.");
         }
 
 
         private void CheckGitHubAuthenticated()
         {
-            // Use GitHub CLI to check authentication status
-            var processResult = ProcessExecutor.RunProcess("gh", "auth status");
-
-            if (processResult.IsError)
-            {
-                throw CreateException(processResult, "You are not authenticated with GitHub CLI (gh). Please run 'gh auth login' to authenticate.");
-            }
+            var processResult = TryExecute("gh", "auth status", "You are not authenticated with GitHub CLI (gh). Please run 'gh auth login' to authenticate.");
 
             // Optionally, check output for explicit authentication confirmation
             if (!processResult.Output.Contains("Logged in to github.com", StringComparison.OrdinalIgnoreCase))
@@ -100,6 +80,27 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
             if (processResult.Errors != null && !processResult.Errors.Contains("Not Found", StringComparison.OrdinalIgnoreCase))
             {
                 throw CreateException(processResult, $"Error checking if repository '{_context.RepositoryName}' exists for owner '{_context.RepositoryOwner}': {processResult.Errors}");
+            }
+        }
+
+        private ProcessResult TryExecute(string command, string args, string errorMessage)
+        {
+            ProcessResult? processResult = null;
+
+            try
+            {
+                processResult = ProcessExecutor.RunProcess(command, args);
+
+                if (processResult.IsError)
+                {
+                    throw CreateException(processResult, errorMessage);
+                }
+
+                return processResult;
+            }
+            catch (Exception ex)
+            {
+                throw CreateException(errorMessage);
             }
         }
 
