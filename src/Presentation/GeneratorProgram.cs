@@ -1,4 +1,6 @@
-﻿using Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions;
+﻿using Microsoft.Extensions.Logging;
+using Optivem.AtddAccelerator.TemplateGenerator.Application;
+using Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions;
 using Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
 using System;
 using System.Linq;
@@ -11,13 +13,23 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation;
 
 public class GeneratorProgram
 {
+    private static ILogger? _logger;
+
     public static async Task<int> Main(string[] args)
     {
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddConsole()
+                .SetMinimumLevel(LogLevel.Information);
+        });
+        _logger = loggerFactory.CreateLogger<GeneratorProgram>();
+
+        _logger.LogInformation("Application started.");
+
         if (!await HasInternetConnection())
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Error.WriteLine("Error: No internet connection detected. Please check your network and try again.");
-            Console.ResetColor();
+            _logger.LogError("Error: No internet connection detected. Please check your network and try again.");
             return 1;
         }
 
@@ -42,23 +54,25 @@ public class GeneratorProgram
             // Handle generate command
             if (args[0] == "generate")
             {
-                var generator = new Generator();
+                var generatorLogger = loggerFactory.CreateLogger<Generator>();
+                var templateRepositoryGeneratorLogger = loggerFactory.CreateLogger<TemplateRepositoryGenerator>();
+                var generator = new Generator(generatorLogger, templateRepositoryGeneratorLogger);
                 var generatorArgs = args.Skip(1).ToArray();
                 return await generator.ExecuteAsync(generatorArgs);
             }
 
             // Unknown command
-            Console.Error.WriteLine($"Error: Command '{args[0]}' is not recognized. Use 'atdd --help' for usage information.");
+            _logger.LogError("Error: Command '{Command}' is not recognized. Use 'atdd --help' for usage information.", args[0]);
             return 1;
         }
         catch (ExecutionException ex)
         {
-            Console.Error.WriteLine($"Error: {ex.CustomMessage}");
+            _logger.LogError("Error: {CustomMessage}", ex.CustomMessage);
             return 1;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            Console.Error.WriteLine($"Unexpected error occurred.");
+            _logger.LogError(ex, "Unexpected error occurred.");
             return 1;
         }
     }
@@ -87,9 +101,7 @@ public class GeneratorProgram
 
         if (latestVersion != null && IsOlderVersion(currentVersion, latestVersion))
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Warning: You are using version {currentVersion}, but a newer version {latestVersion} is available on NuGet.org.");
-            Console.ResetColor();
+            _logger?.LogWarning("Warning: You are using version {CurrentVersion}, but a newer version {LatestVersion} is available on NuGet.org.", currentVersion, latestVersion);
         }
     }
 
@@ -123,38 +135,38 @@ public class GeneratorProgram
         var assembly = Assembly.GetExecutingAssembly();
         var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
 
-        Console.WriteLine($"ATDD Accelerator Template Generator");
-        Console.WriteLine($"Version: {version}");
-        Console.WriteLine();
-        Console.WriteLine("Copyright (c) Optivem");
-        Console.WriteLine("Licensed under MIT License");
-        Console.WriteLine("Repository: https://github.com/optivem/atdd-accelerator");
+        _logger?.LogInformation("ATDD Accelerator Template Generator");
+        _logger?.LogInformation("Version: {Version}", version);
+        _logger?.LogInformation("");
+        _logger?.LogInformation("Copyright (c) Optivem");
+        _logger?.LogInformation("Licensed under MIT License");
+        _logger?.LogInformation("Repository: https://github.com/optivem/atdd-accelerator");
     }
 
     static void ShowHelp()
     {
-        Console.WriteLine("ATDD Accelerator Template Generator");
-        Console.WriteLine();
-        Console.WriteLine("Usage:");
-        Console.WriteLine("  atdd generate monorepo [options]");
-        Console.WriteLine("  atdd --version");
-        Console.WriteLine("  atdd --help");
-        Console.WriteLine();
-        Console.WriteLine("Commands:");
-        Console.WriteLine("  generate monorepo       Generate a monorepo with ATDD structure");
-        Console.WriteLine();
-        Console.WriteLine("Options:");
-        Console.WriteLine("  --repository-name <name>        Repository name (required)");
-        Console.WriteLine("  --system-language <language>    System language (required)");
-        Console.WriteLine("  --system-test-language <lang>   System test language (required)");
-        Console.WriteLine("  --output-path <path>            Output directory (default: current directory)");
-        Console.WriteLine("  --version, -v                   Show version information");
-        Console.WriteLine("  --help, -h                      Show help information");
-        Console.WriteLine();
-        Console.WriteLine("Examples:");
-        Console.WriteLine("  atdd generate monorepo --repository-name MyRepo --system-language CSharp --system-test-language Java");
-        Console.WriteLine();
-        Console.WriteLine("For more information, visit:");
-        Console.WriteLine("https://github.com/optivem/atdd-accelerator");
+        _logger?.LogInformation("ATDD Accelerator Template Generator");
+        _logger?.LogInformation("");
+        _logger?.LogInformation("Usage:");
+        _logger?.LogInformation("  atdd generate monorepo [options]");
+        _logger?.LogInformation("  atdd --version");
+        _logger?.LogInformation("  atdd --help");
+        _logger?.LogInformation("");
+        _logger?.LogInformation("Commands:");
+        _logger?.LogInformation("  generate monorepo       Generate a monorepo with ATDD structure");
+        _logger?.LogInformation("");
+        _logger?.LogInformation("Options:");
+        _logger?.LogInformation("  --repository-name <name>        Repository name (required)");
+        _logger?.LogInformation("  --system-language <language>    System language (required)");
+        _logger?.LogInformation("  --system-test-language <lang>   System test language (required)");
+        _logger?.LogInformation("  --output-path <path>            Output directory (default: current directory)");
+        _logger?.LogInformation("  --version, -v                   Show version information");
+        _logger?.LogInformation("  --help, -h                      Show help information");
+        _logger?.LogInformation("");
+        _logger?.LogInformation("Examples:");
+        _logger?.LogInformation("  atdd generate monorepo --repository-name MyRepo --system-language CSharp --system-test-language Java");
+        _logger?.LogInformation("");
+        _logger?.LogInformation("For more information, visit:");
+        _logger?.LogInformation("https://github.com/optivem/atdd-accelerator");
     }
 }

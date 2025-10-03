@@ -1,4 +1,5 @@
-﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Executors;
+﻿using Microsoft.Extensions.Logging;
+using Optivem.AtddAccelerator.TemplateGenerator.Core.Executors;
 using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors;
 using Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
@@ -10,9 +11,10 @@ using System.Threading.Tasks;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.Application
 {
-    internal class TemplateRepositoryGenerator
+    public class TemplateRepositoryGenerator
     {
         private readonly Context _context;
+        private readonly ILogger<TemplateRepositoryGenerator> _logger;
 
         private readonly GitHubPreconditionsChecker _gitHubPreconditionsChecker;
         private readonly GitHubRepositoryTemplateGenerator _gitHubRepositoryTemplateGenerator;
@@ -25,9 +27,10 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
         private readonly GitHubCommitWorkflowWaiter _gitHubCommitWorkflowWaiter;
         private readonly GitHubTestReleaseWorkflowWaiter _gitHubTestReleaseWorkflowWaiter;
 
-        public TemplateRepositoryGenerator(Context context)
+        public TemplateRepositoryGenerator(Context context, ILogger<TemplateRepositoryGenerator> logger)
         {
             _context = context;
+            _logger = logger;
             _gitHubPreconditionsChecker = new GitHubPreconditionsChecker(context);
             _gitHubRepositoryTemplateGenerator = new GitHubRepositoryTemplateGenerator(context);
             _gitHubCommitPusher = new GitHubCommitPusher(context);
@@ -44,10 +47,10 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
         {
             try
             {
-                Console.WriteLine($"Checking preconditions...");
+                _logger.LogInformation("Checking preconditions...");
                 _gitHubPreconditionsChecker.Execute();
                 _gitHubRepositoryTemplateGenerator.Execute();
-                Console.WriteLine($"Repository {_context.RepositoryName} was created.");
+                _logger.LogInformation("Repository {RepositoryName} was created.", _context.RepositoryName);
                 
                 
                 _localLanguageFoldersCleaner.Execute();
@@ -59,13 +62,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
 
                 _gitHubPagesEnabler.Execute();
                 _gitHubCommitPusher.Execute();
-                Console.WriteLine($"Finished post-processing.");
+                _logger.LogInformation("Finished post-processing.");
 
-                Console.WriteLine($"Waiting for Commit Stage to complete. This may take several minutes. Please wait...");
+                _logger.LogInformation("Waiting for Commit Stage to complete. This may take several minutes. Please wait...");
                 _gitHubCommitWorkflowWaiter.Execute();
-                Console.WriteLine($"Triggering Acceptance Stage and Release Stages. This may take several minutes. Please wait...");
+                _logger.LogInformation("Triggering Acceptance Stage and Release Stages. This may take several minutes. Please wait...");
                 _gitHubTestReleaseWorkflowWaiter.Execute();
-                Console.WriteLine("Workflows have been successfully triggered.");
+                _logger.LogInformation("Workflows have been successfully triggered.");
             }
             finally
             {

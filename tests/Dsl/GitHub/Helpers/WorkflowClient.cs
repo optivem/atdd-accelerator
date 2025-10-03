@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients;
 using Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Util;
 using Shouldly;
@@ -58,12 +59,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
                 if (attempt < maxRetries)
                 {
                     var delay = Math.Min(baseDelayMs * (int)Math.Pow(2, attempt - 1), maxDelayMs);
-                    Console.WriteLine($"Workflow: {workflowFileName} Attempt {attempt}: Workflow status is '{workflowRun.Status}', retrying in {delay}ms...");
                     Thread.Sleep(delay);
-                }
-                else
-                {
-                    Console.WriteLine($"Status: {workflowRun.Status}, max retries reached.");
                 }
             }
 

@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Logging;
 using Optivem.AtddAccelerator.TemplateGenerator.Application;
+using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -8,12 +10,21 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
 
 public class Generator
 {
+    private readonly ILogger<Generator> _logger;
+    private readonly ILogger<TemplateRepositoryGenerator> _templateRepositoryGeneratorLogger;
+
+    public Generator(ILogger<Generator> logger, ILogger<TemplateRepositoryGenerator> templateRepositoryGeneratorLogger)
+    {
+        _logger = logger;
+        _templateRepositoryGeneratorLogger = templateRepositoryGeneratorLogger;   
+    }
+
     public async Task<int> ExecuteAsync(string[] args)
     {
         if (args.Length == 0)
         {
-            Console.Error.WriteLine("Error: Please specify a template name.");
-            Console.Error.WriteLine("Usage: atdd generate monorepo [options]");
+            _logger.LogError("Error: Please specify a template name.");
+            _logger.LogError("Usage: atdd generate monorepo [options]");
             return 1;
         }
 
@@ -21,8 +32,8 @@ public class Generator
         
         if (!templateName.Equals("monorepo", StringComparison.OrdinalIgnoreCase))
         {
-            Console.Error.WriteLine($"Error: Unknown template '{templateName}'");
-            Console.Error.WriteLine("Available templates: monorepo");
+            _logger.LogError("Error: Unknown template '{TemplateName}'", templateName);
+            _logger.LogError("Available templates: monorepo");
             return 1;
         }
 
@@ -36,10 +47,10 @@ public class Generator
 
         var context = OptionsConverter.Convert(options);
 
-        var templateRepositoryGenerator = new TemplateRepositoryGenerator(context);
+        var templateRepositoryGenerator = new TemplateRepositoryGenerator(context, _templateRepositoryGeneratorLogger);
         await templateRepositoryGenerator.GenerateAsync();
 
-        Console.WriteLine($"Repository '{context.RepositoryName}' created successfully under owner '{context.RepositoryOwner}'.");
+        _logger.LogInformation("Repository '{RepositoryName}' created successfully under owner '{RepositoryOwner}'.", context.RepositoryName, context.RepositoryOwner);
 
         return 0;
     }
