@@ -8,14 +8,17 @@
   </PropertyGroup>
 
   <PropertyGroup>
+
+	  <!-- Versioning Information -->
+    <PackageVersion>1.0.22</PackageVersion>
+	<AssemblyInformationalVersion>1.0.22</AssemblyInformationalVersion>
+	  
     <!-- .NET Global Tool Configuration -->
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>atdd</ToolCommandName>
     
     <!-- NuGet Package Information -->
     <PackageId>atdd-accelerator-cli</PackageId>
-	<Version>1.0.21</Version>
-    <PackageVersion>1.0.21</PackageVersion>
     <Authors>Valentina Jemuovic, Optivem</Authors>
     <Description>ATDD Accelerator Template Generator</Description>
     <PackageTags>atdd;testing;accelerator;template</PackageTags>
@@ -25,8 +28,11 @@
     <!-- <PackageIcon>icon.png</PackageIcon> -->
 	  <!-- <PackageReleaseNotes>Initial release.</PackageReleaseNotes> -->
 
-	<AssemblyInformationalVersion>1.0.21</AssemblyInformationalVersion>
+
 	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+	  
+
+
   </PropertyGroup>
 
   <PropertyGroup>
