@@ -37,7 +37,9 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl
         {
             var result = await _client.GenerateRepositoryAsync(repositoryOwner, repositoryName, systemLanguage, systemTestLanguage);
             result.ShouldFail("Repository generation should fail.");
-            result.Errors.ShouldContain(expectedErrorMessage, Case.Insensitive);
+            // Check both output and errors since the error message might go to stdout instead of stderr
+            var allOutput = result.Output + result.Errors;
+            allOutput.ShouldContain(expectedErrorMessage, Case.Insensitive);
         }
     }
 }

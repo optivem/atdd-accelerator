@@ -6,7 +6,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
 {
     public class GeneratorClient
     {
-        public async Task<ProcessResult> GenerateRepositoryAsync(string repositoryOwner, string repositoryName, string systemLanguage, string systemTestLanguage)
+        public Task<ProcessResult> GenerateRepositoryAsync(string repositoryOwner, string repositoryName, string systemLanguage, string systemTestLanguage)
         {
             var args = new[]
             {
@@ -18,35 +18,28 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
                 "--system-test-language", systemTestLanguage,
 
             };
-
-            var originalOut = Console.Out;
-            var originalErr = Console.Error;
-            var outputWriter = new StringWriter();
-            var errorWriter = new StringWriter();
-
-            Console.SetOut(outputWriter);
-            Console.SetError(errorWriter);
-
-            int exitCode = 0;
-            try
+            
+            var commandArgs = new List<string>
             {
-                exitCode = await GeneratorProgram.Main(args);
-            }
-            catch (Exception ex)
-            {
-                exitCode = 1;
-                errorWriter.WriteLine(ex.ToString());
-            }
-            finally
-            {
-                Console.SetOut(originalOut);
-                Console.SetError(originalErr);
-            }
+                "dotnet",
+                "run",
+                "--project", GetProjectPath(),
+                "--"
+            };
+            commandArgs.AddRange(args);
+            
+            var result = ProcessExecutor.ExecuteProcess(commandArgs.ToArray());
+            
+            return Task.FromResult(result);
+        }
 
-            var output = outputWriter.ToString();
-            var errors = errorWriter.ToString();
-
-            return new ProcessResult(exitCode, output, errors);
+        private string GetProjectPath()
+        {
+            var currentDir = AppDomain.CurrentDomain.BaseDirectory;
+            var solutionDir = Directory.GetParent(currentDir)?.Parent?.Parent?.Parent?.Parent?.FullName;
+            if (solutionDir == null)
+                throw new InvalidOperationException("Could not find solution directory");
+            return Path.Combine(solutionDir, "src", "Optivem.AtddAccelerator.TemplateGenerator.csproj");
         }
     }
 }
