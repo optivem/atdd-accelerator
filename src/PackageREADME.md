@@ -33,8 +33,10 @@ gh auth status
 
 If you haven't authenticated, then you'll need to log into GitHub:
 ```
-gh auth login
+gh auth login --web --git-protocol https --scopes "repo,workflow,read:org"
 ```
+
+Note: We recommend https since with ssh you may run into issues with SSH keys. The scopes listed above are required for the tool to create repositories and set up workflows.
 
 ## Usage
 

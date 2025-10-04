@@ -62,7 +62,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             {
                 readmeContent = Regex.Replace(readmeContent, $@".*\[!\[{badge}\].*(?:\r?\n)?", "", RegexOptions.Multiline);
             }
-            return readmeContent.Replace(TemplateConstants.TemplatePath, $"{_context.RepositoryPath}");
+            return readmeContent.Replace(CommonConstants.TemplatePath, $"{_context.RepositoryPath}");
         }
 
         private void AddToStaging()

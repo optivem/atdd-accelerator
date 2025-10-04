@@ -1,5 +1,6 @@
 ﻿using Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities;
 using Optivem.AtddAccelerator.TemplateGenerator.Domain.Exceptions;
+using Optivem.AtddAccelerator.TemplateGenerator.Domain.Utilities;
 using Serilog.Core;
 using System;
 using System.Collections.Generic;
@@ -45,12 +46,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
 
         private void CheckGitHubAuthenticated()
         {
-            var processResult = TryExecute("gh", "auth status", "You are not authenticated with GitHub CLI (gh). Please run 'gh auth login' to authenticate.");
+            var processResult = TryExecute("gh", "auth status", $"You are not authenticated with GitHub CLI (gh). Please run '{CommonConstants.AuthCommand}' to authenticate.");
 
             // Check if logged in to github.com
             if (!processResult.Output.Contains("Logged in to github.com", StringComparison.OrdinalIgnoreCase))
             {
-                throw CreateException(processResult, "GitHub CLI authentication verification failed. Please ensure you are properly logged in with 'gh auth login'.");
+                throw CreateException(processResult, $"GitHub CLI authentication verification failed. Please ensure you are properly logged in with '{CommonConstants.AuthCommand}'.");
             }
 
             // Verify required scopes are present
@@ -68,14 +69,14 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
 
             if (scopesLine == null)
             {
-                throw CreateException("Unable to determine GitHub CLI token scopes. Please re-authenticate with 'gh auth login --scopes \"repo,workflow,read:org\"'.");
+                throw CreateException($"Unable to determine GitHub CLI token scopes. Please re-authenticate with '{CommonConstants.AuthCommand}'.");
             }
 
             // Extract scopes from the line (format: "Token scopes: 'gist', 'read:org', 'repo', 'workflow'")
             var scopesPart = scopesLine.Split(':', 2).LastOrDefault()?.Trim();
             if (string.IsNullOrEmpty(scopesPart))
             {
-                throw CreateException("Unable to parse GitHub CLI token scopes. Please re-authenticate with 'gh auth login --scopes \"repo,workflow,read:org\"'.");
+                throw CreateException($"Unable to parse GitHub CLI token scopes. Please re-authenticate with '{CommonConstants.AuthCommand}'.");
             }
 
             // Handle both quoted and unquoted formats, remove quotes and split by comma
@@ -97,7 +98,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Domain.Executors
             {
                 var missingScopesText = string.Join(", ", missingScopes);
                 var allRequiredScopes = string.Join(",", requiredScopes);
-                throw CreateException($"GitHub CLI is missing required scopes: {missingScopesText}. Please re-authenticate with 'gh auth login --scopes \"{allRequiredScopes}\"'.");
+                throw CreateException($"GitHub CLI is missing required scopes: {missingScopesText}. Please re-authenticate with '{CommonConstants.AuthCommand}'.");
             }
         }
 

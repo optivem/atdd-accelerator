@@ -42,7 +42,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             }
             var templateContent = File.ReadAllText(templatePath);
             var updatedContent = templateContent
-                .Replace($"ghcr.io/{TemplateConstants.TemplatePath}", $"ghcr.io/{_context.RepositoryPath}")
+                .Replace($"ghcr.io/{CommonConstants.TemplatePath}", $"ghcr.io/{_context.RepositoryPath}")
                 .Replace($"monolith-{systemTestLanguage}", $"monolith-{_context.SystemLanguage.Stringify()}");
 
             var currentContent = File.ReadAllText(targetDockerCompose);

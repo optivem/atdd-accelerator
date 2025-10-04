@@ -11,6 +11,8 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 {
     internal class GitHubRepositoryTemplateGenerator : BaseExecutor
     {
+
+
         public GitHubRepositoryTemplateGenerator(Context context, ProcessExecutor processExecutor) : base(context, processExecutor)
         {
         }
@@ -30,17 +32,17 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
             try
             {
-                var result = _processExecutor.RunProcess("gh", $"repo create {_context.RepositoryName} --template {TemplateConstants.TemplatePath} --public --clone");
+                var result = _processExecutor.RunProcess("gh", $"repo create {_context.RepositoryName} --template {CommonConstants.TemplatePath} --public --clone");
 
                 if (result.IsError)
                 {
                     if (result.Errors.Contains("already exists") || result.Output.Contains("already exists"))
                     {
-                        throw new Exception($"Repository name '{_context.RepositoryName}' already exists on this GitHub account. Please choose a different name.");
+                        throw CreateException($"Repository name '{_context.RepositoryName}' already exists on this GitHub account. Please choose a different name.");
                     }
                     else if(result.Errors.Contains("failed to run git: exit status 128"))
                     {
-                        throw new Exception($"Repository '{_context.RepositoryName}' was created, but cloning failed. This may be due to SSH authentication issue. Please switch to HTTPS or ensure your SSH keys are correctly set up in GitHub and try again.");
+                        throw CreateException($"Repository '{_context.RepositoryName}' was created at https://github.com/{_context.RepositoryOwner}/{_context.RepositoryName}, but cloning failed. This may be due to SSH authentication issue. Please re-authenticate with HTTPS using '{CommonConstants.AuthCommand}'");
                     }
                     else
                     {
