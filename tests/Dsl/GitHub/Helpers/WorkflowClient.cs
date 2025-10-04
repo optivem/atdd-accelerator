@@ -43,7 +43,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Dsl.GitHub.Helpe
 
         private WorkflowRunResult WaitUntilCompleted(string workflowFileName)
         {
-            const int maxRetries = 20;
+            const int maxRetries = 50;
             const int baseDelayMs = 1000; // Start with 1 second
             const int maxDelayMs = 300000; // Max 5 minutes
             
