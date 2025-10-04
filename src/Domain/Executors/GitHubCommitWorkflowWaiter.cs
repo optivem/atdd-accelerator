@@ -13,7 +13,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
         private static int MaxAttempts = 50;
         private static int DelayMilliseconds = 30000;
 
-        public GitHubCommitWorkflowWaiter(Context context) : base(context)
+        public GitHubCommitWorkflowWaiter(Context context, ProcessExecutor processExecutor) : base(context, processExecutor)
         {
         }
 
@@ -29,7 +29,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
             
             for (int attempt = 1; attempt <= MaxAttempts; attempt++)
             {
-                var result = ProcessExecutor.RunProcess("gh", $"run list --repo \"{_context.RepositoryPath}\" --workflow \"{workflowName}\" --limit 1 --json status,conclusion,createdAt");
+                var result = _processExecutor.RunProcess("gh", $"run list --repo \"{_context.RepositoryPath}\" --workflow \"{workflowName}\" --limit 1 --json status,conclusion,createdAt");
                 
                 if(result.IsError)
                 {
@@ -57,7 +57,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
         private void VerifyDockerImagesExist()
         {
             string imageName = $"ghcr.io/{_context.RepositoryPath}/monolith-{_context.SystemLanguage.Stringify()}:latest";
-            var result = ProcessExecutor.RunProcess("docker", $"manifest inspect {imageName}");
+            var result = _processExecutor.RunProcess("docker", $"manifest inspect {imageName}");
             
             if (result.IsError || string.IsNullOrWhiteSpace(result.Output))
             {

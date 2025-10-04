@@ -22,25 +22,27 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
         private readonly LocalLanguageFoldersCleaner _localLanguageFoldersCleaner;
         private readonly LocalReadmeBadgeUpdater _localReadmeBadgeUpdater;
         private readonly LocalDockerComposeUpdater _localDockerComposeUpdater;
+        private readonly GitHubCommitter _githubCommitter;
         private readonly GitHubPagesEnabler _gitHubPagesEnabler;
         private readonly LocalRepositoryDeleter _localRepositoryDeleter;
         private readonly GitHubCommitWorkflowWaiter _gitHubCommitWorkflowWaiter;
         private readonly GitHubTestReleaseWorkflowWaiter _gitHubTestReleaseWorkflowWaiter;
 
-        public TemplateRepositoryGenerator(Context context, ILogger<TemplateRepositoryGenerator> logger)
+        public TemplateRepositoryGenerator(Context context, ProcessExecutor processExecutor, ILoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = logger;
-            _gitHubPreconditionsChecker = new GitHubPreconditionsChecker(context);
-            _gitHubRepositoryTemplateGenerator = new GitHubRepositoryTemplateGenerator(context);
-            _gitHubCommitPusher = new GitHubCommitPusher(context);
-            _localLanguageFoldersCleaner = new LocalLanguageFoldersCleaner(context);
-            _localReadmeBadgeUpdater = new LocalReadmeBadgeUpdater(context);
-            _localDockerComposeUpdater = new LocalDockerComposeUpdater(context);
-            _gitHubPagesEnabler = new GitHubPagesEnabler(context);
-            _localRepositoryDeleter = new LocalRepositoryDeleter(context);
-            _gitHubCommitWorkflowWaiter = new GitHubCommitWorkflowWaiter(context);
-            _gitHubTestReleaseWorkflowWaiter = new GitHubTestReleaseWorkflowWaiter(context);
+            _logger = loggerFactory.CreateLogger<TemplateRepositoryGenerator>();
+            _gitHubPreconditionsChecker = new GitHubPreconditionsChecker(context, processExecutor);
+            _gitHubRepositoryTemplateGenerator = new GitHubRepositoryTemplateGenerator(context, processExecutor);
+            _gitHubCommitPusher = new GitHubCommitPusher(context, processExecutor);
+            _localLanguageFoldersCleaner = new LocalLanguageFoldersCleaner(context, processExecutor);
+            _localReadmeBadgeUpdater = new LocalReadmeBadgeUpdater(context, processExecutor);
+            _localDockerComposeUpdater = new LocalDockerComposeUpdater(context, processExecutor);
+            _githubCommitter = new GitHubCommitter(context, processExecutor);
+            _gitHubPagesEnabler = new GitHubPagesEnabler(context, processExecutor);
+            _localRepositoryDeleter = new LocalRepositoryDeleter(context, processExecutor);
+            _gitHubCommitWorkflowWaiter = new GitHubCommitWorkflowWaiter(context, processExecutor);
+            _gitHubTestReleaseWorkflowWaiter = new GitHubTestReleaseWorkflowWaiter(context, processExecutor);
         }
 
         public async Task GenerateAsync()
@@ -52,14 +54,11 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Application
                 _gitHubRepositoryTemplateGenerator.Execute();
                 _logger.LogInformation("Repository {RepositoryName} was created.", _context.RepositoryName);
                 
-                
                 _localLanguageFoldersCleaner.Execute();
                 _localReadmeBadgeUpdater.Execute();
                 _localDockerComposeUpdater.Execute();
 
-                var commitMessage = "Template post-processing";
-                ProcessExecutor.RunProcess("git", $"commit -m \"{commitMessage}\"");
-
+                _githubCommitter.Execute();
                 _gitHubPagesEnabler.Execute();
                 _gitHubCommitPusher.Execute();
                 _logger.LogInformation("Finished post-processing.");

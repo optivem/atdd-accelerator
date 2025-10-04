@@ -10,10 +10,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
     public abstract class BaseExecutor
     {
         protected readonly Context _context;
+        protected readonly ProcessExecutor _processExecutor;
 
-        public BaseExecutor(Context context)
+        public BaseExecutor(Context context, ProcessExecutor processExecutor)
         { 
-            _context = context; 
+            _context = context;
+            _processExecutor = processExecutor;
         }
 
         public abstract void Execute();

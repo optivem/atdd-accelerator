@@ -11,7 +11,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 {
     internal class LocalDockerComposeUpdater : BaseExecutor
     {
-        public LocalDockerComposeUpdater(Context context) : base(context)
+        public LocalDockerComposeUpdater(Context context, ProcessExecutor processExecutor) : base(context, processExecutor)
         {
         }
 
@@ -54,7 +54,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
         private void AddToStaging(string targetDockerCompose)
         {
-            ProcessExecutor.RunProcess("git", $"add {targetDockerCompose}");
+            _processExecutor.RunProcess("git", $"add {targetDockerCompose}");
         }
     }
 }

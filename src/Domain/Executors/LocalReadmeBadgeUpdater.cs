@@ -14,7 +14,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
     {
         private static readonly string ReadmeFilePath = "README.md";
 
-        public LocalReadmeBadgeUpdater(Context context) : base(context)
+        public LocalReadmeBadgeUpdater(Context context, ProcessExecutor processExecutor) : base(context, processExecutor)
         {
         }
 
@@ -67,7 +67,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
         private void AddToStaging()
         {
-            ProcessExecutor.RunProcess("git", "add README.md");
+            _processExecutor.RunProcess("git", "add README.md");
         }
     }
 }

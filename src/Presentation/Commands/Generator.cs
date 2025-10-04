@@ -10,17 +10,13 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands;
 
 public class Generator
 {
+    private readonly ILoggerFactory _loggerFactory;
     private readonly ILogger<Generator> _logger;
-    private readonly ILogger<TemplateRepositoryGenerator> _templateRepositoryGeneratorLogger;
-    private readonly ILogger<OptionsValidator> _optionsValidatorLogger;
 
-    public Generator(ILogger<Generator> logger, 
-        ILogger<TemplateRepositoryGenerator> templateRepositoryGeneratorLogger,
-        ILogger<OptionsValidator> optionsValidatorLogger)
+    public Generator(ILoggerFactory loggerFactory)
     {
-        _logger = logger;
-        _templateRepositoryGeneratorLogger = templateRepositoryGeneratorLogger;
-        _optionsValidatorLogger = optionsValidatorLogger;
+        _loggerFactory = loggerFactory;
+        _logger = loggerFactory.CreateLogger<Generator>();
     }
 
     public async Task<int> ExecuteAsync(string[] args)
@@ -43,7 +39,7 @@ public class Generator
 
         var options = OptionsParser.ParseMonorepoOptions(args);
 
-        var optionsValidator = new OptionsValidator(_optionsValidatorLogger);
+        var optionsValidator = new OptionsValidator(_loggerFactory);
         var result = optionsValidator.Validate(options);
         if(result != 0)
         {
@@ -52,7 +48,14 @@ public class Generator
 
         var context = OptionsConverter.Convert(options);
 
-        var templateRepositoryGenerator = new TemplateRepositoryGenerator(context, _templateRepositoryGeneratorLogger);
+        _logger.LogDebug("Context created:");
+        _logger.LogDebug("  Repository: {RepositoryOwner}/{RepositoryName}", context.RepositoryOwner, context.RepositoryName);
+        _logger.LogDebug("  System Language: {SystemLanguage}", context.SystemLanguage);
+        _logger.LogDebug("  System Test Language: {SystemTestLanguage}", context.SystemTestLanguage);
+        _logger.LogDebug("  Output Path: {OutputPath}", context.OutputPath);
+
+        var processExecutor = new ProcessExecutor(_loggerFactory);
+        var templateRepositoryGenerator = new TemplateRepositoryGenerator(context, processExecutor, _loggerFactory);
         await templateRepositoryGenerator.GenerateAsync();
 
         _logger.LogInformation("Repository '{RepositoryName}' created successfully under owner '{RepositoryOwner}'.", context.RepositoryName, context.RepositoryOwner);

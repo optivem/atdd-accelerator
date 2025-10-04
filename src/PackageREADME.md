@@ -12,10 +12,8 @@ dotnet tool install -g atdd-accelerator-cli
 
 ## Requirements
 
-## Requirements
-
 - [.NET 8.0](https://dotnet.microsoft.com/en-us/download)
-- [GitHub](https://git-scm.com/downloads)
+- [Git](https://git-scm.com/downloads)
 - [GitHub CLI](https://cli.github.com)
 - [Docker Desktop](https://www.docker.com/get-started)
 

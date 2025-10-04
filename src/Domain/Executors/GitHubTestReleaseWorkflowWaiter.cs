@@ -12,7 +12,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
     {
         private static int DelayMillis = 500;
 
-        public GitHubTestReleaseWorkflowWaiter(Context context) : base(context)
+        public GitHubTestReleaseWorkflowWaiter(Context context, ProcessExecutor processExecutor) : base(context, processExecutor)
         {
         }
 
@@ -41,7 +41,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 
         private void ExecuteWorkflow(string workflow)
         {
-            var result = ProcessExecutor.RunProcess("gh", $"workflow run {workflow} --repo \"{_context.RepositoryPath}\"");
+            var result = _processExecutor.RunProcess("gh", $"workflow run {workflow} --repo \"{_context.RepositoryPath}\"");
 
             if (result.IsError)
             {

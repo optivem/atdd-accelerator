@@ -9,7 +9,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
 {
     internal class LocalRepositoryDeleter : BaseExecutor
     {
-        public LocalRepositoryDeleter(Context context) : base(context)
+        public LocalRepositoryDeleter(Context context, ProcessExecutor processExecutor) : base(context, processExecutor)
         {
         }
 

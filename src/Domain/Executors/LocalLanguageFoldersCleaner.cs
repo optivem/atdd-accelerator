@@ -12,7 +12,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
         // TODO: VJ: Add to enum
         private static readonly string[] Languages = { "java", "dotnet", "typescript" };
 
-        public LocalLanguageFoldersCleaner(Context context) : base(context)
+        public LocalLanguageFoldersCleaner(Context context, ProcessExecutor processExecutor) : base(context, processExecutor)
         {
         }
 
@@ -73,12 +73,12 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Executors
                     if (isFolder && Directory.Exists(item))
                     {
                         Directory.Delete(item, true);
-                        ProcessExecutor.RunProcess("git", $"rm -r {item}");
+                        _processExecutor.RunProcess("git", $"rm -r {item}");
                     }
                     else if (File.Exists(item))
                     {
                         File.Delete(item);
-                        ProcessExecutor.RunProcess("git", $"rm {item}");
+                        _processExecutor.RunProcess("git", $"rm {item}");
                     }
                 }
             }

@@ -14,9 +14,9 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Presentation.Commands
         // TODO: VJ: Should come from enum
         private static readonly HashSet<string> ValidLanguages = new HashSet<string> { "java", "dotnet", "typescript" };
 
-        public OptionsValidator(ILogger<OptionsValidator> logger)
+        public OptionsValidator(ILoggerFactory loggerFactory)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<OptionsValidator>();
         }
 
         public int Validate(Options options)

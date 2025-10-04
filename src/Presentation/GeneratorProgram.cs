@@ -33,16 +33,17 @@ public class GeneratorProgram
         
         var logFilePath = Path.Combine(logDirectory, $"{ApplicationConstants.PackageId}-{DateTime.Now:yyyy-MM-dd}.log");
 
-        // Configure Serilog
+        // Configure Serilog - clean console output, detailed file logging  
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .WriteTo.Console(restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information)  // Info/Warning to stdout
-            .WriteTo.Console(restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error,
-                             standardErrorFromLevel: Serilog.Events.LogEventLevel.Error)     // Errors to stderr
-            .WriteTo.File(logFilePath, 
+            .MinimumLevel.Debug()  // Allow Debug level globally
+            .WriteTo.Console(
+                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,  // Console shows Info+ only
+                outputTemplate: "{Message:lj}{NewLine}{Exception}")  // Clean console output
+            .WriteTo.File(logFilePath,
+                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Debug,  // File shows Debug+ 
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 7,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}")  // Detailed file output
             .CreateLogger();
 
         using var loggerFactory = LoggerFactory.Create(builder =>
@@ -51,7 +52,7 @@ public class GeneratorProgram
         });
         _logger = loggerFactory.CreateLogger<GeneratorProgram>();
 
-        _logger.LogInformation("Application started.");
+        _logger.LogInformation("ATDD Accelerator CLI started.");
         _logger.LogInformation("Log file location: {LogFilePath}", logFilePath);
 
         if (!await HasInternetConnection())
@@ -81,10 +82,7 @@ public class GeneratorProgram
             // Handle generate command
             if (args[0] == "generate")
             {
-                var generatorLogger = loggerFactory.CreateLogger<Generator>();
-                var templateRepositoryGeneratorLogger = loggerFactory.CreateLogger<TemplateRepositoryGenerator>();
-                var optionsValidatorLogger = loggerFactory.CreateLogger<OptionsValidator>();
-                var generator = new Generator(generatorLogger, templateRepositoryGeneratorLogger, optionsValidatorLogger);
+                var generator = new Generator(loggerFactory);
                 var generatorArgs = args.Skip(1).ToArray();
                 return await generator.ExecuteAsync(generatorArgs);
             }
@@ -93,13 +91,22 @@ public class GeneratorProgram
             _logger.LogError("Error: Command '{Command}' is not recognized. Use 'atdd --help' for usage information.", args[0]);
             return 1;
         }
+        catch(ProcessException ex)
+        {
+            _logger.LogDebug(ex, "ProcessException caught in Main.");
+            _logger.LogError("Error: {CustomMessage}", ex.CustomMessage);
+            ex.Result?.Errors?.Split('\n').ToList().ForEach(line => _logger.LogError(line));
+            return 1;
+        }
         catch (ExecutionException ex)
         {
+            _logger.LogDebug(ex, "ExecutionException caught in Main.");
             _logger.LogError("Error: {CustomMessage}", ex.CustomMessage);
             return 1;
         }
         catch (Exception ex)
         {
+            _logger.LogDebug(ex, "Unexpected exception caught in Main.");
             _logger.LogError(ex, "Unexpected error occurred.");
             return 1;
         }
@@ -162,15 +169,7 @@ public class GeneratorProgram
     {
         var assembly = Assembly.GetExecutingAssembly();
         var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
-        var logDirectory = GetLogDirectoryPath();
-
-        _logger?.LogInformation("ATDD Accelerator Template Generator");
-        _logger?.LogInformation("Version: {Version}", version);
-        _logger?.LogInformation("");
-        _logger?.LogInformation("Copyright (c) Optivem");
-        _logger?.LogInformation("Licensed under MIT License");
-        _logger?.LogInformation("Repository: https://github.com/optivem/atdd-accelerator");
-        _logger?.LogInformation("Log files stored in: {LogDirectory}", logDirectory);
+        _logger?.LogInformation(version);
     }
 
     static void ShowHelp()

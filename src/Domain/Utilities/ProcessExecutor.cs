@@ -4,12 +4,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
 {
-    public static class ProcessExecutor
+    public class ProcessExecutor
     {
-        public static ProcessResult RunProcess(string fileName, string arguments)
+        private readonly ILogger _logger;
+
+        public ProcessExecutor(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<ProcessExecutor>();
+        }
+
+        public ProcessResult RunProcess(string fileName, string arguments)
         {
             var process = new Process
             {
@@ -22,10 +30,21 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.Core.Utilities
                     UseShellExecute = false
                 }
             };
+
+            _logger.LogDebug("Executing command: {FileName} {Arguments}", fileName, arguments);
+
             process.Start();
+
+            _logger.LogDebug("Process started with PID: {ProcessId}", process.Id);
+
             var output = process.StandardOutput.ReadToEnd();
             var errors = process.StandardError.ReadToEnd();
             process.WaitForExit();
+
+            _logger.LogDebug("Process exited with code: {ExitCode}", process.ExitCode);
+            _logger.LogDebug("Process output: {Output}", output);
+            _logger.LogDebug("Process errors: {Errors}", errors);
+
             return new ProcessResult(process.ExitCode, output, errors);
         }
     }
