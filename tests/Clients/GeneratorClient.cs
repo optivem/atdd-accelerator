@@ -23,6 +23,7 @@ namespace Optivem.AtddAccelerator.TemplateGenerator.SystemTests.Clients
             {
                 "dotnet",
                 "run",
+                "--no-launch-profile",
                 "--project", GetProjectPath(),
                 "--"
             };

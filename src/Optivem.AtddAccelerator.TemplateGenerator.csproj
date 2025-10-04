@@ -10,8 +10,8 @@
   <PropertyGroup>
 
 	  <!-- Versioning Information -->
-    <PackageVersion>1.0.22</PackageVersion>
-	<AssemblyInformationalVersion>1.0.22</AssemblyInformationalVersion>
+    <PackageVersion>1.0.23</PackageVersion>
+	<AssemblyInformationalVersion>1.0.23</AssemblyInformationalVersion>
 	  
     <!-- .NET Global Tool Configuration -->
     <PackAsTool>true</PackAsTool>
