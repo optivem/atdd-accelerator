@@ -8,12 +8,7 @@ The [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) was design
 - [ATDD Accelerator Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/)
 - [ATDD Accelerator Dashboard](https://docs.google.com/spreadsheets/d/1XWrwzDTDSxFFzgjMvhqOrpA5Yh7bOZ87dtEnKHot-eM/edit?gid=0#gid=0)
 
-## GitHub Repositories
+## Repository Links
 
 - [ATDD Accelerator Template](https://github.com/optivem/atdd-accelerator-template)
 - [ATDD Accelerator eShop](https://github.com/optivem/atdd-accelerator-eshop)
-
-## Contributors
-
-- [Valentina Jemuović](https://github.com/valentinajemuovic)
-- [Jelena Cupać](https://github.com/jcupac)
