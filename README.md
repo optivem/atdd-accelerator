@@ -4,34 +4,26 @@ The [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) was design
 
 ## For Students
 
-### Program Links
+**Program Links:**
 
 - [ATDD Accelerator Course](https://optivem.thinkific.com/courses/take/atdd-accelerator)
 - [ATDD Accelerator Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/)
 - [ATDD Accelerator Dashboard](https://docs.google.com/spreadsheets/d/1XWrwzDTDSxFFzgjMvhqOrpA5Yh7bOZ87dtEnKHot-eM/edit?gid=0#gid=0)
 
-### Repository Links
+**Repository Links:**
 
-[ATDD Accelerator Template](https://github.com/optivem/atdd-accelerator-template)
-- [ATDD Accelerator Template (Java)](https://github.com/optivem/atdd-accelerator-template-java)
-- [ATDD Accelerator Template (.NET)](https://github.com/optivem/atdd-accelerator-template-dotnet)
-- [ATDD Accelerator Template (TypeScript)](https://github.com/optivem/atdd-accelerator-template-typescript)
-
-[ATDD Accelerator eShop](https://github.com/optivem/atdd-accelerator-eshop)
-- [ATDD Accelerator eShop (Java)](https://github.com/optivem/atdd-accelerator-eshop-java)
-- [ATDD Accelerator eShop (.NET)](https://github.com/optivem/atdd-accelerator-eshop-dotnet)
-- [ATDD Accelerator eShop (TypeScript)](https://github.com/optivem/atdd-accelerator-eshop-typescript)
+- [ATDD Accelerator Template](https://github.com/optivem/atdd-accelerator-template): [Java](https://github.com/optivem/atdd-accelerator-template-java) [.NET](https://github.com/optivem/atdd-accelerator-template-dotnet) [TypeScript](https://github.com/optivem/atdd-accelerator-template-typescript)
+- [ATDD Accelerator eShop](https://github.com/optivem/atdd-accelerator-eshop): [Java](https://github.com/optivem/atdd-accelerator-eshop-java) [.NET](https://github.com/optivem/atdd-accelerator-eshop-dotnet) [TypeScript](https://github.com/optivem/atdd-accelerator-eshop-typescript)
 
 ## For Teachers
 
-### Program Links
+**Program Links:**
 
-- [ATDD Accelerator Course (Student)](https://optivem.thinkific.com/courses/take/atdd-accelerator)
-- [ATDD Accelerator Course (Admin)](https://optivem.thinkific.com/manage/courses/3202539)
+- [ATDD Accelerator Course Admin](https://optivem.thinkific.com/manage/courses/3202539)
 - [ATDD Accelerator Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/)
 - [ATDD Accelerator Dashboard](https://docs.google.com/spreadsheets/d/1XWrwzDTDSxFFzgjMvhqOrpA5Yh7bOZ87dtEnKHot-eM/edit?gid=0#gid=0)
 
-### Project Board Links
+**Project Links:**
 
 - [ATDD Accelerator Template Project](https://github.com/orgs/optivem/projects/9/views/1)
 - [ATDD Accelerator eShop Project](https://github.com/orgs/optivem/projects/11/views/1)
