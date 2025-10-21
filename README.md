@@ -12,3 +12,12 @@ The [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) was design
 
 - [ATDD Accelerator Template](https://github.com/optivem/atdd-accelerator-template)
 - [ATDD Accelerator eShop](https://github.com/optivem/atdd-accelerator-eshop)
+
+## License
+
+MIT License
+
+## Contributors
+
+- [Valentina Jemuović](https://github.com/valentinajemuovic)
+- [Jelena Cupać](https://github.com/jcupac)
