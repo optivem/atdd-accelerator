@@ -10,8 +10,15 @@ The [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) was design
 
 ## Repository Links
 
-- [ATDD Accelerator Template](https://github.com/optivem/atdd-accelerator-template)
-- [ATDD Accelerator eShop](https://github.com/optivem/atdd-accelerator-eshop)
+[ATDD Accelerator Template](https://github.com/optivem/atdd-accelerator-template):
+- [ATDD Accelerator Template (Java)](https://github.com/optivem/atdd-accelerator-template-java)
+- [ATDD Accelerator Template (.NET)](https://github.com/optivem/atdd-accelerator-template-dotnet)
+- [ATDD Accelerator Template (TypeScript)](https://github.com/optivem/atdd-accelerator-template-typescript)
+
+[ATDD Accelerator eShop](https://github.com/optivem/atdd-accelerator-eshop)
+- [ATDD Accelerator eShop (Java)](https://github.com/optivem/atdd-accelerator-eshop-java)
+- [ATDD Accelerator eShop (.NET)](https://github.com/optivem/atdd-accelerator-eshop-dotnet)
+- [ATDD Accelerator eShop (TypeScript)](https://github.com/optivem/atdd-accelerator-eshop-typescript)
 
 ## License
 
