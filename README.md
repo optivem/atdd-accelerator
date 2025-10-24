@@ -28,6 +28,12 @@ The [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) was design
 - [ATDD Accelerator Template Project](https://github.com/orgs/optivem/projects/9/views/1)
 - [ATDD Accelerator eShop Project](https://github.com/orgs/optivem/projects/11/views/1)
 
+
+## Project Roadmap
+
+- [Project Board](https://github.com/orgs/optivem/projects/12)
+- [Issues](https://github.com/optivem/atdd-accelerator/issues)
+
 ## License
 
 MIT License
