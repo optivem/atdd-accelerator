@@ -14,13 +14,13 @@ The [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) was design
 
 [**ATDD Accelerator Template**](https://github.com/optivem/atdd-accelerator-template):
 - Starter Templates
- - [Java](https://github.com/optivem/atdd-accelerator-template-java)
- - [.NET](https://github.com/optivem/atdd-accelerator-template-dotnet)
- - [TypeScript](https://github.com/optivem/atdd-accelerator-template-typescript)
+  - [Java](https://github.com/optivem/atdd-accelerator-template-java)
+  - [.NET](https://github.com/optivem/atdd-accelerator-template-dotnet)
+  - [TypeScript](https://github.com/optivem/atdd-accelerator-template-typescript)
 - Customized Templates
- - [Multi Language](https://github.com/optivem/atdd-accelerator-template-multi-lang)
- - [Multi Component](https://github.com/optivem/atdd-accelerator-template-multi-comp)
- - [Multi Repository](https://github.com/optivem/atdd-accelerator-template-multi-repo)
+  - [Multi Language](https://github.com/optivem/atdd-accelerator-template-multi-lang)
+  - [Multi Component](https://github.com/optivem/atdd-accelerator-template-multi-comp)
+  - [Multi Repository](https://github.com/optivem/atdd-accelerator-template-multi-repo)
  
 [**ATDD Accelerator eShop**](https://github.com/optivem/atdd-accelerator-eshop):
 - [Java](https://github.com/optivem/atdd-accelerator-eshop-java)
