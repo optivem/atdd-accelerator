@@ -12,9 +12,20 @@ The [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) was design
 
 **Repository Links:**
 
-- [ATDD Accelerator Template - Starter Templates](https://github.com/optivem/atdd-accelerator-template): [Java](https://github.com/optivem/atdd-accelerator-template-java) [.NET](https://github.com/optivem/atdd-accelerator-template-dotnet) [TypeScript](https://github.com/optivem/atdd-accelerator-template-typescript)
-- [ATDD Accelerator Template - Customized Templates](https://github.com/optivem/atdd-accelerator-template): [Multi Language](https://github.com/optivem/atdd-accelerator-template-multi-lang) [Multi Component](https://github.com/optivem/atdd-accelerator-template-multi-comp) [Multi Repository](https://github.com/optivem/atdd-accelerator-template-multi-repo)
-- [ATDD Accelerator eShop](https://github.com/optivem/atdd-accelerator-eshop): [Java](https://github.com/optivem/atdd-accelerator-eshop-java) [.NET](https://github.com/optivem/atdd-accelerator-eshop-dotnet) [TypeScript](https://github.com/optivem/atdd-accelerator-eshop-typescript)
+- [**ATDD Accelerator Template **](https://github.com/optivem/atdd-accelerator-template):
+  Starter Templates
+  - [Java](https://github.com/optivem/atdd-accelerator-template-java)
+  - [.NET](https://github.com/optivem/atdd-accelerator-template-dotnet)
+  - [TypeScript](https://github.com/optivem/atdd-accelerator-template-typescript)
+  Customized Templates
+  - [Multi Language](https://github.com/optivem/atdd-accelerator-template-multi-lang)
+  - [Multi Component](https://github.com/optivem/atdd-accelerator-template-multi-comp)
+  - [Multi Repository](https://github.com/optivem/atdd-accelerator-template-multi-repo)
+ 
+- [**ATDD Accelerator eShop**](https://github.com/optivem/atdd-accelerator-eshop):
+  - [Java](https://github.com/optivem/atdd-accelerator-eshop-java)
+  - [.NET](https://github.com/optivem/atdd-accelerator-eshop-dotnet)
+  - [TypeScript](https://github.com/optivem/atdd-accelerator-eshop-typescript)
 
 ## For Teachers
 
