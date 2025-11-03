@@ -48,7 +48,9 @@ The [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) was design
 
 ## License
 
-MIT License
+[![MIT License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
+
+This project is released under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Contributors
 
