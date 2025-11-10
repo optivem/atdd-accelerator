@@ -2,6 +2,9 @@
 
 The [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) was designed by [Valentina Jemuović](https://www.linkedin.com/in/valentinajemuovic/) to help Senior Engineers and Tech Leads adopt ATDD within 10 weeks. Through the program, our members get a chance to build their own Sandbox Project, receive review & feedback on their Sandbox Project. Then, they can take those learnings and apply them in their Real Life Project.
 
+<img width="1280" height="720" alt="atdd accelerator" src="https://github.com/user-attachments/assets/0599e166-f281-4842-b453-54a003d7da2e" />
+
+
 ## For Students
 
 **Program Links:**
