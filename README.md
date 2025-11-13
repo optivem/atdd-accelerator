@@ -33,7 +33,7 @@
 - [TypeScript](https://github.com/optivem/atdd-accelerator-eshop-typescript)
 
 
-🚀 [**Modern Testing in Legacy Code**](https://github.com/optivem/modern-acceptance-testing-in-legacy-code)
+🚀 [**Modern Acceptance Testing in Legacy Code**](https://github.com/optivem/modern-acceptance-testing-in-legacy-code)
 - [Java](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-java)
 - [.NET](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-dotnet)
 - [TypeScript](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-typescript)
@@ -46,6 +46,9 @@
 - [ATDD Accelerator Course Admin](https://optivem.thinkific.com/manage/courses/3202539)
 - [ATDD Accelerator Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/)
 - [ATDD Accelerator Dashboard](https://docs.google.com/spreadsheets/d/1XWrwzDTDSxFFzgjMvhqOrpA5Yh7bOZ87dtEnKHot-eM/edit?gid=0#gid=0)
+
+**Module Links:**
+- Modern Acceptance Testing in Legacy Code [Course Admin](https://optivem.thinkific.com/manage/courses/3262198) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzM5NTg5/)
 
 **Project Links:**
 
