@@ -33,10 +33,10 @@
 - [TypeScript](https://github.com/optivem/atdd-accelerator-eshop-typescript)
 
 
-🚀 [**E2E Testing in Legacy Code**](https://github.com/optivem/e2e-testing-in-legacy-code)
-- [Java](https://github.com/optivem/e2e-testing-in-legacy-code-java)
-- [.NET](https://github.com/optivem/e2e-testing-in-legacy-code-dotnet)
-- [TypeScript](https://github.com/optivem/e2e-testing-in-legacy-code-typescript)
+🚀 [**Modern Testing in Legacy Code**](https://github.com/optivem/modern-acceptance-testing-in-legacy-code)
+- [Java](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-java)
+- [.NET](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-dotnet)
+- [TypeScript](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-typescript)
 
 
 ## For Teachers
