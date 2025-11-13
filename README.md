@@ -48,7 +48,8 @@
 - [ATDD Accelerator Dashboard](https://docs.google.com/spreadsheets/d/1XWrwzDTDSxFFzgjMvhqOrpA5Yh7bOZ87dtEnKHot-eM/edit?gid=0#gid=0)
 
 **Module Links:**
-- Modern Acceptance Testing in Legacy Code [Course Admin](https://optivem.thinkific.com/manage/courses/3262198) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzM5NTg5/)
+- Pipelines in Legacy Code: [Course Admin](https://optivem.thinkific.com/manage/courses/3262197) | [GroupChat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/)
+- Modern Acceptance Testing in Legacy Code: [Course Admin](https://optivem.thinkific.com/manage/courses/3262198) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzM5NTg5/)
 
 **Project Links:**
 
