@@ -2,11 +2,15 @@
 
 ## For Students
 
+[ATDD Accelerator Dashboard](https://docs.google.com/spreadsheets/d/1XWrwzDTDSxFFzgjMvhqOrpA5Yh7bOZ87dtEnKHot-eM/edit?gid=0#gid=0)
+
 **Program Links:**
 
-- 🏫 [ATDD Accelerator Course](https://optivem.thinkific.com/courses/take/atdd-accelerator)
-- [ATDD Accelerator Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/)
-- [ATDD Accelerator Dashboard](https://docs.google.com/spreadsheets/d/1XWrwzDTDSxFFzgjMvhqOrpA5Yh7bOZ87dtEnKHot-eM/edit?gid=0#gid=0)
+| Name | Course | Group Chat |
+|----------|----------|----------|
+| ATDD Accelerator    | [Course](https://optivem.thinkific.com/courses/take/atdd-accelerator) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) |
+| Row 2    | Data     | Data     |
+
 
 **Repository Links:**
 
