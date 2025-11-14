@@ -32,7 +32,7 @@
 - [TypeScript](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-typescript)
 
 
-## For Teachers
+## For Instructors
 
 **Program Links:**
 
