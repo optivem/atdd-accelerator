@@ -6,10 +6,10 @@
 
 **Program Links:**
 
-| Name | Course | Group Chat |
+| Name | 📝 Course | 📝 Group Chat |
 |----------|----------|----------|
-| ATDD Accelerator (Cohort 2025)   | [Course](https://optivem.thinkific.com/courses/take/atdd-accelerator) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) |
-| Modern Pipelines in Legacy Code  | [Course](https://optivem.thinkific.com/courses/take/modern-pipelines-in-legacy-code) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) |
+| ATDD Accelerator (Cohort 2025)   | 📝 [Course](https://optivem.thinkific.com/courses/take/atdd-accelerator) | 📝 [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) |
+| Modern Pipelines in Legacy Code  | 📝 [Course](https://optivem.thinkific.com/courses/take/modern-pipelines-in-legacy-code) | 📝 [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) |
 
 
 **Repository Links:**
