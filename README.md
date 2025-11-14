@@ -6,7 +6,7 @@
 |----------|----------|----------|----------|----------|
 | ATDD Accelerator (Cohort 2025)   | [Course](https://optivem.thinkific.com/courses/take/atdd-accelerator) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) | -- | [Course Admin](https://optivem.thinkific.com/manage/courses/3202539) |
 | Modern Pipelines in Legacy Code  | [Course](https://optivem.thinkific.com/courses/take/modern-pipelines-in-legacy-code) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) | [GitHub](https://github.com/optivem/atdd-accelerator-template) | [Course Admin](https://optivem.thinkific.com/manage/courses/3262197) |
-| Modern Acceptance in Legacy Code  | [Course](https://optivem.thinkific.com/courses/take/modern-pipelines-in-legacy-code) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) | [GitHub](https://github.com/optivem/modern-acceptance-testing-in-legacy-code) | [Course Admin](https://optivem.thinkific.com/manage/courses/3262198) |
+| Modern Acceptance Testing in Legacy Code  | [Course](https://optivem.thinkific.com/courses/take/modern-acceptance-testing-in-legacy-code) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) | [GitHub](https://github.com/optivem/modern-acceptance-testing-in-legacy-code) | [Course Admin](https://optivem.thinkific.com/manage/courses/3262198) |
 
 **Repository Links:**
 
