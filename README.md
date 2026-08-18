@@ -1,35 +1,11 @@
 # ATDD Accelerator
 
-[ATDD Accelerator Dashboard](https://docs.google.com/spreadsheets/d/1XWrwzDTDSxFFzgjMvhqOrpA5Yh7bOZ87dtEnKHot-eM/edit?gid=0#gid=0)
-
-| Name | Course | Group Chat | GitHub | Course Admin |
-|----------|----------|----------|----------|----------|
-| ATDD Accelerator (Cohort 2025)   | [Course](https://optivem.thinkific.com/courses/take/atdd-accelerator) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) | -- | [Course Admin](https://optivem.thinkific.com/manage/courses/3202539) |
-| Modern Pipelines in Legacy Code  | [Course](https://optivem.thinkific.com/courses/take/modern-pipelines-in-legacy-code) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) | [GitHub](https://github.com/optivem/atdd-accelerator-template) | [Course Admin](https://optivem.thinkific.com/manage/courses/3262197) |
-| Modern Acceptance Testing in Legacy Code  | [Course](https://optivem.thinkific.com/courses/take/modern-acceptance-testing-in-legacy-code) | [Group Chat](https://optivem.thinkific.com/communities/Q29tbXVuaXR5LTI4ODQ2Mg==/spaces/Q29tbXVuaXR5U3BhY2UtMzIzNjM1/) | [GitHub](https://github.com/optivem/modern-acceptance-testing-in-legacy-code) | [Course Admin](https://optivem.thinkific.com/manage/courses/3262198) |
+[ATDD Accelerator Dashboard](https://learn.optivem.com/)
 
 **Repository Links:**
 
-🚀 [**ATDD Accelerator Template**](https://github.com/optivem/atdd-accelerator-template)
-- Starter Templates
-  - [Java](https://github.com/optivem/atdd-accelerator-template-java)
-  - [.NET](https://github.com/optivem/atdd-accelerator-template-dotnet)
-  - [TypeScript](https://github.com/optivem/atdd-accelerator-template-typescript)
-- Customized Templates
-  - [Multi Language](https://github.com/optivem/atdd-accelerator-template-multi-lang)
-  - [Multi Component](https://github.com/optivem/atdd-accelerator-template-multi-comp)
-  - [Multi Repository](https://github.com/optivem/atdd-accelerator-template-multi-repo)
- 
-🚀 [**ATDD Accelerator eShop**](https://github.com/optivem/atdd-accelerator-eshop)
-- [Java](https://github.com/optivem/atdd-accelerator-eshop-java)
-- [.NET](https://github.com/optivem/atdd-accelerator-eshop-dotnet)
-- [TypeScript](https://github.com/optivem/atdd-accelerator-eshop-typescript)
-
-
-🚀 [**Modern Acceptance Testing in Legacy Code**](https://github.com/optivem/modern-acceptance-testing-in-legacy-code)
-- [Java](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-java)
-- [.NET](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-dotnet)
-- [TypeScript](https://github.com/optivem/modern-acceptance-testing-in-legacy-code-typescript)
+🚀 [**gh-optivem**](https://github.com/optivem/gh-optivem)
+🚀 [**shop**](https://github.com/optivem/shop)
 
 **Project Links:**
 
